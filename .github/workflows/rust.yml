@@ -33,6 +33,9 @@ jobs:
       - name: Run library & binary unit tests
         run: cargo test --lib --bins --verbose
 
+      - name: Run SpeedCo I benchmark suite (debug)
+        run: cargo test --test bench_speedcoding --verbose -- --nocapture
+
       - name: Compile all phase TDD integration suites
         # As each Sprint turns Green on its phase-N/* branch, enable execution for completed phases
         # (e.g., `cargo test --test phase_1_core_types --verbose`) and full `cargo test --release` at Sprint 6+.
@@ -40,6 +43,9 @@ jobs:
 
       - name: Release build
         run: cargo build --release --verbose
+
+      - name: Run SpeedCo I benchmark suite (release)
+        run: cargo test --release --test bench_speedcoding --verbose -- --nocapture
 
       - name: Build documentation
         run: cargo doc --no-deps
