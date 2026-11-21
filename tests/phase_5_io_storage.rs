@@ -233,9 +233,7 @@ fn card_reader_load_deck_rewinds_tapes_and_offloads_blocks() {
     for (i, ch) in "0350500000000{00{".chars().enumerate() {
         data_card[9 + i] = ch;
     }
-    for col in &mut data_card[26..79] {
-        *col = '0';
-    }
+    data_card[26..79].fill('0');
     data_card[79] = '1';
     let data_str: String = data_card.into_iter().collect();
 

@@ -133,6 +133,7 @@ fn decimal_float_validation_and_roundtrip() {
 
     let dec = DecimalFloat::new(false, 3_141_592_650, 1).unwrap(); // 3.141592650
     let sf = dec.to_speed_float().unwrap();
+    #[allow(clippy::approx_constant)]
     assert!((sf.to_f64() - 3.14159265).abs() < 1e-8);
     let back = DecimalFloat::from_speed_float(sf).unwrap();
     assert_eq!(back.exponent, 1);

@@ -257,6 +257,7 @@ impl SpeedFloat {
     }
 
     /// Returns `-self`.
+    #[allow(clippy::should_implement_trait)]
     pub fn neg(self) -> Self {
         Self {
             negative: !self.negative,
@@ -286,6 +287,14 @@ impl SpeedFloat {
             exp_negative: word.bit(37),
             exponent: word.bits(38, 54) as u32,
         }
+    }
+}
+
+impl std::ops::Neg for SpeedFloat {
+    type Output = Self;
+
+    fn neg(self) -> Self::Output {
+        SpeedFloat::neg(self)
     }
 }
 
