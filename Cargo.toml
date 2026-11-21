@@ -1,0 +1,9 @@
+[package]
+name = "speedcoding"
+version = "0.1.0"
+edition = "2024"
+license = "MIT OR Apache-2.0"
+exclude = ["102632810-05-01-acc.pdf"]
+
+[dependencies]
+mpc = { git = "https://github.com/Mr-Kumar-Abhishek/mpc-rs.git" }

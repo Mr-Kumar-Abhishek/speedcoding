@@ -1,0 +1,35 @@
+speedcoding
+Copyright (c) 2026 Abhishek Kumar <mr.kumar.abhishek@outlook.in>
+
+This Rust library crate is dual-licensed under the MIT License (LICENSE-MIT)
+or the Apache License, Version 2.0 (LICENSE-APACHE), at your option.
+
+---
+Historical Reference Documentation (Excluded from Cargo Crate Packaging)
+
+This repository includes `102632810-05-01-acc.pdf` solely as historical and
+educational reference material, and excludes it from Cargo crate packages via
+`Cargo.toml`:
+
+- Title: IBM 701 Speedcoding System
+- Publisher / Origin: IBM Scientific Computing Service, 590 Madison Avenue,
+  New York, N.Y., 1953 (Introduction dated June 19, 1953, by Cuthbert Hurd;
+  crediting John Backus, Harlan L. Herrick, Donald A. Quarles, Jr.,
+  Sherwood Skillman, John Pulos, Lucy A. Siegel, and John Sheldon).
+- Archival Source: Collection of the Computer History Museum, Catalog ID
+  102632810 (https://archive.computerhistory.org/resources/access/text/2018/02/102632810-05-01-acc.pdf).
+- Rights Note: The PDF scan is NOT covered by this crate's MIT or Apache-2.0
+  license. Reproduction or use of the Computer History Museum archival scan
+  is subject to the Computer History Museum Terms of Use (non-commercial,
+  personal, educational, and research fair use).
+
+"IBM" and "IBM 701" are historical product and trade names of International
+Business Machines Corporation. This project is an independent implementation
+and is not affiliated with or endorsed by IBM.
+
+---
+Third-Party Dependencies
+
+- mpc (https://github.com/Mr-Kumar-Abhishek/mpc-rs.git)
+  Copyright (c) 2025 Abhishek Kumar <mr.kumar.abhishek@outlook.in>
+  Licensed under the MIT License.
