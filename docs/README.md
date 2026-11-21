@@ -3,6 +3,7 @@
 Rust library and CLI implementation of the **1953 IBM 701 Speedcoding System (SpeedCo I)**, built with [`mpc-rs`](https://github.com/Mr-Kumar-Abhishek/mpc-rs) for parser combinators and organized around a 2-week Agile Sprint + 6-phase Red-Green-Refactor TDD roadmap.
 
 - **Repository:** <https://github.com/Mr-Kumar-Abhishek/speedcoding>
+- **GitHub Pages Portal & Rustdoc:** <https://mr-kumar-abhishek.github.io/speedcoding/>
 - **Crate Version:** `0.1.0-alpha.1` (`edition = "2024"`, pre-release tag [`v0.1.0-alpha.1`](https://github.com/Mr-Kumar-Abhishek/speedcoding/releases/tag/v0.1.0-alpha.1))
 - **Primary Reference Manual:** *IBM 701 Speedcoding System* (IBM Scientific Computing Service, 1953), archived in `102632810-05-01-acc.pdf` (Computer History Museum Catalog ID `102632810`).
 
@@ -12,6 +13,7 @@ Rust library and CLI implementation of the **1953 IBM 701 Speedcoding System (Sp
 
 | Document | Description |
 |---|---|
+| [index.html](index.html) | Interactive GitHub Pages documentation portal (live specs, opcode filter, Mermaid diagrams, and Rustdoc entrypoint) |
 | [AGILE-SPRINTS.md](AGILE-SPRINTS.md) | 2-week Agile Sprint workflow, ceremonies, Sprints 0–7 roadmap, Product Backlog (`US-01..US-14`), DoR & DoD |
 | [TIMELINE-AND-BRANCHES.md](TIMELINE-AND-BRANCHES.md) | Gitflow + 6-phase branch topology, TDD workflow, milestone schedule, and release targets |
 | [TDD-TEST-SPECIFICATION.md](TDD-TEST-SPECIFICATION.md) | Complete specification of all 66 Red-phase TDD test cases across `src/lib.rs` and `tests/phase_1..6` |
@@ -45,7 +47,7 @@ flowchart TD
 | `io` | [`src/io.rs`](../src/io.rs) | Sprint 5 / Phase 5 | `TapeUnit` (`J..M`) with parity/checksum/status, `DrumUnit` (`P..Q`), `LinePrinter` |
 | `diagnostics` | [`src/diagnostics.rs`](../src/diagnostics.rs) | Sprint 6 / Phase 6 | `CheckingState` (`PRCH`/`STCH`/`ECHTR`), selective 10-line `ListingBuffer`, and Section 12 `TimingCalculator` |
 | `speedcoding` CLI | [`src/main.rs`](../src/main.rs) | Sprint 0 & 7 | Thin CLI entrypoint (`--help`, `--version`, `info`) |
-| Sprint CI & Templates | [`.github/workflows/rust.yml`](../.github/workflows/rust.yml) | Sprint 0 | GitHub Actions CI, [User Story template](../.github/ISSUE_TEMPLATE/user-story.md), and [PR template](../.github/PULL_REQUEST_TEMPLATE.md) |
+| CI, Pages & Templates | [`.github/workflows/rust.yml`](../.github/workflows/rust.yml) | Sprint 0 | Sprint CI, [GitHub Pages deploy](../.github/workflows/gh-pages.yml), [User Story template](../.github/ISSUE_TEMPLATE/user-story.md), and [PR template](../.github/PULL_REQUEST_TEMPLATE.md) |
 
 ---
 
