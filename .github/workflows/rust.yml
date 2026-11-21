@@ -39,6 +39,9 @@ jobs:
       - name: Run Phase 1 core_types TDD suite (debug)
         run: cargo test --test phase_1_core_types --verbose
 
+      - name: Run Phase 2 parser TDD suite (debug)
+        run: cargo test --test phase_2_parser --verbose
+
       - name: Compile all phase TDD integration suites
         # As each Sprint turns Green on its phase-N/* branch, enable execution for completed phases
         # (e.g., `cargo test --test phase_1_core_types --verbose`) and full `cargo test --release` at Sprint 6+.
@@ -52,6 +55,9 @@ jobs:
 
       - name: Run Phase 1 core_types TDD suite (release)
         run: cargo test --release --test phase_1_core_types --verbose
+
+      - name: Run Phase 2 parser TDD suite (release)
+        run: cargo test --release --test phase_2_parser --verbose
 
       - name: Build documentation
         run: cargo doc --no-deps
