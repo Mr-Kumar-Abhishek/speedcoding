@@ -1,0 +1,48 @@
+name: Rust Sprint CI
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+      - "phase-*/*"
+  pull_request:
+    branches:
+      - master
+      - develop
+      - "phase-*/*"
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build-and-verify:
+    name: Build, Compile Phase Suites, Release & Docs
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install stable Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Debug build
+        run: cargo build --verbose
+
+      - name: Run library & binary unit tests
+        run: cargo test --lib --bins --verbose
+
+      - name: Compile all phase TDD integration suites
+        # As each Sprint turns Green on its phase-N/* branch, enable execution for completed phases
+        # (e.g., `cargo test --test phase_1_core_types --verbose`) and full `cargo test --release` at Sprint 6+.
+        run: cargo test --tests --no-run --verbose
+
+      - name: Release build
+        run: cargo build --release --verbose
+
+      - name: Build documentation
+        run: cargo doc --no-deps
+
+      - name: Verify Cargo package manifest
+        run: cargo package --list --allow-dirty

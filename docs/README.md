@@ -1,9 +1,9 @@
 # `speedcoding` Documentation
 
-Rust library implementation of the **1953 IBM 701 Speedcoding System (SpeedCo I)**, built with [`mpc-rs`](https://github.com/Mr-Kumar-Abhishek/mpc-rs) for parser combinators and organized around a 6-phase Red-Green-Refactor TDD roadmap.
+Rust library and CLI implementation of the **1953 IBM 701 Speedcoding System (SpeedCo I)**, built with [`mpc-rs`](https://github.com/Mr-Kumar-Abhishek/mpc-rs) for parser combinators and organized around a 2-week Agile Sprint + 6-phase Red-Green-Refactor TDD roadmap.
 
 - **Repository:** <https://github.com/Mr-Kumar-Abhishek/speedcoding>
-- **Crate Version:** `0.1.0` (`edition = "2024"`)
+- **Crate Version:** `0.1.0-alpha.1` (`edition = "2024"`, pre-release tag [`v0.1.0-alpha.1`](https://github.com/Mr-Kumar-Abhishek/speedcoding/releases/tag/v0.1.0-alpha.1))
 - **Primary Reference Manual:** *IBM 701 Speedcoding System* (IBM Scientific Computing Service, 1953), archived in `102632810-05-01-acc.pdf` (Computer History Museum Catalog ID `102632810`).
 
 ---
@@ -12,13 +12,14 @@ Rust library implementation of the **1953 IBM 701 Speedcoding System (SpeedCo I)
 
 | Document | Description |
 |---|---|
-| [TIMELINE-AND-BRANCHES.md](TIMELINE-AND-BRANCHES.md) | Gitflow + 6-phase branch topology, TDD workflow, milestone schedule, and Definition of Done |
+| [AGILE-SPRINTS.md](AGILE-SPRINTS.md) | 2-week Agile Sprint workflow, ceremonies, Sprints 0–7 roadmap, Product Backlog (`US-01..US-14`), DoR & DoD |
+| [TIMELINE-AND-BRANCHES.md](TIMELINE-AND-BRANCHES.md) | Gitflow + 6-phase branch topology, TDD workflow, milestone schedule, and release targets |
 | [TDD-TEST-SPECIFICATION.md](TDD-TEST-SPECIFICATION.md) | Complete specification of all 66 Red-phase TDD test cases across `src/lib.rs` and `tests/phase_1..6` |
 | [ARCHITECTURE-AND-SPEC.md](ARCHITECTURE-AND-SPEC.md) | Technical reference distilled from the 1953 SpeedCo I manual: 72-bit layouts, opcodes, cards, I/O, checking, listing, and timing |
 
 ---
 
-## Crate Module Map
+## Crate Module Map & Repository Tooling
 
 ```mermaid
 flowchart TD
@@ -32,16 +33,19 @@ flowchart TD
     ARITH --> CTRL
     IO --> CTRL
     DIAG --> CTRL
+    CTRL --> CLI["src/main.rs (speedcoding CLI)"]
 ```
 
-| Module | File | Phase | Responsibility |
+| Module / Asset | File | Sprint / Phase | Responsibility |
 |---|---|---|---|
-| `core_types` | [`src/core_types.rs`](../src/core_types.rs) | Phase 1 | `Word72`, `Address`, `SpeedFloat`, `DecimalFloat`, `RCode`, `LCode`, 49 `Op1` + 48 `Op2` opcodes, `Instruction`, `ElectrostaticMemory` |
-| `parser` | [`src/parser.rs`](../src/parser.rs) | Phase 2 | `mpc`-backed mnemonic/line/program parsers and 80-column instruction, data, and loading-control card parsers |
-| `arithmetic` | [`src/arithmetic.rs`](../src/arithmetic.rs) | Phase 3 | Floating-binary `OP1` arithmetic (`ADD`..`NGDIV`) and Set 1 elementary functions (`SQRT`, `SINE`, `ARTAN`, `EXP`, `LN`) |
-| `control` | [`src/control.rs`](../src/control.rs) | Phase 4 | `SpeedCoMachine`, `PC` execution loop, `OP2` transfers, `RQuantities`, `AddressCounter`, location `0025` control tricks |
-| `io` | [`src/io.rs`](../src/io.rs) | Phase 5 | `TapeUnit` (`J..M`) with parity/checksum/status, `DrumUnit` (`P..Q`), `LinePrinter` |
-| `diagnostics` | [`src/diagnostics.rs`](../src/diagnostics.rs) | Phase 6 | `CheckingState` (`PRCH`/`STCH`/`ECHTR`), selective 10-line `ListingBuffer`, and Section 12 `TimingCalculator` |
+| `core_types` | [`src/core_types.rs`](../src/core_types.rs) | Sprint 1 / Phase 1 | `Word72`, `Address`, `SpeedFloat`, `DecimalFloat`, `RCode`, `LCode`, 49 `Op1` + 48 `Op2` opcodes, `Instruction`, `ElectrostaticMemory` |
+| `parser` | [`src/parser.rs`](../src/parser.rs) | Sprint 2 / Phase 2 | `mpc`-backed mnemonic/line/program parsers and 80-column instruction, data, and loading-control card parsers |
+| `arithmetic` | [`src/arithmetic.rs`](../src/arithmetic.rs) | Sprint 3 / Phase 3 | Floating-binary `OP1` arithmetic (`ADD`..`NGDIV`) and Set 1 elementary functions (`SQRT`, `SINE`, `ARTAN`, `EXP`, `LN`) |
+| `control` | [`src/control.rs`](../src/control.rs) | Sprint 4 / Phase 4 | `SpeedCoMachine`, `PC` execution loop, `OP2` transfers, `RQuantities`, `AddressCounter`, location `0025` control tricks |
+| `io` | [`src/io.rs`](../src/io.rs) | Sprint 5 / Phase 5 | `TapeUnit` (`J..M`) with parity/checksum/status, `DrumUnit` (`P..Q`), `LinePrinter` |
+| `diagnostics` | [`src/diagnostics.rs`](../src/diagnostics.rs) | Sprint 6 / Phase 6 | `CheckingState` (`PRCH`/`STCH`/`ECHTR`), selective 10-line `ListingBuffer`, and Section 12 `TimingCalculator` |
+| `speedcoding` CLI | [`src/main.rs`](../src/main.rs) | Sprint 0 & 7 | Thin CLI entrypoint (`--help`, `--version`, `info`) |
+| Sprint CI & Templates | [`.github/workflows/rust.yml`](../.github/workflows/rust.yml) | Sprint 0 | GitHub Actions CI, [User Story template](../.github/ISSUE_TEMPLATE/user-story.md), and [PR template](../.github/PULL_REQUEST_TEMPLATE.md) |
 
 ---
 
