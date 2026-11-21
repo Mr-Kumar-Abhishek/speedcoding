@@ -4,6 +4,7 @@ Rust library and CLI implementation of the **1953 IBM 701 Speedcoding System (Sp
 
 - **Repository:** <https://github.com/Mr-Kumar-Abhishek/speedcoding>
 - **GitHub Pages Portal & Rustdoc:** <https://mr-kumar-abhishek.github.io/speedcoding/>
+- **GitHub Pages Reports Portal:** <https://mr-kumar-abhishek.github.io/speedcoding/report/>
 - **Crate Version:** `0.1.0-alpha.1` (`edition = "2024"`, pre-release tag [`v0.1.0-alpha.1`](https://github.com/Mr-Kumar-Abhishek/speedcoding/releases/tag/v0.1.0-alpha.1))
 - **Primary Reference Manual:** *IBM 701 Speedcoding System* (IBM Scientific Computing Service, 1953), archived in `102632810-05-01-acc.pdf` (Computer History Museum Catalog ID `102632810`).
 
@@ -13,11 +14,12 @@ Rust library and CLI implementation of the **1953 IBM 701 Speedcoding System (Sp
 
 | Document | Description |
 |---|---|
-| [index.html](index.html) | Interactive GitHub Pages documentation portal (live specs, opcode filter, Mermaid diagrams, and Rustdoc entrypoint) |
+| [index.html](index.html) | Interactive GitHub Pages documentation portal (live specs, opcode filter, Mermaid diagrams, reports, and Rustdoc entrypoint) |
 | [AGILE-SPRINTS.md](AGILE-SPRINTS.md) | 2-week Agile Sprint workflow, ceremonies, Sprints 0–7 roadmap, Product Backlog (`US-01..US-14`), DoR & DoD |
 | [TIMELINE-AND-BRANCHES.md](TIMELINE-AND-BRANCHES.md) | Gitflow + 6-phase branch topology, TDD workflow, milestone schedule, and release targets |
 | [TDD-TEST-SPECIFICATION.md](TDD-TEST-SPECIFICATION.md) | Complete specification of all 66 Red-phase TDD test cases across `src/lib.rs` and `tests/phase_1..6` |
 | [ARCHITECTURE-AND-SPEC.md](ARCHITECTURE-AND-SPEC.md) | Technical reference distilled from the 1953 SpeedCo I manual: 72-bit layouts, opcodes, cards, I/O, checking, listing, and timing |
+| [report/index.html](../report/index.html) | Standalone GitHub Pages HTML viewer for the Benchmark and Compliance reports |
 | [speedcoding-benchmark-report.md](../report/speedcoding-benchmark-report.md) | Debug & Release parsing benchmark results (`tests/bench_speedcoding.rs`, CI Run `#44938969997`) |
 | [compliance-report.md](../report/compliance-report.md) | License/IP, SpeedCo I manual traceability, safety/SHA-256, and Agile/CI compliance audit |
 
