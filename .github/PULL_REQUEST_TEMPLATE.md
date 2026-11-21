@@ -1,8 +1,8 @@
 ## Sprint & Story Context
 - **Sprint:** `Sprint <N>`
 - **Story ID(s):** `US-XX`
-- **Source Branch:** `phase-<N>/<name>` -> **Target:** `develop`
-- **Target Pre-release Tag (if closing Sprint):** `v0.1.0-alpha.<N>`
+- **Branch Flow:** `phase-<N>/<name>` -> `develop` -> `master` (upon phase completion)
+- **Target Release Tag (if closing Sprint):** `v0.1.0-alpha.<N>`
 
 ## Summary of Changes
 <!-- Describe the minimal Green implementation and refactoring completed in this sprint -->
@@ -14,8 +14,9 @@
 
 ## Verification Gate (Definition of Done)
 - [ ] `cargo build --verbose` (0 warnings)
-- [ ] `cargo test` for completed phase suite(s) + `--lib --bins` (0 failures)
-- [ ] `cargo build --release --verbose` & `cargo test --release` (for implemented phases)
+- [ ] `cargo test` for completed phase suite(s) + `--lib --bins` + `bench_speedcoding` (0 failures)
+- [ ] `cargo build --release --verbose` & `cargo test --release` (for implemented phases + benchmarks)
 - [ ] `cargo doc --no-deps` (0 warnings)
 - [ ] `cargo package --list --allow-dirty` (0 warnings; `102632810-05-01-acc.pdf` excluded)
 - [ ] Updated `docs/AGILE-SPRINTS.md` backlog status & test counts
+- [ ] Merged `develop` -> `master` after CI passes and synced remaining `phase-*` branches
