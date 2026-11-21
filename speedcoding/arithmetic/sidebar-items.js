@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["MAX_ADD_SUB_DEC_EXP_DIFF","MAX_SINE_ARTAN_DEC_EXP","MAX_SQRT_EXP_LN_DEC_EXP"],"enum":["ArithmeticOutcome"],"fn":["execute_op1_arithmetic","execute_op1_math"]};

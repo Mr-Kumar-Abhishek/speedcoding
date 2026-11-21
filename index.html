@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>speedcoding — IBM 701 Speedcoding System (SpeedCo I) for Rust</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface-2: #1f2630;
+      --border: #30363d;
+      --text: #e6edf3;
+      --muted: #9198a1;
+      --accent: #f97316;
+      --accent-soft: rgba(249, 115, 22, 0.14);
+      --link: #58a6ff;
+      --green: #3fb950;
+      --yellow: #d29922;
+      --blue: #58a6ff;
+      --code-bg: #0b0f14;
+      --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+
+    html[data-theme="light"] {
+      --bg: #f6f8fa;
+      --surface: #ffffff;
+      --surface-2: #f0f3f6;
+      --border: #d0d7de;
+      --text: #1f2328;
+      --muted: #59636e;
+      --accent: #d95700;
+      --accent-soft: rgba(217, 87, 0, 0.1);
+      --link: #0969da;
+      --green: #1a7f37;
+      --yellow: #9a6700;
+      --blue: #0969da;
+      --code-bg: #f6f8fa;
+      --shadow: 0 8px 24px rgba(31, 35, 40, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a { color: var(--link); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    header.topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(8px);
+    }
+
+    .topbar-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0.75rem 1.25rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--text);
+      flex-wrap: wrap;
+    }
+
+    .brand-mark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.9rem;
+      border: 1px solid var(--accent);
+    }
+
+    .badges { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; }
+
+    .badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text);
+    }
+
+    .badge.rust { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+    .badge.lic { border-color: var(--blue); color: var(--blue); }
+
+    .actions { display: flex; align-items: center; gap: 0.55rem; flex-wrap: wrap; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.38rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .btn:hover { border-color: var(--accent); text-decoration: none; }
+    .btn.primary { background: var(--accent); color: #ffffff; border-color: var(--accent); }
+    .btn.primary:hover { opacity: 0.92; }
+
+    nav.subnav { border-top: 1px solid var(--border); background: var(--bg); }
+
+    .subnav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0.45rem 1.25rem;
+      display: flex;
+      gap: 1.1rem;
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+
+    .subnav a {
+      white-space: nowrap;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--muted);
+      padding: 0.25rem 0;
+    }
+
+    .subnav a:hover { color: var(--accent); text-decoration: none; }
+
+    main { max-width: 1200px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+
+    .hero {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      margin-bottom: 2rem;
+    }
+
+    .hero h1 { margin: 0 0 0.5rem; font-size: clamp(1.7rem, 3vw, 2.35rem); line-height: 1.2; }
+    .hero p.lead { color: var(--muted); font-size: 1.03rem; margin: 0 0 1rem; max-width: 78ch; }
+
+    .doc-pills { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0 0.25rem; }
+
+    .doc-pill {
+      display: inline-block;
+      font-size: 0.82rem;
+      padding: 0.28rem 0.65rem;
+      border-radius: 6px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--link);
+    }
+
+    .doc-pill:hover { border-color: var(--accent); text-decoration: none; }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.9rem;
+      margin-top: 1.25rem;
+    }
+
+    .stat-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.9rem 1rem;
+    }
+
+    .stat-label { font-size: 0.76rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+    .stat-value { font-size: 1.15rem; font-weight: 700; margin-top: 0.18rem; }
+
+    section.doc-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.75rem;
+      margin-bottom: 1.75rem;
+      box-shadow: var(--shadow);
+      scroll-margin-top: 7.5rem;
+    }
+
+    section.doc-section h2 {
+      margin-top: 0;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 1.42rem;
+    }
+
+    section.doc-section h3 { margin-top: 1.5rem; margin-bottom: 0.6rem; font-size: 1.08rem; color: var(--accent); }
+
+    .two-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.25rem; }
+
+    .card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.15rem;
+    }
+
+    .card h4 { margin-top: 0; margin-bottom: 0.5rem; }
+
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.88em; }
+
+    p code, li code, td code {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.08rem 0.35rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0.85rem 0 1.25rem;
+      font-size: 0.9rem;
+      display: block;
+      overflow-x: auto;
+    }
+
+    th, td { border: 1px solid var(--border); padding: 0.52rem 0.72rem; text-align: left; vertical-align: top; }
+    th { background: var(--surface-2); font-weight: 600; }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+    .status-pill {
+      display: inline-block;
+      padding: 0.1rem 0.5rem;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .status-done { background: rgba(63, 185, 80, 0.15); color: var(--green); border: 1px solid var(--green); }
+    .status-planned { background: rgba(88, 166, 255, 0.15); color: var(--blue); border: 1px solid var(--blue); }
+    .status-skip { background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent); }
+
+    .filter-bar {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      flex-wrap: wrap;
+      margin: 0.75rem 0 1rem;
+    }
+
+    .filter-input {
+      flex: 1 1 280px;
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--code-bg);
+      color: var(--text);
+      font-size: 0.92rem;
+    }
+
+    .filter-count { font-size: 0.85rem; color: var(--muted); }
+
+    .diagram-box {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 1rem 0;
+      overflow-x: auto;
+      text-align: center;
+    }
+
+    .note-box {
+      background: var(--code-bg);
+      border-left: 3px solid var(--accent);
+      border-radius: 6px;
+      padding: 0.85rem 1rem;
+      margin: 0.75rem 0;
+      font-size: 0.92rem;
+    }
+
+    details {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    details summary { cursor: pointer; font-weight: 600; }
+
+    footer {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.5rem 1.25rem 3rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.88rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <span class="brand-mark">speedcoding</span>
+        <span>IBM 701 Speedcoding System (SpeedCo I)</span>
+        <div class="badges">
+          <span class="badge rust">v0.1.0-alpha.1 · Rust 2024</span>
+          <span class="badge lic">MIT OR Apache-2.0</span>
+        </div>
+      </div>
+      <div class="actions">
+        <a class="btn primary" href="./speedcoding/index.html">Rustdoc API</a>
+        <a class="btn" href="https://github.com/Mr-Kumar-Abhishek/speedcoding/releases/tag/v0.1.0-alpha.1" target="_blank" rel="noopener">Pre-release</a>
+        <a class="btn" href="https://github.com/Mr-Kumar-Abhishek/speedcoding" target="_blank" rel="noopener">GitHub Repo</a>
+        <button class="btn" id="theme-toggle" type="button" aria-label="Toggle theme">Light Mode</button>
+      </div>
+    </div>
+    <nav class="subnav" aria-label="Section navigation">
+      <div class="subnav-inner">
+        <a href="#overview">Overview</a>
+        <a href="#architecture">Architecture &amp; Layouts</a>
+        <a href="#opcodes">OP1 &amp; OP2 Reference</a>
+        <a href="#io-diagnostics">Cards, I/O, Checking &amp; Timing</a>
+        <a href="#agile-timeline">Agile Sprints &amp; Branches</a>
+        <a href="#tdd">TDD Specification (66 Tests)</a>
+        <a href="#builds-releases">Builds, CI &amp; Releases</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="hero">
+      <h1><code>speedcoding</code> — 1953 IBM 701 Speedcoding System (SpeedCo I)</h1>
+      <p class="lead">
+        A faithful Rust library and CLI implementation of John Backus's 1953 IBM 701 floating-point Speedcoding System,
+        powered by <a href="https://github.com/Mr-Kumar-Abhishek/mpc-rs" target="_blank" rel="noopener"><code>mpc-rs</code></a>
+        parser combinators and guided by a 2-week Agile Sprint + 6-phase Red-Green-Refactor TDD roadmap.
+      </p>
+      <div class="doc-pills">
+        <a class="doc-pill" href="./docs/README.md">docs/README.md</a>
+        <a class="doc-pill" href="./docs/AGILE-SPRINTS.md">docs/AGILE-SPRINTS.md</a>
+        <a class="doc-pill" href="./docs/TIMELINE-AND-BRANCHES.md">docs/TIMELINE-AND-BRANCHES.md</a>
+        <a class="doc-pill" href="./docs/TDD-TEST-SPECIFICATION.md">docs/TDD-TEST-SPECIFICATION.md</a>
+        <a class="doc-pill" href="./docs/ARCHITECTURE-AND-SPEC.md">docs/ARCHITECTURE-AND-SPEC.md</a>
+      </div>
+      <div class="hero-grid">
+        <div class="stat-card">
+          <div class="stat-label">Crate &amp; Release</div>
+          <div class="stat-value"><code>speedcoding</code> v0.1.0-alpha.1</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Instruction Set</div>
+          <div class="stat-value">49 OP1 · 48 OP2 (72-bit)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">TDD Test Suite</div>
+          <div class="stat-value">66 Tests (6 Phases + Lib)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Agile Roadmap</div>
+          <div class="stat-value">Sprints 0–7 (Sprint 0 Done)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1. Overview -->
+    <section id="overview" class="doc-section">
+      <h2>1. Crate Overview, Module Map &amp; Licensing</h2>
+      <div class="diagram-box">
+        <div class="mermaid">
+flowchart TD
+    MPC["mpc (git: mpc-rs)"] --> PAR["parser (Phase 2)"]
+    CT["core_types (Phase 1)"] --> PAR
+    CT --> ARITH["arithmetic (Phase 3)"]
+    CT --> IO["io (Phase 5)"]
+    CT --> DIAG["diagnostics (Phase 6)"]
+    CT --> CTRL["control (Phase 4 &amp; Machine)"]
+    PAR --> CTRL
+    ARITH --> CTRL
+    IO --> CTRL
+    DIAG --> CTRL
+    CTRL --> CLI["src/main.rs (speedcoding CLI)"]
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr><th>Module / Asset</th><th>Path</th><th>Sprint / Phase</th><th>Responsibility</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>core_types</code></td><td><code>src/core_types.rs</code></td><td>Sprint 1 / Phase 1</td><td><code>Word72</code>, <code>Address</code>, <code>SpeedFloat</code>, <code>DecimalFloat</code>, <code>RCode</code>, <code>LCode</code>, 49 <code>Op1</code> + 48 <code>Op2</code>, <code>Instruction</code>, <code>ElectrostaticMemory</code></td></tr>
+          <tr><td><code>parser</code></td><td><code>src/parser.rs</code></td><td>Sprint 2 / Phase 2</td><td><code>mpc</code> mnemonic/line/program parsers and 80-column instruction, data, and loading-control card parsers</td></tr>
+          <tr><td><code>arithmetic</code></td><td><code>src/arithmetic.rs</code></td><td>Sprint 3 / Phase 3</td><td>Floating-binary <code>OP1</code> arithmetic and Set 1 elementary math (<code>SQRT</code>, <code>SINE</code>, <code>ARTAN</code>, <code>EXP</code>, <code>LN</code>)</td></tr>
+          <tr><td><code>control</code></td><td><code>src/control.rs</code></td><td>Sprint 4 / Phase 4</td><td><code>SpeedCoMachine</code>, <code>PC=300</code>, <code>OP2</code> transfers, <code>RQuantities</code>, <code>AddressCounter</code>, location <code>0025</code> control tricks</td></tr>
+          <tr><td><code>io</code></td><td><code>src/io.rs</code></td><td>Sprint 5 / Phase 5</td><td><code>TapeUnit</code> (<code>J..M</code>) with 7th-channel parity/checksum/status, <code>DrumUnit</code> (<code>P..Q</code>), <code>LinePrinter</code></td></tr>
+          <tr><td><code>diagnostics</code></td><td><code>src/diagnostics.rs</code></td><td>Sprint 6 / Phase 6</td><td><code>CheckingState</code> (<code>PRCH</code>/<code>STCH</code>/<code>ECHTR</code>), selective 10-line <code>ListingBuffer</code>, Section 12 <code>TimingCalculator</code></td></tr>
+          <tr><td><code>speedcoding</code> CLI</td><td><code>src/main.rs</code></td><td>Sprint 0 &amp; 7</td><td>Release CLI entrypoint (<code>--help</code>, <code>--version</code>, <code>info</code>)</td></tr>
+          <tr><td>CI &amp; Pages</td><td><code>.github/workflows/</code></td><td>Sprint 0</td><td><code>rust.yml</code> (Sprint CI), <code>gh-pages.yml</code> (Pages deploy), Agile user story &amp; PR templates</td></tr>
+        </tbody>
+      </table>
+
+      <div class="two-col">
+        <div class="card">
+          <h4><code>Cargo.toml</code> Dependency &amp; Licensing</h4>
+          <pre><code>[package]
+name = "speedcoding"
+version = "0.1.0-alpha.1"
+edition = "2024"
+license = "MIT OR Apache-2.0"
+exclude = ["102632810-05-01-acc.pdf"]
+
+[dependencies]
+mpc = { git = "https://github.com/Mr-Kumar-Abhishek/mpc-rs.git" }</code></pre>
+        </div>
+        <div class="card">
+          <h4>CLI Usage &amp; Historical Attribution</h4>
+          <pre><code>speedcoding --help      # Usage and status
+speedcoding --version   # 0.1.0-alpha.1
+speedcoding info        # SpeedCo I machine constants</code></pre>
+          <p>
+            Crate source is dual-licensed under <code>MIT OR Apache-2.0</code> (<code>LICENSE-MIT</code>, <code>LICENSE-APACHE</code>).
+            Historical manual <code>102632810-05-01-acc.pdf</code> (Computer History Museum Catalog <code>102632810</code>, IBM 1953)
+            is excluded from Cargo packaging and documented in <code>NOTICE</code>.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Architecture & Layouts -->
+    <section id="architecture" class="doc-section">
+      <h2>2. SpeedCo I Memory, 72-Bit Word Layouts &amp; Arithmetic Rules</h2>
+      <div class="two-col">
+        <div class="card">
+          <h4>Electrostatic &amp; Auxiliary Memory</h4>
+          <ul>
+            <li><strong>Electrostatic CRT Store:</strong> <code>1024</code> words (<code>0000..=1023</code>).</li>
+            <li><strong>User Storage:</strong> <code>0300..=1013</code> (<code>714</code> words); execution starts at <code>PC = 0300</code>.</li>
+            <li><strong>Control Storage:</strong> <code>0000..=0299</code> &amp; <code>1014..=1023</code> protected (<code>0025</code> holds <code>R</code>-control state).</li>
+            <li><strong>Drums <code>P</code> &amp; <code>Q</code>:</strong> <code>1024</code> words each (<code>0..=1023</code>, no wrap).</li>
+            <li><strong>Tapes <code>J..M</code>:</strong> Variable unit records, 6 data + 1 odd-parity redundancy channel + checksum.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4>Arithmetic &amp; Set 1 Math Rules</h4>
+          <ul>
+            <li><strong>Decimal Exponent Limit:</strong> 10-digit fraction with <code>|E<sub>10</sub>| &le; 236</code>; binary <code>|E<sub>2</sub>| &le; 131,071</code>.</li>
+            <li><strong>Add/Sub Restrictions:</strong> Decimal exponent difference <code>&gt; 76</code> rejected; exact cancellation keeps <code>F = 0</code> and operand exponent without shifting.</li>
+            <li><strong>Truncation vs Rounding:</strong> Multiply/add/sub are unrounded; <code>DIV</code>/<code>NGDIV</code> form 34/35-bit rounded quotients; <code>F(B)=0</code> stops with <code>DivideCheck</code>.</li>
+            <li><strong>Set 1 Quirk Rules:</strong> <code>SQRT</code> negative/zero <code>F</code> yields <code>F=0</code>, exp <code>&lceil;E/2&rceil;</code>; <code>SINE</code> zero <code>F</code> yields exp <code>+7</code>; <code>LN</code> treats negative as <code>|x|</code> and zero <code>F</code> as <code>1/2</code>.</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Floating Binary Word (Page 3-2) &amp; Instruction Word (Page 4-4)</h3>
+      <div class="two-col">
+        <table>
+          <thead><tr><th>Bits (1-based MSB)</th><th class="num">Width</th><th>Number Field</th></tr></thead>
+          <tbody>
+            <tr><td><code>1</code></td><td class="num">1</td><td>Quantity sign (<code>1</code> = negative)</td></tr>
+            <tr><td><code>2–36</code></td><td class="num">35</td><td>Fractional part <code>F</code> (<code>0.5 &le; |F| &lt; 1</code> or <code>0</code>)</td></tr>
+            <tr><td><code>37</code></td><td class="num">1</td><td>Exponent sign</td></tr>
+            <tr><td><code>38–54</code></td><td class="num">17</td><td>Binary exponent <code>E</code> (<code>0..=131,071</code>)</td></tr>
+            <tr><td><code>55–72</code></td><td class="num">18</td><td>Unused (<code>0</code>)</td></tr>
+          </tbody>
+        </table>
+        <table>
+          <thead><tr><th>Bits (1-based MSB)</th><th class="num">Width</th><th>Instruction Field</th></tr></thead>
+          <tbody>
+            <tr><td><code>1</code> / <code>2</code> / <code>3–5</code> / <code>6</code></td><td class="num">1+1+3+1</td><td>Sign / <code>0</code> / <code>R</code>-code (<code>0..=7</code>) / <code>0</code></td></tr>
+            <tr><td><code>7–18</code> / <code>19–26</code></td><td class="num">12 + 8</td><td><code>OP1</code> numeric code / <code>OP2</code> numeric code</td></tr>
+            <tr><td><code>27–36</code> / <code>37</code></td><td class="num">10 + 1</td><td><code>D</code> address / <code>0</code></td></tr>
+            <tr><td><code>38–47</code> / <code>48–57</code></td><td class="num">10 + 10</td><td><code>A</code> address / <code>B</code> address</td></tr>
+            <tr><td><code>58–59</code> / <code>60–62</code> / <code>63–72</code></td><td class="num">2+3+10</td><td><code>00</code> / <code>L</code>-code (<code>0,3,6</code>) / <code>C</code> address</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 3. OP1 & OP2 Reference -->
+    <section id="opcodes" class="doc-section">
+      <h2>3. Complete SpeedCo I Operation Code Reference (49 OP1 + 48 OP2)</h2>
+      <div class="filter-bar">
+        <input id="opcode-filter" class="filter-input" type="search" placeholder="Filter OP1 / OP2 by mnemonic, code, or description (e.g. ADD, 437, skip, R_A, check)..." />
+        <span id="opcode-count" class="filter-count">Showing all 97 opcodes</span>
+      </div>
+
+      <div class="two-col">
+        <div>
+          <h3><code>OP1</code> Operations (49 Codes, Pages 5-1..5-2)</h3>
+          <table id="op1-table">
+            <thead><tr><th>Mnemonic</th><th class="num">Code</th><th>Rule</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>ADD</code></td><td class="num">658</td><td>—</td><td>Q(A) + Q(B) &rarr; Q(C)</td></tr>
+              <tr><td><code>SUB</code></td><td class="num">696</td><td>—</td><td>Q(A) - Q(B) &rarr; Q(C)</td></tr>
+              <tr><td><code>ADDAB</code></td><td class="num">699</td><td>—</td><td>Q(A) + |Q(B)| &rarr; Q(C)</td></tr>
+              <tr><td><code>ABADD</code></td><td class="num">703</td><td>—</td><td>|Q(A)| + |Q(B)| &rarr; Q(C)</td></tr>
+              <tr><td><code>SUBAB</code></td><td class="num">707</td><td>—</td><td>Q(A) - |Q(B)| &rarr; Q(C)</td></tr>
+              <tr><td><code>ABSUB</code></td><td class="num">711</td><td>—</td><td>|Q(A)| - |Q(B)| &rarr; Q(C)</td></tr>
+              <tr><td><code>MPY</code></td><td class="num">715</td><td>—</td><td>Q(A) &middot; Q(B) &rarr; Q(C)</td></tr>
+              <tr><td><code>NGMPY</code></td><td class="num">731</td><td>—</td><td>-(Q(A) &middot; Q(B)) &rarr; Q(C)</td></tr>
+              <tr><td><code>DIV</code></td><td class="num">734</td><td>—</td><td>Q(A) &divide; Q(B) &rarr; Q(C)</td></tr>
+              <tr><td><code>NGDIV</code></td><td class="num">748</td><td>—</td><td>-(Q(A) &divide; Q(B)) &rarr; Q(C)</td></tr>
+              <tr><td><code>SQRT</code></td><td class="num">782</td><td>—</td><td>&radic;Q(A) &rarr; Q(C)</td></tr>
+              <tr><td><code>SINE</code></td><td class="num">780</td><td>—</td><td>sin Q(A) &rarr; Q(C)</td></tr>
+              <tr><td><code>ARTAN</code></td><td class="num">781</td><td>—</td><td>arctan Q(A) &rarr; Q(C)</td></tr>
+              <tr><td><code>EXP</code></td><td class="num">783</td><td>—</td><td>exp Q(A) &rarr; Q(C)</td></tr>
+              <tr><td><code>LN</code></td><td class="num">784</td><td>—</td><td>ln Q(A) &rarr; Q(C)</td></tr>
+              <tr><td><code>WRTPJ..M</code></td><td class="num">532..535</td><td>—</td><td>Write cells A..B to tape J(532), K(533), L(534), M(535)</td></tr>
+              <tr><td><code>RFTPJ</code></td><td class="num">435</td><td><span class="status-pill status-skip">No OP2</span></td><td>Read forward tape J (B-A+1 words)</td></tr>
+              <tr><td><code>RFTPK</code></td><td class="num">437</td><td><span class="status-pill status-skip">No OP2</span></td><td>Read forward tape K</td></tr>
+              <tr><td><code>RFTPL</code></td><td class="num">439</td><td><span class="status-pill status-skip">No OP2</span></td><td>Read forward tape L</td></tr>
+              <tr><td><code>RFTPM</code></td><td class="num">441</td><td><span class="status-pill status-skip">No OP2</span></td><td>Read forward tape M</td></tr>
+              <tr><td><code>RBTPJ..M</code></td><td class="num">416..419</td><td><span class="status-pill status-skip">No OP2</span></td><td>Read backward tape J(416), K(417), L(418), M(419)</td></tr>
+              <tr><td><code>SFTPJ..M</code></td><td class="num">556..559</td><td><span class="status-pill status-skip">No OP2</span></td><td>Skip forward tape J(556), K(557), L(558), M(559)</td></tr>
+              <tr><td><code>SBTPJ..M</code></td><td class="num">546..549</td><td><span class="status-pill status-skip">No OP2</span></td><td>Skip backward tape J(546), K(547), L(548), M(549)</td></tr>
+              <tr><td><code>RWTPJ..M</code></td><td class="num">572..578</td><td>—</td><td>Rewind tape J(572), K(574), L(576), M(578)</td></tr>
+              <tr><td><code>EFTPJ..M</code></td><td class="num">564..570</td><td>—</td><td>End file tape J(564), K(566), L(568), M(570)</td></tr>
+              <tr><td><code>WRDRP</code> / <code>WRDRQ</code></td><td class="num">497 / 498</td><td><span class="status-pill status-skip">No OP2</span></td><td>Write cells A..B to drum P / Q starting at C</td></tr>
+              <tr><td><code>RFDRP</code> / <code>RFDRQ</code></td><td class="num">526 / 528</td><td>—</td><td>Read drum P / Q starting at C into cells A..B</td></tr>
+              <tr><td><code>PRINT</code></td><td class="num">580</td><td>—</td><td>Print cells A..B (5/line, ID 100*C+n)</td></tr>
+              <tr><td><code>NOOP</code></td><td class="num">751</td><td>—</td><td>No OP1 operation (2.736 ms)</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div>
+          <h3><code>OP2</code> Operations (48 Codes, Pages 5-3..5-5)</h3>
+          <table id="op2-table">
+            <thead><tr><th>Mnemonic</th><th class="num">Code</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>TR</code></td><td class="num">104</td><td>Unconditional transfer to D</td></tr>
+              <tr><td><code>TRPL</code> / <code>TRMN</code> / <code>TRZ</code></td><td class="num">109 / 115 / 112</td><td>Transfer to D if Q(C) &gt; 0, &lt; 0, or F(Q(C)) = 0</td></tr>
+              <tr><td><code>SNTRP</code> / <code>SNTRQ</code></td><td class="num">117 / 120</td><td>Transfer to D if panel sense switch 4 (P) or 5 (Q) is down</td></tr>
+              <tr><td><code>TIA</code> / <code>TIB</code> / <code>TIC</code></td><td class="num">128 / 126 / 125</td><td>Increase R_A, R_B, or R_C by 1 and transfer to D</td></tr>
+              <tr><td><code>TIAB</code> / <code>TIBC</code> / <code>TIAC</code> / <code>TIABC</code></td><td class="num">130 / 127 / 129 / 131</td><td>Increase combination of R_A, R_B, R_C by 1 and transfer to D</td></tr>
+              <tr><td><code>TDA</code> / <code>TDB</code> / <code>TDC</code></td><td class="num">135 / 133 / 132</td><td>Decrease R_A, R_B, or R_C by 1 and transfer to D (error if &lt; 0)</td></tr>
+              <tr><td><code>TDAB</code> / <code>TDBC</code> / <code>TDAC</code> / <code>TDABC</code></td><td class="num">137 / 134 / 136 / 138</td><td>Decrease combination of R_A, R_B, R_C by 1 and transfer to D</td></tr>
+              <tr><td><code>SETRA</code> / <code>SETRB</code> / <code>SETRC</code></td><td class="num">139 / 250 / 145</td><td>Set R_A, R_B, or R_C to D</td></tr>
+              <tr><td><code>SKRA</code> / <code>SKRB</code> / <code>SKRC</code></td><td class="num">152 / 159 / 162</td><td>Skip next instruction if R_A, R_B, or R_C equals D</td></tr>
+              <tr><td><code>RADDA</code> / <code>RADDB</code> / <code>RADDC</code> / <code>RADDD</code></td><td class="num">199 / 202 / 205 / 208</td><td>Reset AC to 0 and add A, B, C, or D field of cell D</td></tr>
+              <tr><td><code>ADDA</code> / <code>ADDB</code> / <code>ADDC</code> / <code>ADDD</code></td><td class="num">177 / 184 / 190 / 193</td><td>Add A, B, C, or D field of cell D to AC</td></tr>
+              <tr><td><code>SUBA</code> / <code>SUBB</code> / <code>SUBC</code> / <code>SUBD</code></td><td class="num">211 / 216 / 221 / 226</td><td>Subtract A, B, C, or D field of cell D from AC</td></tr>
+              <tr><td><code>STA</code> / <code>STB</code> / <code>STC</code> / <code>STD</code></td><td class="num">251 / 252 / 235 / 244</td><td>Store |AC| mod 1024 into A, B, C, or D field of cell D</td></tr>
+              <tr><td><code>SKIP</code></td><td class="num">165</td><td>Skip next instruction if |AC| = D</td></tr>
+              <tr><td><code>PRCH</code> / <code>STCH</code> / <code>ECHTR</code></td><td class="num">232 / 253 / 254</td><td>Prepare check / Start check loop / End check &amp; transfer to D</td></tr>
+              <tr><td><code>STOP</code></td><td class="num">123</td><td>Halt machine; manual restart transfers to D</td></tr>
+              <tr><td><em>(blank / -)</em></td><td class="num">000</td><td>No OP2 operation (0.000 ms)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Cards, I/O, Checking & Timing -->
+    <section id="io-diagnostics" class="doc-section">
+      <h2>4. 80-Column Cards, Tape Status Matrix, Checking, Listing &amp; Timing</h2>
+      <div class="two-col">
+        <div class="card">
+          <h4>80-Column Card Formats (Section 7)</h4>
+          <ul>
+            <li><strong>Instruction Card:</strong> Col <code>8</code> not 0+1, Col <code>9</code> blank, <code>10–13</code> Location, <code>14</code>=<code>0</code>, <code>15–19</code> Alpha OP1, <code>20</code> R, <code>21–32</code> A/B/C, <code>33–34</code>=<code>00</code>, <code>35–39</code> Alpha OP2, <code>40–43</code> D, <code>44</code> L, <code>46–51</code> Num OP1/OP2, <code>52–55</code>=<code>0000</code>.</li>
+            <li><strong>Data Card:</strong> Col <code>8</code> double-punched 0+1, Col <code>9</code>=<code>8</code>, up to 5 decimal floats (Col <code>45</code> skipped in <code>N3</code>; <code>12</code>=<code>+</code>, <code>11</code>=<code>-</code> overpunch), Col <code>80</code> word count <code>1..=5</code>.</li>
+            <li><strong>Loading Control Card:</strong> Col <code>9</code>=<code>9</code>, <code>11–14</code> first, <code>16–19</code> last, <code>21–24</code> drum addr, <code>29</code> unit (<code>J..M</code> or <code>P/Q</code>).</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4>Checking, Listing &amp; Section 12 Timing</h4>
+          <ul>
+            <li><strong>Checking Loop (Sec. 10):</strong> Pass 1 sums fixed-point words in Counter 1; Pass 2 sums in Counter 2 and skips on match. <code>PRINT</code> suppressed on Pass 2 (<code>2.896 ms</code>).</li>
+            <li><strong>Selective Listing (Sec. 11):</strong> Switches 1/2/3 match <code>L</code>=<code>0/3/6</code>; snapshots post-<code>OP1</code>/pre-<code>OP2</code>; flushes every <strong>10 lines</strong> (<code>1.325s</code> avg / <code>1.370s</code> max); <code>|E|&gt;236</code> prints <code>±999</code>.</li>
+            <li><strong>Tape Length &amp; Loading (Sec. 12):</strong> Length = <code>2*72 + sum((n+0.5)*3/25) + (k-1)</code> in at <code>75 in/s</code>; EOF gap = <code>0.96s</code>; load = <code>0.4n + 0.6c + e</code> (<code>e=2</code> or <code>55</code>).</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Tape Unit Status Transition Matrix (Pages 7-13..7-14)</h3>
+      <table>
+        <thead><tr><th>Instruction</th><th>Original <code>Read</code></th><th>Original <code>Neutral</code></th><th>Original <code>Write</code></th></tr></thead>
+        <tbody>
+          <tr><td><code>RFTP</code> / <code>RBTP</code> / <code>SFTP</code> / <code>SBTP</code></td><td><code>Read</code></td><td><code>Read</code></td><td><code>Write</code> (Copy-check stop)</td></tr>
+          <tr><td><code>WRTP</code></td><td><code>Read</code> (Copy-check stop)</td><td><code>Write</code></td><td><code>Write</code></td></tr>
+          <tr><td><code>EFTP</code></td><td><code>Read</code> (Ignored, no stop)</td><td><code>Neutral</code></td><td><code>Neutral</code></td></tr>
+          <tr><td><code>RWTP</code></td><td><code>Neutral</code></td><td><code>Neutral</code></td><td><code>Neutral</code></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 5. Agile Sprints & Branch Timeline -->
+    <section id="agile-timeline" class="doc-section">
+      <h2>5. Agile Sprint Workflow, Roadmap &amp; Product Backlog</h2>
+      <div class="diagram-box">
+        <div class="mermaid">
+flowchart LR
+    BKL["Product Backlog (US-01..US-14)"] --> PLN["Sprint Planning (DoR Check)"]
+    PLN --> BR["Phase Branch (phase-N/*)"]
+    BR --> TDD["TDD (Red -&gt; Green -&gt; Refactor)"]
+    TDD --> PR["Sprint PR &amp; CI (rust.yml)"]
+    PR --> MRG["Merge to develop &amp; Pre-release Tag"]
+    MRG --> RET["Sprint Review &amp; Retro"]
+    RET -->|Next Sprint| PLN
+    MRG -->|Sprint 7 DoD Met| REL["Merge to master &amp; v0.1.0"]
+        </div>
+      </div>
+
+      <h3>Sprints 0–7 Roadmap</h3>
+      <table>
+        <thead><tr><th>Sprint</th><th>Status</th><th>Branch / Target</th><th>Tag</th><th>Deliverable</th><th>Test Gate</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Sprint 0</strong></td><td><span class="status-pill status-done">Done</span></td><td><code>develop</code> / <code>phase-1..6</code></td><td><code>v0.1.0-alpha.1</code></td><td>Crate init, <code>mpc-rs</code>, <code>MIT OR Apache-2.0</code> + <code>NOTICE</code>, Red-phase stubs, 66 tests, docs, Pages, CLI, CI</td><td>1/66 pass; 66/66 compile</td></tr>
+          <tr><td><strong>Sprint 1</strong></td><td><span class="status-pill status-planned">Planned</span></td><td><code>phase-1/core-types</code></td><td><code>v0.1.0-alpha.2</code></td><td>Implement <code>src/core_types.rs</code></td><td>12/66 green</td></tr>
+          <tr><td><strong>Sprint 2</strong></td><td><span class="status-pill status-planned">Planned</span></td><td><code>phase-2/parser</code></td><td><code>v0.1.0-alpha.3</code></td><td>Implement <code>src/parser.rs</code> with <code>mpc-rs</code></td><td>22/66 green</td></tr>
+          <tr><td><strong>Sprint 3</strong></td><td><span class="status-pill status-planned">Planned</span></td><td><code>phase-3/arithmetic-math</code></td><td><code>v0.1.0-alpha.4</code></td><td>Implement <code>src/arithmetic.rs</code></td><td>32/66 green</td></tr>
+          <tr><td><strong>Sprint 4</strong></td><td><span class="status-pill status-planned">Planned</span></td><td><code>phase-4/control-addressing</code></td><td><code>v0.1.0-alpha.5</code></td><td>Implement <code>src/control.rs</code> &amp; <code>SpeedCoMachine</code></td><td>44/66 green</td></tr>
+          <tr><td><strong>Sprint 5</strong></td><td><span class="status-pill status-planned">Planned</span></td><td><code>phase-5/io-storage</code></td><td><code>v0.1.0-alpha.6</code></td><td>Implement <code>src/io.rs</code> &amp; <code>load_deck</code></td><td>55/66 green</td></tr>
+          <tr><td><strong>Sprint 6</strong></td><td><span class="status-pill status-planned">Planned</span></td><td><code>phase-6/checking-listing-timing</code></td><td><code>v0.1.0-beta.1</code></td><td>Implement <code>src/diagnostics.rs</code></td><td>66/66 green</td></tr>
+          <tr><td><strong>Sprint 7</strong></td><td><span class="status-pill status-planned">Planned</span></td><td><code>develop</code> &rarr; <code>master</code></td><td><code>v0.1.0</code></td><td>End-to-end sample programs, CLI execution, stable release</td><td>66/66 + E2E green</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Product Backlog (<code>US-01</code> – <code>US-14</code>)</h3>
+      <table>
+        <thead><tr><th>ID</th><th>Sprint</th><th>Story Summary</th><th>Priority</th><th class="num">Pts</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td><code>US-01</code></td><td>Sprint 0</td><td>Dual-licensed crate (<code>MIT OR Apache-2.0</code>), <code>mpc-rs</code> dependency, CHM <code>NOTICE</code></td><td>High</td><td class="num">3</td><td><span class="status-pill status-done">Done</span></td></tr>
+          <tr><td><code>US-02</code></td><td>Sprint 0</td><td>Public repo, Gitflow + 6 milestone branches, Red-phase API stubs &amp; 66 tests</td><td>High</td><td class="num">5</td><td><span class="status-pill status-done">Done</span></td></tr>
+          <tr><td><code>US-03</code></td><td>Sprint 0</td><td>Markdown docs &amp; GitHub Pages portal + Rustdoc workflow</td><td>Medium</td><td class="num">3</td><td><span class="status-pill status-done">Done</span></td></tr>
+          <tr><td><code>US-04</code></td><td>Sprint 0</td><td>Release CLI (<code>src/main.rs</code>), <code>v0.1.0-alpha.1</code> pre-release, Agile CI/templates</td><td>Medium</td><td class="num">5</td><td><span class="status-pill status-done">Done</span></td></tr>
+          <tr><td><code>US-05</code></td><td>Sprint 1</td><td>72-bit words, floating-binary/decimal conversions, protected electrostatic memory</td><td>High</td><td class="num">8</td><td><span class="status-pill status-planned">Planned</span></td></tr>
+          <tr><td><code>US-06</code></td><td>Sprint 1</td><td><code>RCode</code>, <code>LCode</code>, all 49 <code>Op1</code> + 48 <code>Op2</code> codes, 72-bit instruction roundtrip</td><td>High</td><td class="num">5</td><td><span class="status-pill status-planned">Planned</span></td></tr>
+          <tr><td><code>US-07</code></td><td>Sprint 2</td><td><code>mpc</code> symbolic instruction &amp; program parser with skip-<code>OP1</code> enforcement</td><td>High</td><td class="num">5</td><td><span class="status-pill status-planned">Planned</span></td></tr>
+          <tr><td><code>US-08</code></td><td>Sprint 2</td><td>80-col instruction/data/control card parsers + gang-punch translation</td><td>High</td><td class="num">8</td><td><span class="status-pill status-planned">Planned</span></td></tr>
+          <tr><td><code>US-09</code></td><td>Sprint 3</td><td>Add/Sub (6 variants, cancellation, &le;76 diff), Mpy truncation, Div + DivideCheck</td><td>High</td><td class="num">5</td><td><span class="status-pill status-planned">Planned</span></td></tr>
+          <tr><td><code>US-10</code></td><td>Sprint 3</td><td>Set 1 <code>SQRT</code>, <code>SINE</code>, <code>ARTAN</code>, <code>EXP</code>, <code>LN</code> precision &amp; Appendix quirks</td><td>Medium</td><td class="num">8</td><td><span class="status-pill status-planned">Planned</span></td></tr>
+          <tr><td><code>US-11</code></td><td>Sprint 4</td><td><code>PC=300</code>, conditional/switch transfers, <code>STOP</code>, non-destructive <code>R</code>-code indexing</td><td>High</td><td class="num">8</td><td><span class="status-pill status-planned">Planned</span></td></tr>
+          <tr><td><code>US-12</code></td><td>Sprint 4</td><td>18-bit <code>AddressCounter</code>, location <code>0025</code> save/restore, control region guard</td><td>High</td><td class="num">5</td><td><span class="status-pill status-planned">Planned</span></td></tr>
+          <tr><td><code>US-13</code></td><td>Sprint 5</td><td>7-ch parity <code>TapeUnit</code> (<code>J..M</code>), <code>DrumUnit</code> (<code>P..Q</code>), <code>LinePrinter</code>, <code>load_deck</code></td><td>High</td><td class="num">8</td><td><span class="status-pill status-planned">Planned</span></td></tr>
+          <tr><td><code>US-14</code></td><td>Sprint 6</td><td><code>PRCH</code>/<code>STCH</code>/<code>ECHTR</code> checking loops, 10-line listing, Section 12 timing</td><td>Medium</td><td class="num">8</td><td><span class="status-pill status-planned">Planned</span></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 6. TDD Specification -->
+    <section id="tdd" class="doc-section">
+      <h2>6. Red-Green-Refactor TDD Test Specification (66 Tests)</h2>
+      <div class="diagram-box">
+        <div class="mermaid">
+flowchart LR
+    RED["1. RED: Tests compile cleanly against todo!() stubs"] --> GREEN["2. GREEN: Implement minimal safe Rust to pass phase suite"]
+    GREEN --> REF["3. REFACTOR: Extract helpers, verify zero warnings"]
+    REF --> VER["4. VERIFY: Debug + Release tests, rustdoc, package list"]
+        </div>
+      </div>
+
+      <div class="note-box">
+        <strong>Unit Smoke Test (<code>src/lib.rs</code> — 1 test):</strong>
+        <code>mpc_library_inclusion</code> validates <code>mpc::{MpcResult, mpc_parse, mpc_string}</code> integration.
+      </div>
+
+      <details open>
+        <summary>Phase 1 — <code>tests/phase_1_core_types.rs</code> (11 tests)</summary>
+        <ul>
+          <li><code>word72_bounds_bits_and_six_bit_groups</code> — 72-bit range, 1-based MSB bit extraction, 12 six-bit tape groups.</li>
+          <li><code>address_and_user_storage_bounds</code> — <code>0..=1023</code>, user <code>300..=1013</code> (714 cells), <code>INITIAL_PC=300</code>, <code>0025</code>.</li>
+          <li><code>speed_float_72bit_layout_and_normalization</code> — <code>SpeedFloat</code> bit positions (1, 2–36, 37, 38–54, 55–72=0) and normalization.</li>
+          <li><code>speed_float_binary_exponent_bounds</code> — Binary exponent bounds <code>&plusmn;131,071</code> roundtrip.</li>
+          <li><code>decimal_float_validation_and_roundtrip</code> — <code>|E| &le; 236</code> check and decimal &harr; binary conversion.</li>
+          <li><code>r_code_flags_and_bounds</code> — <code>RCode</code> <code>0..=7</code> flags for <code>A</code>, <code>B</code>, <code>C</code>.</li>
+          <li><code>l_code_panel_switches_and_validation</code> — <code>LCode</code> <code>0/3/6</code> &rarr; switches <code>1/2/3</code>.</li>
+          <li><code>op1_all_49_operations_and_skip_restrictions</code> — All 49 <code>Op1</code> codes/mnemonics + <code>forbids_op2()</code>.</li>
+          <li><code>op2_all_48_operations_and_noop</code> — All 48 <code>Op2</code> codes/mnemonics including <code>SETRB=250</code>, <code>NoOp=000</code>.</li>
+          <li><code>instruction_72bit_layout_roundtrip</code> — Page 4-4 instruction packing/unpacking and mandatory zero bits.</li>
+          <li><code>electrostatic_memory_user_access_and_control_protection</code> — Protected control regions <code>0..=299</code>, <code>1014..=1023</code>.</li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>Phase 2 — <code>tests/phase_2_parser.rs</code> (10 tests)</summary>
+        <ul>
+          <li><code>mpc_op1_and_op2_mnemonic_parsers</code></li>
+          <li><code>symbolic_instruction_line_examples</code></li>
+          <li><code>multi_line_program_parsing_sum_and_check_loops</code></li>
+          <li><code>instruction_card_80col_fields_and_fixed_zeros</code></li>
+          <li><code>alpha_only_instruction_card_requires_gang_punch</code></li>
+          <li><code>numeric_only_instruction_card_loads_directly</code></li>
+          <li><code>data_card_80col_five_values_col45_skip_and_overpunch_signs</code></li>
+          <li><code>data_card_validation_rejects_bad_exponent_and_word_count</code></li>
+          <li><code>loading_control_card_tape_and_drum_formats</code></li>
+          <li><code>forbids_op2_with_skip_capable_op1</code></li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>Phase 3 — <code>tests/phase_3_arithmetic_math.rs</code> (10 tests)</summary>
+        <ul>
+          <li><code>add_sub_six_variants_with_signed_operands</code></li>
+          <li><code>exact_cancellation_preserves_exponent_without_shifting</code></li>
+          <li><code>add_sub_exponent_difference_over_76_rejected</code></li>
+          <li><code>mpy_and_ngmpy_truncation_and_sub_half_doubling</code></li>
+          <li><code>div_and_ngdiv_rounding_and_exponent_adjustment</code></li>
+          <li><code>div_by_zero_triggers_divide_check_stop</code></li>
+          <li><code>sqrt_accuracy_and_negative_or_zero_fraction_quirk</code></li>
+          <li><code>sine_accuracy_and_large_exponent_zero_quirk</code></li>
+          <li><code>artan_principal_value_accuracy</code></li>
+          <li><code>exp_and_ln_accuracy_and_ln_quirks</code></li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>Phase 4 — <code>tests/phase_4_control_addressing.rs</code> (12 tests)</summary>
+        <ul>
+          <li><code>initial_pc_is_300_and_op1_precedes_op2</code></li>
+          <li><code>unconditional_tr_and_conditional_trpl_trmn_trz</code></li>
+          <li><code>two_instruction_ge_zero_transfer_idiom</code></li>
+          <li><code>sense_and_transfer_p_q_switches</code></li>
+          <li><code>stop_and_transfer_halts_and_restarts_at_d</code></li>
+          <li><code>r_code_non_destructive_effective_addresses_page_9_2</code></li>
+          <li><code>ti_td_setr_skr_and_underflow_stop</code></li>
+          <li><code>worked_example_sum_34_numbers_page_9_5</code></li>
+          <li><code>address_counter_modulo_1024_table_page_9_8</code></li>
+          <li><code>address_counter_radd_add_sub_st_skip_and_page_9_10_example</code></li>
+          <li><code>combined_ac_and_r_quantities_via_addr_0025_page_9_12</code></li>
+          <li><code>control_region_transfer_and_effective_address_rejected</code></li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>Phase 5 — <code>tests/phase_5_io_storage.rs</code> (11 tests)</summary>
+        <ul>
+          <li><code>tape_odd_parity_redundancy_channel</code></li>
+          <li><code>tape_status_transition_matrix_pages_7_13_and_7_14</code></li>
+          <li><code>tape_write_end_file_rewind_and_full_or_partial_read</code></li>
+          <li><code>tape_oversized_read_triggers_copy_check_stop</code></li>
+          <li><code>tape_eof_skip_checksum_skip_and_parity_stop</code></li>
+          <li><code>tape_backward_read_and_skip_worked_example_page_7_12</code></li>
+          <li><code>tape_read_backward_error_does_not_final_backspace</code></li>
+          <li><code>drum_write_read_worked_example_pages_7_15_and_7_16</code></li>
+          <li><code>drum_single_word_verify_error_skip_and_bounds_no_wrap</code></li>
+          <li><code>line_printer_page_7_19_worked_example_and_exponent_limit</code></li>
+          <li><code>card_reader_load_deck_rewinds_tapes_and_offloads_blocks</code></li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>Phase 6 — <code>tests/phase_6_checking_listing_timing.rs</code> (11 tests)</summary>
+        <ul>
+          <li><code>checking_protocol_state_machine_rules_page_10_4</code></li>
+          <li><code>checking_loop_pass_1_and_pass_2_worked_example_page_10_2</code></li>
+          <li><code>checking_loop_discrepancy_does_not_skip_and_print_suppressed_on_pass2</code></li>
+          <li><code>checking_loop_inter_pass_initialization_not_summed_page_10_3</code></li>
+          <li><code>selective_listing_switches_10_line_drum_flush_and_pass2_suppression</code></li>
+          <li><code>listing_operand_sign_exceptions_and_exponent_overflow_page_11_2</code></li>
+          <li><code>listing_captures_state_after_op1_before_op2</code></li>
+          <li><code>timing_op1_arithmetic_math_io_and_print_pass2</code></li>
+          <li><code>timing_op2_and_additive_instruction_time</code></li>
+          <li><code>timing_tape_length_rewind_worked_example_eof_and_skip_delay</code></li>
+          <li><code>timing_listing_constants_and_card_loading_formula_page_12_5</code></li>
+        </ul>
+      </details>
+    </section>
+
+    <!-- 7. Builds, CI & Releases -->
+    <section id="builds-releases" class="doc-section">
+      <h2>7. Build Profiles, CI Pipelines &amp; Pre-release Artifacts</h2>
+      <div class="two-col">
+        <div class="card">
+          <h4>Debug &amp; Release Commands</h4>
+          <pre><code># Iterative TDD (debug)
+cargo build
+cargo test --no-run
+cargo test --test phase_1_core_types
+
+# Release, Docs &amp; Packaging
+cargo build --release
+cargo test --release --no-run
+cargo doc --no-deps
+cargo package --list --allow-dirty</code></pre>
+        </div>
+        <div class="card">
+          <h4>GitHub Actions &amp; <code>v0.1.0-alpha.1</code></h4>
+          <ul>
+            <li><strong>CI Gate:</strong> <code>.github/workflows/rust.yml</code> validates debug, release, docs, and packaging on <code>master</code>, <code>develop</code>, and <code>phase-*/*</code>.</li>
+            <li><strong>Pages Deploy:</strong> <code>.github/workflows/gh-pages.yml</code> publishes <code>docs/index.html</code>, <code>docs/*.md</code>, and Rustdoc to <code>gh-pages</code>.</li>
+            <li><strong>Pre-release Assets:</strong> <a href="https://github.com/Mr-Kumar-Abhishek/speedcoding/releases/tag/v0.1.0-alpha.1" target="_blank" rel="noopener"><code>speedcoding-v0.1.0-alpha.1-x86_64-pc-windows-msvc.zip</code></a> (<code>speedcoding.exe</code> + <code>libspeedcoding.rlib</code> + licenses) and <code>SHA256SUMS.txt</code>.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>speedcoding v0.1.0-alpha.1 · Dual-licensed MIT OR Apache-2.0 · Independent Rust implementation of IBM 701 Speedcoding System (1953)</span>
+    <span>
+      <a href="./speedcoding/index.html">Rustdoc API</a> &middot;
+      <a href="./docs/AGILE-SPRINTS.md">Agile Sprints</a> &middot;
+      <a href="https://github.com/Mr-Kumar-Abhishek/speedcoding" target="_blank" rel="noopener">Repository</a>
+    </span>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script>
+    (function () {
+      const root = document.documentElement;
+      const btn = document.getElementById("theme-toggle");
+
+      function initMermaid(theme) {
+        if (!window.mermaid) return;
+        mermaid.initialize({
+          startOnLoad: false,
+          theme: theme === "light" ? "default" : "dark",
+          securityLevel: "loose"
+        });
+        mermaid.run({ querySelector: ".mermaid" });
+      }
+
+      document.querySelectorAll(".mermaid").forEach((el) => {
+        el.dataset.source = el.textContent.trim();
+      });
+
+      initMermaid(root.getAttribute("data-theme") || "dark");
+
+      btn.addEventListener("click", () => {
+        const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+        root.setAttribute("data-theme", next);
+        btn.textContent = next === "dark" ? "Light Mode" : "Dark Mode";
+        document.querySelectorAll(".mermaid").forEach((el) => {
+          el.removeAttribute("data-processed");
+          el.textContent = el.dataset.source;
+        });
+        initMermaid(next);
+      });
+
+      const filterInput = document.getElementById("opcode-filter");
+      const countLabel = document.getElementById("opcode-count");
+      const rows = Array.from(document.querySelectorAll("#op1-table tbody tr, #op2-table tbody tr"));
+      filterInput.addEventListener("input", () => {
+        const q = filterInput.value.trim().toLowerCase();
+        let shown = 0;
+        rows.forEach((tr) => {
+          const match = !q || tr.textContent.toLowerCase().includes(q);
+          tr.style.display = match ? "" : "none";
+          if (match) shown += 1;
+        });
+        countLabel.textContent = q ? `Showing ${shown} matching row(s)` : "Showing all 97 opcodes";
+      });
+    })();
+  </script>
+</body>
+</html>

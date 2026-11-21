@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["AC_MAX","AC_MIN"],"enum":["StepOutcome"],"struct":["AddressCounter","RQuantities","SenseSwitches","SpeedCoMachine"]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["DRUM_CAPACITY","PRINTER_VALUES_PER_LINE"],"enum":["DrumId","DrumWriteOutcome","TapeId","TapeReadOutcome","TapeSkipOutcome","TapeStatus"],"struct":["DrumUnit","LinePrinter","PrinterLine","TapeRecord","TapeUnit"]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["FRACTION_BITS","INITIAL_PC","MAX_BINARY_EXPONENT","MAX_DECIMAL_EXPONENT","SPECIAL_R_CONTROL_ADDR","TOTAL_MEM_WORDS","USER_MEM_END","USER_MEM_LEN","USER_MEM_START","WORD_BITS"],"enum":["MachineStop","Op1","Op2","SpeedError"],"struct":["Address","DecimalFloat","ElectrostaticMemory","Instruction","LCode","RCode","SpeedFloat","Word72"]};
