@@ -1,17 +1,15 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
-}
+//! IBM 701 Speedcoding System (SpeedCo I) library crate.
+
+pub mod arithmetic;
+pub mod control;
+pub mod core_types;
+pub mod diagnostics;
+pub mod io;
+pub mod parser;
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use mpc::{MpcResult, mpc_parse, mpc_string};
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
 
     #[test]
     fn mpc_library_inclusion() {
