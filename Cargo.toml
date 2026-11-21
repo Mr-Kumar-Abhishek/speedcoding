@@ -2,6 +2,8 @@
 name = "speedcoding"
 version = "0.1.0"
 edition = "2024"
+description = "Rust implementation of the 1953 IBM 701 Speedcoding System (SpeedCo I)"
+repository = "https://github.com/Mr-Kumar-Abhishek/speedcoding"
 license = "MIT OR Apache-2.0"
 exclude = ["102632810-05-01-acc.pdf"]
 
