@@ -3,7 +3,7 @@
 This document catalogs every TDD test case currently defined in the repository (**1** unit test in `src/lib.rs` + **65** phase integration tests across `tests/phase_1_core_types.rs`..`tests/phase_6_checking_listing_timing.rs`).
 
 > [!NOTE]
-> **Current TDD Stage (Sprint 2 / Phases 1–2 Green):** `src/lib.rs` (`1/1`), Phase 1 [`tests/phase_1_core_types.rs`](../tests/phase_1_core_types.rs) (`11/11`), and Phase 2 [`tests/phase_2_parser.rs`](../tests/phase_2_parser.rs) (`10/10`) now pass in both Debug and Release builds in GitHub Actions Linux CI (Run [`#44946046507`](https://github.com/Mr-Kumar-Abhishek/speedcoding/actions/runs/44946046507); `22/66` TDD tests Green alongside `5/5` benchmarks). Phases 3–6 (`44` tests) compile cleanly with 0 warnings against `todo!()` stubs in `src/*.rs`. Running compiled `.exe` binaries under `target\debug\deps\` on this Windows host is blocked by an Application Control policy (`os error 4551`), so runtime test execution is verified via `.github/workflows/rust.yml`.
+> **Current TDD Stage (Sprint 3 / Phases 1–3 Green):** `src/lib.rs` (`1/1`), Phase 1 [`tests/phase_1_core_types.rs`](../tests/phase_1_core_types.rs) (`11/11`), Phase 2 [`tests/phase_2_parser.rs`](../tests/phase_2_parser.rs) (`10/10`), and Phase 3 [`tests/phase_3_arithmetic_math.rs`](../tests/phase_3_arithmetic_math.rs) (`10/10`) now pass in both Debug and Release builds in GitHub Actions Linux CI (Run [`#44948301907`](https://github.com/Mr-Kumar-Abhishek/speedcoding/actions/runs/44948301907), alongside `cargo clippy --all-targets -- -D warnings`; `32/66` TDD tests Green alongside `5/5` benchmarks). Phases 4–6 (`34` tests) compile cleanly with 0 warnings against `todo!()` stubs in `src/*.rs`. Running compiled `.exe` binaries under `target\debug\deps\` on this Windows host is blocked by an Application Control policy (`os error 4551`), so runtime test execution is verified via `.github/workflows/rust.yml`.
 
 ---
 
@@ -57,7 +57,7 @@ This document catalogs every TDD test case currently defined in the repository (
 | 1 | `add_sub_six_variants_with_signed_operands` | Sec. 3-3 | Verifies `ADD`, `SUB`, `ADDAB`, `ABADD`, `SUBAB`, and `ABSUB` on signed operands. |
 | 2 | `exact_cancellation_preserves_exponent_without_shifting` | Sec. 3-3 | Verifies `x + (-x)` and `x - x` produce `fraction == 0` while retaining the operands' binary exponent without shifting. |
 | 3 | `add_sub_exponent_difference_over_76_rejected` | Sec. 3-3 | Rejects `ADD`/`SUB` when operands' decimal exponents differ by more than `76` (`ExponentDifferenceTooLarge`). |
-| 4 | `mpy_and_ngmpy_truncation_and_sub_half_doubling` | Sec. 3-3, 3-4 | Checks product doubling and `exponent - 1` when `\|Fa*Fb\| < 0.5`, `NGMPY` negation, and 35-bit truncation (unrounded). |
+| 4 | `mpy_and_ngmpy_truncation_and_sub_half_doubling` | Sec. 3-3, 3-4 | Checks product doubling and `exponent - 1` when `\|Fa*Fb\| < 0.5`, `NGMPY` negation, and 35-bit unrounded truncation (including `> 0.5 ULP` remainders). |
 | 5 | `div_and_ngdiv_rounding_and_exponent_adjustment` | Sec. 3-4 | Checks `DIV` / `NGDIV` sign handling, quotient exponent adjustment, and 34/35-bit rounding (e.g., `1.0 / 3.0`). |
 | 6 | `div_by_zero_triggers_divide_check_stop` | Sec. 3-4 | Returns `ArithmeticOutcome::Stop(MachineStop::DivideCheck)` when `F(B) == 0` for `DIV` or `NGDIV`. |
 | 7 | `sqrt_accuracy_and_negative_or_zero_fraction_quirk` | Appendix-1 | Verifies `>= 9` significant digits for positive inputs and the negative/zero `F` quirk returning `F = 0` and binary exp `ceil(E / 2)`. |

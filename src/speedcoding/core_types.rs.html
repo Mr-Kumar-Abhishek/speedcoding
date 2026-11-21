@@ -257,600 +257,609 @@
 <a href=#257 id=257 data-nosnippet>257</a>    }
 <a href=#258 id=258 data-nosnippet>258</a>
 <a href=#259 id=259 data-nosnippet>259</a>    <span class="doccomment">/// Returns `-self`.
-<a href=#260 id=260 data-nosnippet>260</a>    </span><span class="kw">pub fn </span>neg(<span class="self">self</span>) -&gt; <span class="self">Self </span>{
-<a href=#261 id=261 data-nosnippet>261</a>        <span class="self">Self </span>{
-<a href=#262 id=262 data-nosnippet>262</a>            negative: !<span class="self">self</span>.negative,
-<a href=#263 id=263 data-nosnippet>263</a>            ..<span class="self">self
-<a href=#264 id=264 data-nosnippet>264</a>        </span>}
-<a href=#265 id=265 data-nosnippet>265</a>    }
-<a href=#266 id=266 data-nosnippet>266</a>
-<a href=#267 id=267 data-nosnippet>267</a>    <span class="doccomment">/// Encodes into a 72-bit word (bit 1 sign, 2..=36 frac, 37 exp sign, 38..=54 exp, 55..=72 zero).
-<a href=#268 id=268 data-nosnippet>268</a>    </span><span class="kw">pub fn </span>to_word(<span class="self">self</span>) -&gt; Word72 {
-<a href=#269 id=269 data-nosnippet>269</a>        <span class="kw">let </span><span class="kw-2">mut </span>bits = <span class="number">0u128</span>;
-<a href=#270 id=270 data-nosnippet>270</a>        <span class="kw">if </span><span class="self">self</span>.negative {
-<a href=#271 id=271 data-nosnippet>271</a>            bits |= <span class="number">1u128 </span>&lt;&lt; <span class="number">71</span>;
-<a href=#272 id=272 data-nosnippet>272</a>        }
-<a href=#273 id=273 data-nosnippet>273</a>        bits |= ((<span class="self">self</span>.fraction &amp; FRACTION_MASK) <span class="kw">as </span>u128) &lt;&lt; <span class="number">36</span>;
-<a href=#274 id=274 data-nosnippet>274</a>        <span class="kw">if </span><span class="self">self</span>.exp_negative {
-<a href=#275 id=275 data-nosnippet>275</a>            bits |= <span class="number">1u128 </span>&lt;&lt; <span class="number">35</span>;
-<a href=#276 id=276 data-nosnippet>276</a>        }
-<a href=#277 id=277 data-nosnippet>277</a>        bits |= ((<span class="self">self</span>.exponent &amp; MAX_BINARY_EXPONENT) <span class="kw">as </span>u128) &lt;&lt; <span class="number">18</span>;
-<a href=#278 id=278 data-nosnippet>278</a>        Word72 { bits }
-<a href=#279 id=279 data-nosnippet>279</a>    }
-<a href=#280 id=280 data-nosnippet>280</a>
-<a href=#281 id=281 data-nosnippet>281</a>    <span class="doccomment">/// Decodes a 72-bit word into `SpeedFloat`.
-<a href=#282 id=282 data-nosnippet>282</a>    </span><span class="kw">pub fn </span>from_word(word: Word72) -&gt; <span class="self">Self </span>{
-<a href=#283 id=283 data-nosnippet>283</a>        <span class="self">Self </span>{
-<a href=#284 id=284 data-nosnippet>284</a>            negative: word.bit(<span class="number">1</span>),
-<a href=#285 id=285 data-nosnippet>285</a>            fraction: word.bits(<span class="number">2</span>, <span class="number">36</span>),
-<a href=#286 id=286 data-nosnippet>286</a>            exp_negative: word.bit(<span class="number">37</span>),
-<a href=#287 id=287 data-nosnippet>287</a>            exponent: word.bits(<span class="number">38</span>, <span class="number">54</span>) <span class="kw">as </span>u32,
-<a href=#288 id=288 data-nosnippet>288</a>        }
-<a href=#289 id=289 data-nosnippet>289</a>    }
-<a href=#290 id=290 data-nosnippet>290</a>}
-<a href=#291 id=291 data-nosnippet>291</a>
-<a href=#292 id=292 data-nosnippet>292</a><span class="doccomment">/// External SpeedCo I floating decimal representation (`F * 10^E`, 10-digit fraction, `|E| &lt;= 236`).
-<a href=#293 id=293 data-nosnippet>293</a></span><span class="attr">#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-<a href=#294 id=294 data-nosnippet>294</a></span><span class="kw">pub struct </span>DecimalFloat {
-<a href=#295 id=295 data-nosnippet>295</a>    <span class="kw">pub </span>negative: bool,
-<a href=#296 id=296 data-nosnippet>296</a>    <span class="kw">pub </span>digits: u64,
-<a href=#297 id=297 data-nosnippet>297</a>    <span class="kw">pub </span>exponent: i16,
-<a href=#298 id=298 data-nosnippet>298</a>}
-<a href=#299 id=299 data-nosnippet>299</a>
-<a href=#300 id=300 data-nosnippet>300</a><span class="kw">impl </span>DecimalFloat {
-<a href=#301 id=301 data-nosnippet>301</a>    <span class="doccomment">/// Constructs and validates a floating decimal value (`|exponent| &lt;= 236`).
-<a href=#302 id=302 data-nosnippet>302</a>    </span><span class="kw">pub fn </span>new(negative: bool, digits: u64, exponent: i16) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, SpeedError&gt; {
-<a href=#303 id=303 data-nosnippet>303</a>        <span class="kw">if </span>!(-MAX_DECIMAL_EXPONENT..=MAX_DECIMAL_EXPONENT).contains(<span class="kw-2">&amp;</span>exponent) {
-<a href=#304 id=304 data-nosnippet>304</a>            <span class="kw">return </span><span class="prelude-val">Err</span>(SpeedError::DecimalExponentOutOfRange(exponent <span class="kw">as </span>i32));
-<a href=#305 id=305 data-nosnippet>305</a>        }
-<a href=#306 id=306 data-nosnippet>306</a>        <span class="kw">if </span>digits &gt;= TEN_DIGITS_LIMIT {
-<a href=#307 id=307 data-nosnippet>307</a>            <span class="kw">return </span><span class="prelude-val">Err</span>(SpeedError::InvalidCardFormat(<span class="macro">format!</span>(
-<a href=#308 id=308 data-nosnippet>308</a>                <span class="string">"decimal fraction exceeds 10 digits: {digits}"
-<a href=#309 id=309 data-nosnippet>309</a>            </span>)));
-<a href=#310 id=310 data-nosnippet>310</a>        }
-<a href=#311 id=311 data-nosnippet>311</a>        <span class="prelude-val">Ok</span>(<span class="self">Self </span>{
-<a href=#312 id=312 data-nosnippet>312</a>            negative,
-<a href=#313 id=313 data-nosnippet>313</a>            digits,
-<a href=#314 id=314 data-nosnippet>314</a>            exponent,
-<a href=#315 id=315 data-nosnippet>315</a>        })
-<a href=#316 id=316 data-nosnippet>316</a>    }
-<a href=#317 id=317 data-nosnippet>317</a>
-<a href=#318 id=318 data-nosnippet>318</a>    <span class="doccomment">/// Converts external decimal floating point to internal binary `SpeedFloat`.
-<a href=#319 id=319 data-nosnippet>319</a>    </span><span class="kw">pub fn </span>to_speed_float(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;SpeedFloat, SpeedError&gt; {
-<a href=#320 id=320 data-nosnippet>320</a>        <span class="kw">if </span><span class="self">self</span>.digits == <span class="number">0 </span>{
-<a href=#321 id=321 data-nosnippet>321</a>            <span class="kw">return </span><span class="prelude-val">Ok</span>(SpeedFloat::zero());
-<a href=#322 id=322 data-nosnippet>322</a>        }
-<a href=#323 id=323 data-nosnippet>323</a>        <span class="kw">let </span>sign = <span class="kw">if </span><span class="self">self</span>.negative { <span class="string">"-" </span>} <span class="kw">else </span>{ <span class="string">"" </span>};
-<a href=#324 id=324 data-nosnippet>324</a>        <span class="kw">let </span>repr = <span class="macro">format!</span>(<span class="string">"{sign}0.{:010}e{}"</span>, <span class="self">self</span>.digits, <span class="self">self</span>.exponent);
-<a href=#325 id=325 data-nosnippet>325</a>        <span class="kw">let </span>val: f64 = repr.parse().map_err(|err| {
-<a href=#326 id=326 data-nosnippet>326</a>            SpeedError::InvalidCardFormat(<span class="macro">format!</span>(<span class="string">"invalid decimal float '{repr}': {err}"</span>))
-<a href=#327 id=327 data-nosnippet>327</a>        })<span class="question-mark">?</span>;
-<a href=#328 id=328 data-nosnippet>328</a>        SpeedFloat::from_f64(val)
-<a href=#329 id=329 data-nosnippet>329</a>    }
-<a href=#330 id=330 data-nosnippet>330</a>
-<a href=#331 id=331 data-nosnippet>331</a>    <span class="doccomment">/// Converts internal binary `SpeedFloat` to external decimal `DecimalFloat`, rejecting `|E| &gt; 236`.
-<a href=#332 id=332 data-nosnippet>332</a>    </span><span class="kw">pub fn </span>from_speed_float(val: SpeedFloat) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, SpeedError&gt; {
-<a href=#333 id=333 data-nosnippet>333</a>        <span class="kw">if </span>val.is_zero_fraction() {
-<a href=#334 id=334 data-nosnippet>334</a>            <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="self">Self </span>{
-<a href=#335 id=335 data-nosnippet>335</a>                negative: <span class="bool-val">false</span>,
-<a href=#336 id=336 data-nosnippet>336</a>                digits: <span class="number">0</span>,
-<a href=#337 id=337 data-nosnippet>337</a>                exponent: <span class="number">0</span>,
-<a href=#338 id=338 data-nosnippet>338</a>            });
-<a href=#339 id=339 data-nosnippet>339</a>        }
-<a href=#340 id=340 data-nosnippet>340</a>
-<a href=#341 id=341 data-nosnippet>341</a>        <span class="comment">// Reject out-of-range decimal exponents before calling to_f64() so large binary exponents do not overflow f64.
-<a href=#342 id=342 data-nosnippet>342</a>        </span><span class="kw">let </span>frac = (val.fraction <span class="kw">as </span>f64) / ((<span class="number">1u64 </span>&lt;&lt; FRACTION_BITS) <span class="kw">as </span>f64);
-<a href=#343 id=343 data-nosnippet>343</a>        <span class="kw">let </span>log10_val = frac.log10() + (val.signed_exponent() <span class="kw">as </span>f64) * std::f64::consts::LOG10_2;
-<a href=#344 id=344 data-nosnippet>344</a>        <span class="kw">let </span>est_dec_exp = log10_val.floor() <span class="kw">as </span>i32 + <span class="number">1</span>;
-<a href=#345 id=345 data-nosnippet>345</a>        <span class="kw">let </span>dec_limit = MAX_DECIMAL_EXPONENT <span class="kw">as </span>i32;
-<a href=#346 id=346 data-nosnippet>346</a>        <span class="kw">if </span>est_dec_exp &lt; -dec_limit - <span class="number">1 </span>|| est_dec_exp &gt; dec_limit + <span class="number">1 </span>{
-<a href=#347 id=347 data-nosnippet>347</a>            <span class="kw">return </span><span class="prelude-val">Err</span>(SpeedError::DecimalExponentOutOfRange(est_dec_exp));
+<a href=#260 id=260 data-nosnippet>260</a>    </span><span class="attr">#[allow(clippy::should_implement_trait)]
+<a href=#261 id=261 data-nosnippet>261</a>    </span><span class="kw">pub fn </span>neg(<span class="self">self</span>) -&gt; <span class="self">Self </span>{
+<a href=#262 id=262 data-nosnippet>262</a>        <span class="self">Self </span>{
+<a href=#263 id=263 data-nosnippet>263</a>            negative: !<span class="self">self</span>.negative,
+<a href=#264 id=264 data-nosnippet>264</a>            ..<span class="self">self
+<a href=#265 id=265 data-nosnippet>265</a>        </span>}
+<a href=#266 id=266 data-nosnippet>266</a>    }
+<a href=#267 id=267 data-nosnippet>267</a>
+<a href=#268 id=268 data-nosnippet>268</a>    <span class="doccomment">/// Encodes into a 72-bit word (bit 1 sign, 2..=36 frac, 37 exp sign, 38..=54 exp, 55..=72 zero).
+<a href=#269 id=269 data-nosnippet>269</a>    </span><span class="kw">pub fn </span>to_word(<span class="self">self</span>) -&gt; Word72 {
+<a href=#270 id=270 data-nosnippet>270</a>        <span class="kw">let </span><span class="kw-2">mut </span>bits = <span class="number">0u128</span>;
+<a href=#271 id=271 data-nosnippet>271</a>        <span class="kw">if </span><span class="self">self</span>.negative {
+<a href=#272 id=272 data-nosnippet>272</a>            bits |= <span class="number">1u128 </span>&lt;&lt; <span class="number">71</span>;
+<a href=#273 id=273 data-nosnippet>273</a>        }
+<a href=#274 id=274 data-nosnippet>274</a>        bits |= ((<span class="self">self</span>.fraction &amp; FRACTION_MASK) <span class="kw">as </span>u128) &lt;&lt; <span class="number">36</span>;
+<a href=#275 id=275 data-nosnippet>275</a>        <span class="kw">if </span><span class="self">self</span>.exp_negative {
+<a href=#276 id=276 data-nosnippet>276</a>            bits |= <span class="number">1u128 </span>&lt;&lt; <span class="number">35</span>;
+<a href=#277 id=277 data-nosnippet>277</a>        }
+<a href=#278 id=278 data-nosnippet>278</a>        bits |= ((<span class="self">self</span>.exponent &amp; MAX_BINARY_EXPONENT) <span class="kw">as </span>u128) &lt;&lt; <span class="number">18</span>;
+<a href=#279 id=279 data-nosnippet>279</a>        Word72 { bits }
+<a href=#280 id=280 data-nosnippet>280</a>    }
+<a href=#281 id=281 data-nosnippet>281</a>
+<a href=#282 id=282 data-nosnippet>282</a>    <span class="doccomment">/// Decodes a 72-bit word into `SpeedFloat`.
+<a href=#283 id=283 data-nosnippet>283</a>    </span><span class="kw">pub fn </span>from_word(word: Word72) -&gt; <span class="self">Self </span>{
+<a href=#284 id=284 data-nosnippet>284</a>        <span class="self">Self </span>{
+<a href=#285 id=285 data-nosnippet>285</a>            negative: word.bit(<span class="number">1</span>),
+<a href=#286 id=286 data-nosnippet>286</a>            fraction: word.bits(<span class="number">2</span>, <span class="number">36</span>),
+<a href=#287 id=287 data-nosnippet>287</a>            exp_negative: word.bit(<span class="number">37</span>),
+<a href=#288 id=288 data-nosnippet>288</a>            exponent: word.bits(<span class="number">38</span>, <span class="number">54</span>) <span class="kw">as </span>u32,
+<a href=#289 id=289 data-nosnippet>289</a>        }
+<a href=#290 id=290 data-nosnippet>290</a>    }
+<a href=#291 id=291 data-nosnippet>291</a>}
+<a href=#292 id=292 data-nosnippet>292</a>
+<a href=#293 id=293 data-nosnippet>293</a><span class="kw">impl </span>std::ops::Neg <span class="kw">for </span>SpeedFloat {
+<a href=#294 id=294 data-nosnippet>294</a>    <span class="kw">type </span>Output = <span class="self">Self</span>;
+<a href=#295 id=295 data-nosnippet>295</a>
+<a href=#296 id=296 data-nosnippet>296</a>    <span class="kw">fn </span>neg(<span class="self">self</span>) -&gt; <span class="self">Self</span>::Output {
+<a href=#297 id=297 data-nosnippet>297</a>        SpeedFloat::neg(<span class="self">self</span>)
+<a href=#298 id=298 data-nosnippet>298</a>    }
+<a href=#299 id=299 data-nosnippet>299</a>}
+<a href=#300 id=300 data-nosnippet>300</a>
+<a href=#301 id=301 data-nosnippet>301</a><span class="doccomment">/// External SpeedCo I floating decimal representation (`F * 10^E`, 10-digit fraction, `|E| &lt;= 236`).
+<a href=#302 id=302 data-nosnippet>302</a></span><span class="attr">#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+<a href=#303 id=303 data-nosnippet>303</a></span><span class="kw">pub struct </span>DecimalFloat {
+<a href=#304 id=304 data-nosnippet>304</a>    <span class="kw">pub </span>negative: bool,
+<a href=#305 id=305 data-nosnippet>305</a>    <span class="kw">pub </span>digits: u64,
+<a href=#306 id=306 data-nosnippet>306</a>    <span class="kw">pub </span>exponent: i16,
+<a href=#307 id=307 data-nosnippet>307</a>}
+<a href=#308 id=308 data-nosnippet>308</a>
+<a href=#309 id=309 data-nosnippet>309</a><span class="kw">impl </span>DecimalFloat {
+<a href=#310 id=310 data-nosnippet>310</a>    <span class="doccomment">/// Constructs and validates a floating decimal value (`|exponent| &lt;= 236`).
+<a href=#311 id=311 data-nosnippet>311</a>    </span><span class="kw">pub fn </span>new(negative: bool, digits: u64, exponent: i16) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, SpeedError&gt; {
+<a href=#312 id=312 data-nosnippet>312</a>        <span class="kw">if </span>!(-MAX_DECIMAL_EXPONENT..=MAX_DECIMAL_EXPONENT).contains(<span class="kw-2">&amp;</span>exponent) {
+<a href=#313 id=313 data-nosnippet>313</a>            <span class="kw">return </span><span class="prelude-val">Err</span>(SpeedError::DecimalExponentOutOfRange(exponent <span class="kw">as </span>i32));
+<a href=#314 id=314 data-nosnippet>314</a>        }
+<a href=#315 id=315 data-nosnippet>315</a>        <span class="kw">if </span>digits &gt;= TEN_DIGITS_LIMIT {
+<a href=#316 id=316 data-nosnippet>316</a>            <span class="kw">return </span><span class="prelude-val">Err</span>(SpeedError::InvalidCardFormat(<span class="macro">format!</span>(
+<a href=#317 id=317 data-nosnippet>317</a>                <span class="string">"decimal fraction exceeds 10 digits: {digits}"
+<a href=#318 id=318 data-nosnippet>318</a>            </span>)));
+<a href=#319 id=319 data-nosnippet>319</a>        }
+<a href=#320 id=320 data-nosnippet>320</a>        <span class="prelude-val">Ok</span>(<span class="self">Self </span>{
+<a href=#321 id=321 data-nosnippet>321</a>            negative,
+<a href=#322 id=322 data-nosnippet>322</a>            digits,
+<a href=#323 id=323 data-nosnippet>323</a>            exponent,
+<a href=#324 id=324 data-nosnippet>324</a>        })
+<a href=#325 id=325 data-nosnippet>325</a>    }
+<a href=#326 id=326 data-nosnippet>326</a>
+<a href=#327 id=327 data-nosnippet>327</a>    <span class="doccomment">/// Converts external decimal floating point to internal binary `SpeedFloat`.
+<a href=#328 id=328 data-nosnippet>328</a>    </span><span class="kw">pub fn </span>to_speed_float(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;SpeedFloat, SpeedError&gt; {
+<a href=#329 id=329 data-nosnippet>329</a>        <span class="kw">if </span><span class="self">self</span>.digits == <span class="number">0 </span>{
+<a href=#330 id=330 data-nosnippet>330</a>            <span class="kw">return </span><span class="prelude-val">Ok</span>(SpeedFloat::zero());
+<a href=#331 id=331 data-nosnippet>331</a>        }
+<a href=#332 id=332 data-nosnippet>332</a>        <span class="kw">let </span>sign = <span class="kw">if </span><span class="self">self</span>.negative { <span class="string">"-" </span>} <span class="kw">else </span>{ <span class="string">"" </span>};
+<a href=#333 id=333 data-nosnippet>333</a>        <span class="kw">let </span>repr = <span class="macro">format!</span>(<span class="string">"{sign}0.{:010}e{}"</span>, <span class="self">self</span>.digits, <span class="self">self</span>.exponent);
+<a href=#334 id=334 data-nosnippet>334</a>        <span class="kw">let </span>val: f64 = repr.parse().map_err(|err| {
+<a href=#335 id=335 data-nosnippet>335</a>            SpeedError::InvalidCardFormat(<span class="macro">format!</span>(<span class="string">"invalid decimal float '{repr}': {err}"</span>))
+<a href=#336 id=336 data-nosnippet>336</a>        })<span class="question-mark">?</span>;
+<a href=#337 id=337 data-nosnippet>337</a>        SpeedFloat::from_f64(val)
+<a href=#338 id=338 data-nosnippet>338</a>    }
+<a href=#339 id=339 data-nosnippet>339</a>
+<a href=#340 id=340 data-nosnippet>340</a>    <span class="doccomment">/// Converts internal binary `SpeedFloat` to external decimal `DecimalFloat`, rejecting `|E| &gt; 236`.
+<a href=#341 id=341 data-nosnippet>341</a>    </span><span class="kw">pub fn </span>from_speed_float(val: SpeedFloat) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, SpeedError&gt; {
+<a href=#342 id=342 data-nosnippet>342</a>        <span class="kw">if </span>val.is_zero_fraction() {
+<a href=#343 id=343 data-nosnippet>343</a>            <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="self">Self </span>{
+<a href=#344 id=344 data-nosnippet>344</a>                negative: <span class="bool-val">false</span>,
+<a href=#345 id=345 data-nosnippet>345</a>                digits: <span class="number">0</span>,
+<a href=#346 id=346 data-nosnippet>346</a>                exponent: <span class="number">0</span>,
+<a href=#347 id=347 data-nosnippet>347</a>            });
 <a href=#348 id=348 data-nosnippet>348</a>        }
 <a href=#349 id=349 data-nosnippet>349</a>
-<a href=#350 id=350 data-nosnippet>350</a>        <span class="kw">let </span>formatted = <span class="macro">format!</span>(<span class="string">"{:.9e}"</span>, val.to_f64().abs());
-<a href=#351 id=351 data-nosnippet>351</a>        <span class="kw">let </span>(mant_str, exp_str) = formatted.split_once(<span class="string">'e'</span>).ok_or_else(|| {
-<a href=#352 id=352 data-nosnippet>352</a>            SpeedError::ParseError(<span class="macro">format!</span>(<span class="string">"unexpected scientific format: {formatted}"</span>))
-<a href=#353 id=353 data-nosnippet>353</a>        })<span class="question-mark">?</span>;
-<a href=#354 id=354 data-nosnippet>354</a>        <span class="kw">let </span>digits_str: String = mant_str.chars().filter(|<span class="kw-2">&amp;</span>ch| ch != <span class="string">'.'</span>).collect();
-<a href=#355 id=355 data-nosnippet>355</a>        <span class="kw">let </span>digits: u64 = digits_str.parse().map_err(|err| {
-<a href=#356 id=356 data-nosnippet>356</a>            SpeedError::ParseError(<span class="macro">format!</span>(<span class="string">"invalid decimal digits '{digits_str}': {err}"</span>))
-<a href=#357 id=357 data-nosnippet>357</a>        })<span class="question-mark">?</span>;
-<a href=#358 id=358 data-nosnippet>358</a>        <span class="kw">let </span>sci_exp: i32 = exp_str.parse().map_err(|err| {
-<a href=#359 id=359 data-nosnippet>359</a>            SpeedError::ParseError(<span class="macro">format!</span>(<span class="string">"invalid decimal exponent '{exp_str}': {err}"</span>))
-<a href=#360 id=360 data-nosnippet>360</a>        })<span class="question-mark">?</span>;
-<a href=#361 id=361 data-nosnippet>361</a>        <span class="kw">let </span>dec_exp = sci_exp + <span class="number">1</span>;
-<a href=#362 id=362 data-nosnippet>362</a>        <span class="kw">if </span>!(-dec_limit..=dec_limit).contains(<span class="kw-2">&amp;</span>dec_exp) {
-<a href=#363 id=363 data-nosnippet>363</a>            <span class="kw">return </span><span class="prelude-val">Err</span>(SpeedError::DecimalExponentOutOfRange(dec_exp));
-<a href=#364 id=364 data-nosnippet>364</a>        }
-<a href=#365 id=365 data-nosnippet>365</a>
-<a href=#366 id=366 data-nosnippet>366</a>        <span class="prelude-val">Ok</span>(<span class="self">Self </span>{
-<a href=#367 id=367 data-nosnippet>367</a>            negative: val.negative,
-<a href=#368 id=368 data-nosnippet>368</a>            digits,
-<a href=#369 id=369 data-nosnippet>369</a>            exponent: dec_exp <span class="kw">as </span>i16,
-<a href=#370 id=370 data-nosnippet>370</a>        })
-<a href=#371 id=371 data-nosnippet>371</a>    }
-<a href=#372 id=372 data-nosnippet>372</a>}
-<a href=#373 id=373 data-nosnippet>373</a>
-<a href=#374 id=374 data-nosnippet>374</a><span class="doccomment">/// 3-bit address modification selector (`0..=7`) controlling `R_A`, `R_B`, and `R_C`.
-<a href=#375 id=375 data-nosnippet>375</a></span><span class="attr">#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-<a href=#376 id=376 data-nosnippet>376</a></span><span class="kw">pub struct </span>RCode {
-<a href=#377 id=377 data-nosnippet>377</a>    raw: u8,
-<a href=#378 id=378 data-nosnippet>378</a>}
-<a href=#379 id=379 data-nosnippet>379</a>
-<a href=#380 id=380 data-nosnippet>380</a><span class="kw">impl </span>RCode {
-<a href=#381 id=381 data-nosnippet>381</a>    <span class="doccomment">/// Validates `val &lt;= 7`.
-<a href=#382 id=382 data-nosnippet>382</a>    </span><span class="kw">pub fn </span>new(val: u8) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, SpeedError&gt; {
-<a href=#383 id=383 data-nosnippet>383</a>        <span class="kw">if </span>val &lt;= <span class="number">7 </span>{
-<a href=#384 id=384 data-nosnippet>384</a>            <span class="prelude-val">Ok</span>(<span class="self">Self </span>{ raw: val })
-<a href=#385 id=385 data-nosnippet>385</a>        } <span class="kw">else </span>{
-<a href=#386 id=386 data-nosnippet>386</a>            <span class="prelude-val">Err</span>(SpeedError::InvalidRCode(val))
-<a href=#387 id=387 data-nosnippet>387</a>        }
-<a href=#388 id=388 data-nosnippet>388</a>    }
-<a href=#389 id=389 data-nosnippet>389</a>
-<a href=#390 id=390 data-nosnippet>390</a>    <span class="doccomment">/// Returns raw R-code value (`0..=7`).
-<a href=#391 id=391 data-nosnippet>391</a>    </span><span class="kw">pub fn </span>raw(<span class="self">self</span>) -&gt; u8 {
-<a href=#392 id=392 data-nosnippet>392</a>        <span class="self">self</span>.raw
-<a href=#393 id=393 data-nosnippet>393</a>    }
-<a href=#394 id=394 data-nosnippet>394</a>
-<a href=#395 id=395 data-nosnippet>395</a>    <span class="doccomment">/// Returns `true` when bit 4 is set (`R` in `{4, 5, 6, 7}`), adding `R_A` to `A`.
-<a href=#396 id=396 data-nosnippet>396</a>    </span><span class="kw">pub fn </span>modifies_a(<span class="self">self</span>) -&gt; bool {
-<a href=#397 id=397 data-nosnippet>397</a>        (<span class="self">self</span>.raw &amp; <span class="number">0b100</span>) != <span class="number">0
-<a href=#398 id=398 data-nosnippet>398</a>    </span>}
-<a href=#399 id=399 data-nosnippet>399</a>
-<a href=#400 id=400 data-nosnippet>400</a>    <span class="doccomment">/// Returns `true` when bit 2 is set (`R` in `{2, 3, 6, 7}`), adding `R_B` to `B`.
-<a href=#401 id=401 data-nosnippet>401</a>    </span><span class="kw">pub fn </span>modifies_b(<span class="self">self</span>) -&gt; bool {
-<a href=#402 id=402 data-nosnippet>402</a>        (<span class="self">self</span>.raw &amp; <span class="number">0b010</span>) != <span class="number">0
-<a href=#403 id=403 data-nosnippet>403</a>    </span>}
-<a href=#404 id=404 data-nosnippet>404</a>
-<a href=#405 id=405 data-nosnippet>405</a>    <span class="doccomment">/// Returns `true` when bit 1 is set (`R` in `{1, 3, 5, 7}`), adding `R_C` to `C`.
-<a href=#406 id=406 data-nosnippet>406</a>    </span><span class="kw">pub fn </span>modifies_c(<span class="self">self</span>) -&gt; bool {
-<a href=#407 id=407 data-nosnippet>407</a>        (<span class="self">self</span>.raw &amp; <span class="number">0b001</span>) != <span class="number">0
-<a href=#408 id=408 data-nosnippet>408</a>    </span>}
-<a href=#409 id=409 data-nosnippet>409</a>}
-<a href=#410 id=410 data-nosnippet>410</a>
-<a href=#411 id=411 data-nosnippet>411</a><span class="doccomment">/// Selective listing code (`0`, `3`, or `6`), corresponding to panel switches 1, 2, or 3.
-<a href=#412 id=412 data-nosnippet>412</a></span><span class="attr">#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-<a href=#413 id=413 data-nosnippet>413</a></span><span class="kw">pub struct </span>LCode {
-<a href=#414 id=414 data-nosnippet>414</a>    raw: u8,
-<a href=#415 id=415 data-nosnippet>415</a>}
-<a href=#416 id=416 data-nosnippet>416</a>
-<a href=#417 id=417 data-nosnippet>417</a><span class="kw">impl </span>LCode {
-<a href=#418 id=418 data-nosnippet>418</a>    <span class="doccomment">/// Validates `val` is one of `0`, `3`, or `6`.
-<a href=#419 id=419 data-nosnippet>419</a>    </span><span class="kw">pub fn </span>new(val: u8) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, SpeedError&gt; {
-<a href=#420 id=420 data-nosnippet>420</a>        <span class="kw">match </span>val {
-<a href=#421 id=421 data-nosnippet>421</a>            <span class="number">0 </span>| <span class="number">3 </span>| <span class="number">6 </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self </span>{ raw: val }),
-<a href=#422 id=422 data-nosnippet>422</a>            <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(SpeedError::InvalidLCode(val)),
-<a href=#423 id=423 data-nosnippet>423</a>        }
-<a href=#424 id=424 data-nosnippet>424</a>    }
+<a href=#350 id=350 data-nosnippet>350</a>        <span class="comment">// Reject out-of-range decimal exponents before calling to_f64() so large binary exponents do not overflow f64.
+<a href=#351 id=351 data-nosnippet>351</a>        </span><span class="kw">let </span>frac = (val.fraction <span class="kw">as </span>f64) / ((<span class="number">1u64 </span>&lt;&lt; FRACTION_BITS) <span class="kw">as </span>f64);
+<a href=#352 id=352 data-nosnippet>352</a>        <span class="kw">let </span>log10_val = frac.log10() + (val.signed_exponent() <span class="kw">as </span>f64) * std::f64::consts::LOG10_2;
+<a href=#353 id=353 data-nosnippet>353</a>        <span class="kw">let </span>est_dec_exp = log10_val.floor() <span class="kw">as </span>i32 + <span class="number">1</span>;
+<a href=#354 id=354 data-nosnippet>354</a>        <span class="kw">let </span>dec_limit = MAX_DECIMAL_EXPONENT <span class="kw">as </span>i32;
+<a href=#355 id=355 data-nosnippet>355</a>        <span class="kw">if </span>est_dec_exp &lt; -dec_limit - <span class="number">1 </span>|| est_dec_exp &gt; dec_limit + <span class="number">1 </span>{
+<a href=#356 id=356 data-nosnippet>356</a>            <span class="kw">return </span><span class="prelude-val">Err</span>(SpeedError::DecimalExponentOutOfRange(est_dec_exp));
+<a href=#357 id=357 data-nosnippet>357</a>        }
+<a href=#358 id=358 data-nosnippet>358</a>
+<a href=#359 id=359 data-nosnippet>359</a>        <span class="kw">let </span>formatted = <span class="macro">format!</span>(<span class="string">"{:.9e}"</span>, val.to_f64().abs());
+<a href=#360 id=360 data-nosnippet>360</a>        <span class="kw">let </span>(mant_str, exp_str) = formatted.split_once(<span class="string">'e'</span>).ok_or_else(|| {
+<a href=#361 id=361 data-nosnippet>361</a>            SpeedError::ParseError(<span class="macro">format!</span>(<span class="string">"unexpected scientific format: {formatted}"</span>))
+<a href=#362 id=362 data-nosnippet>362</a>        })<span class="question-mark">?</span>;
+<a href=#363 id=363 data-nosnippet>363</a>        <span class="kw">let </span>digits_str: String = mant_str.chars().filter(|<span class="kw-2">&amp;</span>ch| ch != <span class="string">'.'</span>).collect();
+<a href=#364 id=364 data-nosnippet>364</a>        <span class="kw">let </span>digits: u64 = digits_str.parse().map_err(|err| {
+<a href=#365 id=365 data-nosnippet>365</a>            SpeedError::ParseError(<span class="macro">format!</span>(<span class="string">"invalid decimal digits '{digits_str}': {err}"</span>))
+<a href=#366 id=366 data-nosnippet>366</a>        })<span class="question-mark">?</span>;
+<a href=#367 id=367 data-nosnippet>367</a>        <span class="kw">let </span>sci_exp: i32 = exp_str.parse().map_err(|err| {
+<a href=#368 id=368 data-nosnippet>368</a>            SpeedError::ParseError(<span class="macro">format!</span>(<span class="string">"invalid decimal exponent '{exp_str}': {err}"</span>))
+<a href=#369 id=369 data-nosnippet>369</a>        })<span class="question-mark">?</span>;
+<a href=#370 id=370 data-nosnippet>370</a>        <span class="kw">let </span>dec_exp = sci_exp + <span class="number">1</span>;
+<a href=#371 id=371 data-nosnippet>371</a>        <span class="kw">if </span>!(-dec_limit..=dec_limit).contains(<span class="kw-2">&amp;</span>dec_exp) {
+<a href=#372 id=372 data-nosnippet>372</a>            <span class="kw">return </span><span class="prelude-val">Err</span>(SpeedError::DecimalExponentOutOfRange(dec_exp));
+<a href=#373 id=373 data-nosnippet>373</a>        }
+<a href=#374 id=374 data-nosnippet>374</a>
+<a href=#375 id=375 data-nosnippet>375</a>        <span class="prelude-val">Ok</span>(<span class="self">Self </span>{
+<a href=#376 id=376 data-nosnippet>376</a>            negative: val.negative,
+<a href=#377 id=377 data-nosnippet>377</a>            digits,
+<a href=#378 id=378 data-nosnippet>378</a>            exponent: dec_exp <span class="kw">as </span>i16,
+<a href=#379 id=379 data-nosnippet>379</a>        })
+<a href=#380 id=380 data-nosnippet>380</a>    }
+<a href=#381 id=381 data-nosnippet>381</a>}
+<a href=#382 id=382 data-nosnippet>382</a>
+<a href=#383 id=383 data-nosnippet>383</a><span class="doccomment">/// 3-bit address modification selector (`0..=7`) controlling `R_A`, `R_B`, and `R_C`.
+<a href=#384 id=384 data-nosnippet>384</a></span><span class="attr">#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+<a href=#385 id=385 data-nosnippet>385</a></span><span class="kw">pub struct </span>RCode {
+<a href=#386 id=386 data-nosnippet>386</a>    raw: u8,
+<a href=#387 id=387 data-nosnippet>387</a>}
+<a href=#388 id=388 data-nosnippet>388</a>
+<a href=#389 id=389 data-nosnippet>389</a><span class="kw">impl </span>RCode {
+<a href=#390 id=390 data-nosnippet>390</a>    <span class="doccomment">/// Validates `val &lt;= 7`.
+<a href=#391 id=391 data-nosnippet>391</a>    </span><span class="kw">pub fn </span>new(val: u8) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, SpeedError&gt; {
+<a href=#392 id=392 data-nosnippet>392</a>        <span class="kw">if </span>val &lt;= <span class="number">7 </span>{
+<a href=#393 id=393 data-nosnippet>393</a>            <span class="prelude-val">Ok</span>(<span class="self">Self </span>{ raw: val })
+<a href=#394 id=394 data-nosnippet>394</a>        } <span class="kw">else </span>{
+<a href=#395 id=395 data-nosnippet>395</a>            <span class="prelude-val">Err</span>(SpeedError::InvalidRCode(val))
+<a href=#396 id=396 data-nosnippet>396</a>        }
+<a href=#397 id=397 data-nosnippet>397</a>    }
+<a href=#398 id=398 data-nosnippet>398</a>
+<a href=#399 id=399 data-nosnippet>399</a>    <span class="doccomment">/// Returns raw R-code value (`0..=7`).
+<a href=#400 id=400 data-nosnippet>400</a>    </span><span class="kw">pub fn </span>raw(<span class="self">self</span>) -&gt; u8 {
+<a href=#401 id=401 data-nosnippet>401</a>        <span class="self">self</span>.raw
+<a href=#402 id=402 data-nosnippet>402</a>    }
+<a href=#403 id=403 data-nosnippet>403</a>
+<a href=#404 id=404 data-nosnippet>404</a>    <span class="doccomment">/// Returns `true` when bit 4 is set (`R` in `{4, 5, 6, 7}`), adding `R_A` to `A`.
+<a href=#405 id=405 data-nosnippet>405</a>    </span><span class="kw">pub fn </span>modifies_a(<span class="self">self</span>) -&gt; bool {
+<a href=#406 id=406 data-nosnippet>406</a>        (<span class="self">self</span>.raw &amp; <span class="number">0b100</span>) != <span class="number">0
+<a href=#407 id=407 data-nosnippet>407</a>    </span>}
+<a href=#408 id=408 data-nosnippet>408</a>
+<a href=#409 id=409 data-nosnippet>409</a>    <span class="doccomment">/// Returns `true` when bit 2 is set (`R` in `{2, 3, 6, 7}`), adding `R_B` to `B`.
+<a href=#410 id=410 data-nosnippet>410</a>    </span><span class="kw">pub fn </span>modifies_b(<span class="self">self</span>) -&gt; bool {
+<a href=#411 id=411 data-nosnippet>411</a>        (<span class="self">self</span>.raw &amp; <span class="number">0b010</span>) != <span class="number">0
+<a href=#412 id=412 data-nosnippet>412</a>    </span>}
+<a href=#413 id=413 data-nosnippet>413</a>
+<a href=#414 id=414 data-nosnippet>414</a>    <span class="doccomment">/// Returns `true` when bit 1 is set (`R` in `{1, 3, 5, 7}`), adding `R_C` to `C`.
+<a href=#415 id=415 data-nosnippet>415</a>    </span><span class="kw">pub fn </span>modifies_c(<span class="self">self</span>) -&gt; bool {
+<a href=#416 id=416 data-nosnippet>416</a>        (<span class="self">self</span>.raw &amp; <span class="number">0b001</span>) != <span class="number">0
+<a href=#417 id=417 data-nosnippet>417</a>    </span>}
+<a href=#418 id=418 data-nosnippet>418</a>}
+<a href=#419 id=419 data-nosnippet>419</a>
+<a href=#420 id=420 data-nosnippet>420</a><span class="doccomment">/// Selective listing code (`0`, `3`, or `6`), corresponding to panel switches 1, 2, or 3.
+<a href=#421 id=421 data-nosnippet>421</a></span><span class="attr">#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+<a href=#422 id=422 data-nosnippet>422</a></span><span class="kw">pub struct </span>LCode {
+<a href=#423 id=423 data-nosnippet>423</a>    raw: u8,
+<a href=#424 id=424 data-nosnippet>424</a>}
 <a href=#425 id=425 data-nosnippet>425</a>
-<a href=#426 id=426 data-nosnippet>426</a>    <span class="doccomment">/// Returns raw L-code (`0`, `3`, or `6`).
-<a href=#427 id=427 data-nosnippet>427</a>    </span><span class="kw">pub fn </span>raw(<span class="self">self</span>) -&gt; u8 {
-<a href=#428 id=428 data-nosnippet>428</a>        <span class="self">self</span>.raw
-<a href=#429 id=429 data-nosnippet>429</a>    }
-<a href=#430 id=430 data-nosnippet>430</a>
-<a href=#431 id=431 data-nosnippet>431</a>    <span class="doccomment">/// Maps `0 -&gt; 1`, `3 -&gt; 2`, `6 -&gt; 3`.
-<a href=#432 id=432 data-nosnippet>432</a>    </span><span class="kw">pub fn </span>switch_number(<span class="self">self</span>) -&gt; u8 {
-<a href=#433 id=433 data-nosnippet>433</a>        <span class="kw">match </span><span class="self">self</span>.raw {
-<a href=#434 id=434 data-nosnippet>434</a>            <span class="number">0 </span>=&gt; <span class="number">1</span>,
-<a href=#435 id=435 data-nosnippet>435</a>            <span class="number">3 </span>=&gt; <span class="number">2</span>,
-<a href=#436 id=436 data-nosnippet>436</a>            <span class="number">6 </span>=&gt; <span class="number">3</span>,
-<a href=#437 id=437 data-nosnippet>437</a>            other =&gt; <span class="macro">unreachable!</span>(<span class="string">"validated LCode invariant broken: {other}"</span>),
-<a href=#438 id=438 data-nosnippet>438</a>        }
-<a href=#439 id=439 data-nosnippet>439</a>    }
-<a href=#440 id=440 data-nosnippet>440</a>}
-<a href=#441 id=441 data-nosnippet>441</a>
-<a href=#442 id=442 data-nosnippet>442</a><span class="doccomment">/// All 49 SpeedCo I `OP1` operations (manual pages 5-1 and 5-2).
-<a href=#443 id=443 data-nosnippet>443</a></span><span class="attr">#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-<a href=#444 id=444 data-nosnippet>444</a></span><span class="kw">pub enum </span>Op1 {
-<a href=#445 id=445 data-nosnippet>445</a>    Add,
-<a href=#446 id=446 data-nosnippet>446</a>    Sub,
-<a href=#447 id=447 data-nosnippet>447</a>    AddAb,
-<a href=#448 id=448 data-nosnippet>448</a>    AbAdd,
-<a href=#449 id=449 data-nosnippet>449</a>    SubAb,
-<a href=#450 id=450 data-nosnippet>450</a>    AbSub,
-<a href=#451 id=451 data-nosnippet>451</a>    Mpy,
-<a href=#452 id=452 data-nosnippet>452</a>    NgMpy,
-<a href=#453 id=453 data-nosnippet>453</a>    Div,
-<a href=#454 id=454 data-nosnippet>454</a>    NgDiv,
-<a href=#455 id=455 data-nosnippet>455</a>    Sqrt,
-<a href=#456 id=456 data-nosnippet>456</a>    Sine,
-<a href=#457 id=457 data-nosnippet>457</a>    Artan,
-<a href=#458 id=458 data-nosnippet>458</a>    Exp,
-<a href=#459 id=459 data-nosnippet>459</a>    Ln,
-<a href=#460 id=460 data-nosnippet>460</a>    WrTpJ,
-<a href=#461 id=461 data-nosnippet>461</a>    WrTpK,
-<a href=#462 id=462 data-nosnippet>462</a>    WrTpL,
-<a href=#463 id=463 data-nosnippet>463</a>    WrTpM,
-<a href=#464 id=464 data-nosnippet>464</a>    RfTpJ,
-<a href=#465 id=465 data-nosnippet>465</a>    RfTpK,
-<a href=#466 id=466 data-nosnippet>466</a>    RfTpL,
-<a href=#467 id=467 data-nosnippet>467</a>    RfTpM,
-<a href=#468 id=468 data-nosnippet>468</a>    RbTpJ,
-<a href=#469 id=469 data-nosnippet>469</a>    RbTpK,
-<a href=#470 id=470 data-nosnippet>470</a>    RbTpL,
-<a href=#471 id=471 data-nosnippet>471</a>    RbTpM,
-<a href=#472 id=472 data-nosnippet>472</a>    SfTpJ,
-<a href=#473 id=473 data-nosnippet>473</a>    SfTpK,
-<a href=#474 id=474 data-nosnippet>474</a>    SfTpL,
-<a href=#475 id=475 data-nosnippet>475</a>    SfTpM,
-<a href=#476 id=476 data-nosnippet>476</a>    SbTpJ,
-<a href=#477 id=477 data-nosnippet>477</a>    SbTpK,
-<a href=#478 id=478 data-nosnippet>478</a>    SbTpL,
-<a href=#479 id=479 data-nosnippet>479</a>    SbTpM,
-<a href=#480 id=480 data-nosnippet>480</a>    RwTpJ,
-<a href=#481 id=481 data-nosnippet>481</a>    RwTpK,
-<a href=#482 id=482 data-nosnippet>482</a>    RwTpL,
-<a href=#483 id=483 data-nosnippet>483</a>    RwTpM,
-<a href=#484 id=484 data-nosnippet>484</a>    EfTpJ,
-<a href=#485 id=485 data-nosnippet>485</a>    EfTpK,
-<a href=#486 id=486 data-nosnippet>486</a>    EfTpL,
-<a href=#487 id=487 data-nosnippet>487</a>    EfTpM,
-<a href=#488 id=488 data-nosnippet>488</a>    WrDrP,
-<a href=#489 id=489 data-nosnippet>489</a>    WrDrQ,
-<a href=#490 id=490 data-nosnippet>490</a>    RfDrP,
-<a href=#491 id=491 data-nosnippet>491</a>    RfDrQ,
-<a href=#492 id=492 data-nosnippet>492</a>    Print,
-<a href=#493 id=493 data-nosnippet>493</a>    NoOp,
-<a href=#494 id=494 data-nosnippet>494</a>}
-<a href=#495 id=495 data-nosnippet>495</a>
-<a href=#496 id=496 data-nosnippet>496</a><span class="kw">const </span>OP1_TABLE: <span class="kw-2">&amp;</span>[(Op1, <span class="kw-2">&amp;</span>str, u16, bool)] = <span class="kw-2">&amp;</span>[
-<a href=#497 id=497 data-nosnippet>497</a>    (Op1::Add, <span class="string">"ADD"</span>, <span class="number">658</span>, <span class="bool-val">false</span>),
-<a href=#498 id=498 data-nosnippet>498</a>    (Op1::Sub, <span class="string">"SUB"</span>, <span class="number">696</span>, <span class="bool-val">false</span>),
-<a href=#499 id=499 data-nosnippet>499</a>    (Op1::AddAb, <span class="string">"ADDAB"</span>, <span class="number">699</span>, <span class="bool-val">false</span>),
-<a href=#500 id=500 data-nosnippet>500</a>    (Op1::AbAdd, <span class="string">"ABADD"</span>, <span class="number">703</span>, <span class="bool-val">false</span>),
-<a href=#501 id=501 data-nosnippet>501</a>    (Op1::SubAb, <span class="string">"SUBAB"</span>, <span class="number">707</span>, <span class="bool-val">false</span>),
-<a href=#502 id=502 data-nosnippet>502</a>    (Op1::AbSub, <span class="string">"ABSUB"</span>, <span class="number">711</span>, <span class="bool-val">false</span>),
-<a href=#503 id=503 data-nosnippet>503</a>    (Op1::Mpy, <span class="string">"MPY"</span>, <span class="number">715</span>, <span class="bool-val">false</span>),
-<a href=#504 id=504 data-nosnippet>504</a>    (Op1::NgMpy, <span class="string">"NGMPY"</span>, <span class="number">731</span>, <span class="bool-val">false</span>),
-<a href=#505 id=505 data-nosnippet>505</a>    (Op1::Div, <span class="string">"DIV"</span>, <span class="number">734</span>, <span class="bool-val">false</span>),
-<a href=#506 id=506 data-nosnippet>506</a>    (Op1::NgDiv, <span class="string">"NGDIV"</span>, <span class="number">748</span>, <span class="bool-val">false</span>),
-<a href=#507 id=507 data-nosnippet>507</a>    (Op1::Sqrt, <span class="string">"SQRT"</span>, <span class="number">782</span>, <span class="bool-val">false</span>),
-<a href=#508 id=508 data-nosnippet>508</a>    (Op1::Sine, <span class="string">"SINE"</span>, <span class="number">780</span>, <span class="bool-val">false</span>),
-<a href=#509 id=509 data-nosnippet>509</a>    (Op1::Artan, <span class="string">"ARTAN"</span>, <span class="number">781</span>, <span class="bool-val">false</span>),
-<a href=#510 id=510 data-nosnippet>510</a>    (Op1::Exp, <span class="string">"EXP"</span>, <span class="number">783</span>, <span class="bool-val">false</span>),
-<a href=#511 id=511 data-nosnippet>511</a>    (Op1::Ln, <span class="string">"LN"</span>, <span class="number">784</span>, <span class="bool-val">false</span>),
-<a href=#512 id=512 data-nosnippet>512</a>    (Op1::WrTpJ, <span class="string">"WRTPJ"</span>, <span class="number">532</span>, <span class="bool-val">false</span>),
-<a href=#513 id=513 data-nosnippet>513</a>    (Op1::WrTpK, <span class="string">"WRTPK"</span>, <span class="number">533</span>, <span class="bool-val">false</span>),
-<a href=#514 id=514 data-nosnippet>514</a>    (Op1::WrTpL, <span class="string">"WRTPL"</span>, <span class="number">534</span>, <span class="bool-val">false</span>),
-<a href=#515 id=515 data-nosnippet>515</a>    (Op1::WrTpM, <span class="string">"WRTPM"</span>, <span class="number">535</span>, <span class="bool-val">false</span>),
-<a href=#516 id=516 data-nosnippet>516</a>    (Op1::RfTpJ, <span class="string">"RFTPJ"</span>, <span class="number">435</span>, <span class="bool-val">true</span>),
-<a href=#517 id=517 data-nosnippet>517</a>    (Op1::RfTpK, <span class="string">"RFTPK"</span>, <span class="number">437</span>, <span class="bool-val">true</span>),
-<a href=#518 id=518 data-nosnippet>518</a>    (Op1::RfTpL, <span class="string">"RFTPL"</span>, <span class="number">439</span>, <span class="bool-val">true</span>),
-<a href=#519 id=519 data-nosnippet>519</a>    (Op1::RfTpM, <span class="string">"RFTPM"</span>, <span class="number">441</span>, <span class="bool-val">true</span>),
-<a href=#520 id=520 data-nosnippet>520</a>    (Op1::RbTpJ, <span class="string">"RBTPJ"</span>, <span class="number">416</span>, <span class="bool-val">true</span>),
-<a href=#521 id=521 data-nosnippet>521</a>    (Op1::RbTpK, <span class="string">"RBTPK"</span>, <span class="number">417</span>, <span class="bool-val">true</span>),
-<a href=#522 id=522 data-nosnippet>522</a>    (Op1::RbTpL, <span class="string">"RBTPL"</span>, <span class="number">418</span>, <span class="bool-val">true</span>),
-<a href=#523 id=523 data-nosnippet>523</a>    (Op1::RbTpM, <span class="string">"RBTPM"</span>, <span class="number">419</span>, <span class="bool-val">true</span>),
-<a href=#524 id=524 data-nosnippet>524</a>    (Op1::SfTpJ, <span class="string">"SFTPJ"</span>, <span class="number">556</span>, <span class="bool-val">true</span>),
-<a href=#525 id=525 data-nosnippet>525</a>    (Op1::SfTpK, <span class="string">"SFTPK"</span>, <span class="number">557</span>, <span class="bool-val">true</span>),
-<a href=#526 id=526 data-nosnippet>526</a>    (Op1::SfTpL, <span class="string">"SFTPL"</span>, <span class="number">558</span>, <span class="bool-val">true</span>),
-<a href=#527 id=527 data-nosnippet>527</a>    (Op1::SfTpM, <span class="string">"SFTPM"</span>, <span class="number">559</span>, <span class="bool-val">true</span>),
-<a href=#528 id=528 data-nosnippet>528</a>    (Op1::SbTpJ, <span class="string">"SBTPJ"</span>, <span class="number">546</span>, <span class="bool-val">true</span>),
-<a href=#529 id=529 data-nosnippet>529</a>    (Op1::SbTpK, <span class="string">"SBTPK"</span>, <span class="number">547</span>, <span class="bool-val">true</span>),
-<a href=#530 id=530 data-nosnippet>530</a>    (Op1::SbTpL, <span class="string">"SBTPL"</span>, <span class="number">548</span>, <span class="bool-val">true</span>),
-<a href=#531 id=531 data-nosnippet>531</a>    (Op1::SbTpM, <span class="string">"SBTPM"</span>, <span class="number">549</span>, <span class="bool-val">true</span>),
-<a href=#532 id=532 data-nosnippet>532</a>    (Op1::RwTpJ, <span class="string">"RWTPJ"</span>, <span class="number">572</span>, <span class="bool-val">false</span>),
-<a href=#533 id=533 data-nosnippet>533</a>    (Op1::RwTpK, <span class="string">"RWTPK"</span>, <span class="number">574</span>, <span class="bool-val">false</span>),
-<a href=#534 id=534 data-nosnippet>534</a>    (Op1::RwTpL, <span class="string">"RWTPL"</span>, <span class="number">576</span>, <span class="bool-val">false</span>),
-<a href=#535 id=535 data-nosnippet>535</a>    (Op1::RwTpM, <span class="string">"RWTPM"</span>, <span class="number">578</span>, <span class="bool-val">false</span>),
-<a href=#536 id=536 data-nosnippet>536</a>    (Op1::EfTpJ, <span class="string">"EFTPJ"</span>, <span class="number">564</span>, <span class="bool-val">false</span>),
-<a href=#537 id=537 data-nosnippet>537</a>    (Op1::EfTpK, <span class="string">"EFTPK"</span>, <span class="number">566</span>, <span class="bool-val">false</span>),
-<a href=#538 id=538 data-nosnippet>538</a>    (Op1::EfTpL, <span class="string">"EFTPL"</span>, <span class="number">568</span>, <span class="bool-val">false</span>),
-<a href=#539 id=539 data-nosnippet>539</a>    (Op1::EfTpM, <span class="string">"EFTPM"</span>, <span class="number">570</span>, <span class="bool-val">false</span>),
-<a href=#540 id=540 data-nosnippet>540</a>    (Op1::WrDrP, <span class="string">"WRDRP"</span>, <span class="number">497</span>, <span class="bool-val">true</span>),
-<a href=#541 id=541 data-nosnippet>541</a>    (Op1::WrDrQ, <span class="string">"WRDRQ"</span>, <span class="number">498</span>, <span class="bool-val">true</span>),
-<a href=#542 id=542 data-nosnippet>542</a>    (Op1::RfDrP, <span class="string">"RFDRP"</span>, <span class="number">526</span>, <span class="bool-val">false</span>),
-<a href=#543 id=543 data-nosnippet>543</a>    (Op1::RfDrQ, <span class="string">"RFDRQ"</span>, <span class="number">528</span>, <span class="bool-val">false</span>),
-<a href=#544 id=544 data-nosnippet>544</a>    (Op1::Print, <span class="string">"PRINT"</span>, <span class="number">580</span>, <span class="bool-val">false</span>),
-<a href=#545 id=545 data-nosnippet>545</a>    (Op1::NoOp, <span class="string">"NOOP"</span>, <span class="number">751</span>, <span class="bool-val">false</span>),
-<a href=#546 id=546 data-nosnippet>546</a>];
-<a href=#547 id=547 data-nosnippet>547</a>
-<a href=#548 id=548 data-nosnippet>548</a><span class="kw">impl </span>Op1 {
-<a href=#549 id=549 data-nosnippet>549</a>    <span class="doccomment">/// Returns the 3-digit numerical operation code for `OP1`.
-<a href=#550 id=550 data-nosnippet>550</a>    </span><span class="kw">pub fn </span>code(<span class="self">self</span>) -&gt; u16 {
-<a href=#551 id=551 data-nosnippet>551</a>        OP1_TABLE
-<a href=#552 id=552 data-nosnippet>552</a>            .iter()
-<a href=#553 id=553 data-nosnippet>553</a>            .find(|&amp;&amp;(op, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>)| op == <span class="self">self</span>)
-<a href=#554 id=554 data-nosnippet>554</a>            .expect(<span class="string">"every Op1 variant exists in OP1_TABLE"</span>)
-<a href=#555 id=555 data-nosnippet>555</a>            .<span class="number">2
-<a href=#556 id=556 data-nosnippet>556</a>    </span>}
-<a href=#557 id=557 data-nosnippet>557</a>
-<a href=#558 id=558 data-nosnippet>558</a>    <span class="doccomment">/// Returns the alphabetical mnemonic for `OP1`.
-<a href=#559 id=559 data-nosnippet>559</a>    </span><span class="kw">pub fn </span>mnemonic(<span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">'static </span>str {
+<a href=#426 id=426 data-nosnippet>426</a><span class="kw">impl </span>LCode {
+<a href=#427 id=427 data-nosnippet>427</a>    <span class="doccomment">/// Validates `val` is one of `0`, `3`, or `6`.
+<a href=#428 id=428 data-nosnippet>428</a>    </span><span class="kw">pub fn </span>new(val: u8) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, SpeedError&gt; {
+<a href=#429 id=429 data-nosnippet>429</a>        <span class="kw">match </span>val {
+<a href=#430 id=430 data-nosnippet>430</a>            <span class="number">0 </span>| <span class="number">3 </span>| <span class="number">6 </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self </span>{ raw: val }),
+<a href=#431 id=431 data-nosnippet>431</a>            <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(SpeedError::InvalidLCode(val)),
+<a href=#432 id=432 data-nosnippet>432</a>        }
+<a href=#433 id=433 data-nosnippet>433</a>    }
+<a href=#434 id=434 data-nosnippet>434</a>
+<a href=#435 id=435 data-nosnippet>435</a>    <span class="doccomment">/// Returns raw L-code (`0`, `3`, or `6`).
+<a href=#436 id=436 data-nosnippet>436</a>    </span><span class="kw">pub fn </span>raw(<span class="self">self</span>) -&gt; u8 {
+<a href=#437 id=437 data-nosnippet>437</a>        <span class="self">self</span>.raw
+<a href=#438 id=438 data-nosnippet>438</a>    }
+<a href=#439 id=439 data-nosnippet>439</a>
+<a href=#440 id=440 data-nosnippet>440</a>    <span class="doccomment">/// Maps `0 -&gt; 1`, `3 -&gt; 2`, `6 -&gt; 3`.
+<a href=#441 id=441 data-nosnippet>441</a>    </span><span class="kw">pub fn </span>switch_number(<span class="self">self</span>) -&gt; u8 {
+<a href=#442 id=442 data-nosnippet>442</a>        <span class="kw">match </span><span class="self">self</span>.raw {
+<a href=#443 id=443 data-nosnippet>443</a>            <span class="number">0 </span>=&gt; <span class="number">1</span>,
+<a href=#444 id=444 data-nosnippet>444</a>            <span class="number">3 </span>=&gt; <span class="number">2</span>,
+<a href=#445 id=445 data-nosnippet>445</a>            <span class="number">6 </span>=&gt; <span class="number">3</span>,
+<a href=#446 id=446 data-nosnippet>446</a>            other =&gt; <span class="macro">unreachable!</span>(<span class="string">"validated LCode invariant broken: {other}"</span>),
+<a href=#447 id=447 data-nosnippet>447</a>        }
+<a href=#448 id=448 data-nosnippet>448</a>    }
+<a href=#449 id=449 data-nosnippet>449</a>}
+<a href=#450 id=450 data-nosnippet>450</a>
+<a href=#451 id=451 data-nosnippet>451</a><span class="doccomment">/// All 49 SpeedCo I `OP1` operations (manual pages 5-1 and 5-2).
+<a href=#452 id=452 data-nosnippet>452</a></span><span class="attr">#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+<a href=#453 id=453 data-nosnippet>453</a></span><span class="kw">pub enum </span>Op1 {
+<a href=#454 id=454 data-nosnippet>454</a>    Add,
+<a href=#455 id=455 data-nosnippet>455</a>    Sub,
+<a href=#456 id=456 data-nosnippet>456</a>    AddAb,
+<a href=#457 id=457 data-nosnippet>457</a>    AbAdd,
+<a href=#458 id=458 data-nosnippet>458</a>    SubAb,
+<a href=#459 id=459 data-nosnippet>459</a>    AbSub,
+<a href=#460 id=460 data-nosnippet>460</a>    Mpy,
+<a href=#461 id=461 data-nosnippet>461</a>    NgMpy,
+<a href=#462 id=462 data-nosnippet>462</a>    Div,
+<a href=#463 id=463 data-nosnippet>463</a>    NgDiv,
+<a href=#464 id=464 data-nosnippet>464</a>    Sqrt,
+<a href=#465 id=465 data-nosnippet>465</a>    Sine,
+<a href=#466 id=466 data-nosnippet>466</a>    Artan,
+<a href=#467 id=467 data-nosnippet>467</a>    Exp,
+<a href=#468 id=468 data-nosnippet>468</a>    Ln,
+<a href=#469 id=469 data-nosnippet>469</a>    WrTpJ,
+<a href=#470 id=470 data-nosnippet>470</a>    WrTpK,
+<a href=#471 id=471 data-nosnippet>471</a>    WrTpL,
+<a href=#472 id=472 data-nosnippet>472</a>    WrTpM,
+<a href=#473 id=473 data-nosnippet>473</a>    RfTpJ,
+<a href=#474 id=474 data-nosnippet>474</a>    RfTpK,
+<a href=#475 id=475 data-nosnippet>475</a>    RfTpL,
+<a href=#476 id=476 data-nosnippet>476</a>    RfTpM,
+<a href=#477 id=477 data-nosnippet>477</a>    RbTpJ,
+<a href=#478 id=478 data-nosnippet>478</a>    RbTpK,
+<a href=#479 id=479 data-nosnippet>479</a>    RbTpL,
+<a href=#480 id=480 data-nosnippet>480</a>    RbTpM,
+<a href=#481 id=481 data-nosnippet>481</a>    SfTpJ,
+<a href=#482 id=482 data-nosnippet>482</a>    SfTpK,
+<a href=#483 id=483 data-nosnippet>483</a>    SfTpL,
+<a href=#484 id=484 data-nosnippet>484</a>    SfTpM,
+<a href=#485 id=485 data-nosnippet>485</a>    SbTpJ,
+<a href=#486 id=486 data-nosnippet>486</a>    SbTpK,
+<a href=#487 id=487 data-nosnippet>487</a>    SbTpL,
+<a href=#488 id=488 data-nosnippet>488</a>    SbTpM,
+<a href=#489 id=489 data-nosnippet>489</a>    RwTpJ,
+<a href=#490 id=490 data-nosnippet>490</a>    RwTpK,
+<a href=#491 id=491 data-nosnippet>491</a>    RwTpL,
+<a href=#492 id=492 data-nosnippet>492</a>    RwTpM,
+<a href=#493 id=493 data-nosnippet>493</a>    EfTpJ,
+<a href=#494 id=494 data-nosnippet>494</a>    EfTpK,
+<a href=#495 id=495 data-nosnippet>495</a>    EfTpL,
+<a href=#496 id=496 data-nosnippet>496</a>    EfTpM,
+<a href=#497 id=497 data-nosnippet>497</a>    WrDrP,
+<a href=#498 id=498 data-nosnippet>498</a>    WrDrQ,
+<a href=#499 id=499 data-nosnippet>499</a>    RfDrP,
+<a href=#500 id=500 data-nosnippet>500</a>    RfDrQ,
+<a href=#501 id=501 data-nosnippet>501</a>    Print,
+<a href=#502 id=502 data-nosnippet>502</a>    NoOp,
+<a href=#503 id=503 data-nosnippet>503</a>}
+<a href=#504 id=504 data-nosnippet>504</a>
+<a href=#505 id=505 data-nosnippet>505</a><span class="kw">const </span>OP1_TABLE: <span class="kw-2">&amp;</span>[(Op1, <span class="kw-2">&amp;</span>str, u16, bool)] = <span class="kw-2">&amp;</span>[
+<a href=#506 id=506 data-nosnippet>506</a>    (Op1::Add, <span class="string">"ADD"</span>, <span class="number">658</span>, <span class="bool-val">false</span>),
+<a href=#507 id=507 data-nosnippet>507</a>    (Op1::Sub, <span class="string">"SUB"</span>, <span class="number">696</span>, <span class="bool-val">false</span>),
+<a href=#508 id=508 data-nosnippet>508</a>    (Op1::AddAb, <span class="string">"ADDAB"</span>, <span class="number">699</span>, <span class="bool-val">false</span>),
+<a href=#509 id=509 data-nosnippet>509</a>    (Op1::AbAdd, <span class="string">"ABADD"</span>, <span class="number">703</span>, <span class="bool-val">false</span>),
+<a href=#510 id=510 data-nosnippet>510</a>    (Op1::SubAb, <span class="string">"SUBAB"</span>, <span class="number">707</span>, <span class="bool-val">false</span>),
+<a href=#511 id=511 data-nosnippet>511</a>    (Op1::AbSub, <span class="string">"ABSUB"</span>, <span class="number">711</span>, <span class="bool-val">false</span>),
+<a href=#512 id=512 data-nosnippet>512</a>    (Op1::Mpy, <span class="string">"MPY"</span>, <span class="number">715</span>, <span class="bool-val">false</span>),
+<a href=#513 id=513 data-nosnippet>513</a>    (Op1::NgMpy, <span class="string">"NGMPY"</span>, <span class="number">731</span>, <span class="bool-val">false</span>),
+<a href=#514 id=514 data-nosnippet>514</a>    (Op1::Div, <span class="string">"DIV"</span>, <span class="number">734</span>, <span class="bool-val">false</span>),
+<a href=#515 id=515 data-nosnippet>515</a>    (Op1::NgDiv, <span class="string">"NGDIV"</span>, <span class="number">748</span>, <span class="bool-val">false</span>),
+<a href=#516 id=516 data-nosnippet>516</a>    (Op1::Sqrt, <span class="string">"SQRT"</span>, <span class="number">782</span>, <span class="bool-val">false</span>),
+<a href=#517 id=517 data-nosnippet>517</a>    (Op1::Sine, <span class="string">"SINE"</span>, <span class="number">780</span>, <span class="bool-val">false</span>),
+<a href=#518 id=518 data-nosnippet>518</a>    (Op1::Artan, <span class="string">"ARTAN"</span>, <span class="number">781</span>, <span class="bool-val">false</span>),
+<a href=#519 id=519 data-nosnippet>519</a>    (Op1::Exp, <span class="string">"EXP"</span>, <span class="number">783</span>, <span class="bool-val">false</span>),
+<a href=#520 id=520 data-nosnippet>520</a>    (Op1::Ln, <span class="string">"LN"</span>, <span class="number">784</span>, <span class="bool-val">false</span>),
+<a href=#521 id=521 data-nosnippet>521</a>    (Op1::WrTpJ, <span class="string">"WRTPJ"</span>, <span class="number">532</span>, <span class="bool-val">false</span>),
+<a href=#522 id=522 data-nosnippet>522</a>    (Op1::WrTpK, <span class="string">"WRTPK"</span>, <span class="number">533</span>, <span class="bool-val">false</span>),
+<a href=#523 id=523 data-nosnippet>523</a>    (Op1::WrTpL, <span class="string">"WRTPL"</span>, <span class="number">534</span>, <span class="bool-val">false</span>),
+<a href=#524 id=524 data-nosnippet>524</a>    (Op1::WrTpM, <span class="string">"WRTPM"</span>, <span class="number">535</span>, <span class="bool-val">false</span>),
+<a href=#525 id=525 data-nosnippet>525</a>    (Op1::RfTpJ, <span class="string">"RFTPJ"</span>, <span class="number">435</span>, <span class="bool-val">true</span>),
+<a href=#526 id=526 data-nosnippet>526</a>    (Op1::RfTpK, <span class="string">"RFTPK"</span>, <span class="number">437</span>, <span class="bool-val">true</span>),
+<a href=#527 id=527 data-nosnippet>527</a>    (Op1::RfTpL, <span class="string">"RFTPL"</span>, <span class="number">439</span>, <span class="bool-val">true</span>),
+<a href=#528 id=528 data-nosnippet>528</a>    (Op1::RfTpM, <span class="string">"RFTPM"</span>, <span class="number">441</span>, <span class="bool-val">true</span>),
+<a href=#529 id=529 data-nosnippet>529</a>    (Op1::RbTpJ, <span class="string">"RBTPJ"</span>, <span class="number">416</span>, <span class="bool-val">true</span>),
+<a href=#530 id=530 data-nosnippet>530</a>    (Op1::RbTpK, <span class="string">"RBTPK"</span>, <span class="number">417</span>, <span class="bool-val">true</span>),
+<a href=#531 id=531 data-nosnippet>531</a>    (Op1::RbTpL, <span class="string">"RBTPL"</span>, <span class="number">418</span>, <span class="bool-val">true</span>),
+<a href=#532 id=532 data-nosnippet>532</a>    (Op1::RbTpM, <span class="string">"RBTPM"</span>, <span class="number">419</span>, <span class="bool-val">true</span>),
+<a href=#533 id=533 data-nosnippet>533</a>    (Op1::SfTpJ, <span class="string">"SFTPJ"</span>, <span class="number">556</span>, <span class="bool-val">true</span>),
+<a href=#534 id=534 data-nosnippet>534</a>    (Op1::SfTpK, <span class="string">"SFTPK"</span>, <span class="number">557</span>, <span class="bool-val">true</span>),
+<a href=#535 id=535 data-nosnippet>535</a>    (Op1::SfTpL, <span class="string">"SFTPL"</span>, <span class="number">558</span>, <span class="bool-val">true</span>),
+<a href=#536 id=536 data-nosnippet>536</a>    (Op1::SfTpM, <span class="string">"SFTPM"</span>, <span class="number">559</span>, <span class="bool-val">true</span>),
+<a href=#537 id=537 data-nosnippet>537</a>    (Op1::SbTpJ, <span class="string">"SBTPJ"</span>, <span class="number">546</span>, <span class="bool-val">true</span>),
+<a href=#538 id=538 data-nosnippet>538</a>    (Op1::SbTpK, <span class="string">"SBTPK"</span>, <span class="number">547</span>, <span class="bool-val">true</span>),
+<a href=#539 id=539 data-nosnippet>539</a>    (Op1::SbTpL, <span class="string">"SBTPL"</span>, <span class="number">548</span>, <span class="bool-val">true</span>),
+<a href=#540 id=540 data-nosnippet>540</a>    (Op1::SbTpM, <span class="string">"SBTPM"</span>, <span class="number">549</span>, <span class="bool-val">true</span>),
+<a href=#541 id=541 data-nosnippet>541</a>    (Op1::RwTpJ, <span class="string">"RWTPJ"</span>, <span class="number">572</span>, <span class="bool-val">false</span>),
+<a href=#542 id=542 data-nosnippet>542</a>    (Op1::RwTpK, <span class="string">"RWTPK"</span>, <span class="number">574</span>, <span class="bool-val">false</span>),
+<a href=#543 id=543 data-nosnippet>543</a>    (Op1::RwTpL, <span class="string">"RWTPL"</span>, <span class="number">576</span>, <span class="bool-val">false</span>),
+<a href=#544 id=544 data-nosnippet>544</a>    (Op1::RwTpM, <span class="string">"RWTPM"</span>, <span class="number">578</span>, <span class="bool-val">false</span>),
+<a href=#545 id=545 data-nosnippet>545</a>    (Op1::EfTpJ, <span class="string">"EFTPJ"</span>, <span class="number">564</span>, <span class="bool-val">false</span>),
+<a href=#546 id=546 data-nosnippet>546</a>    (Op1::EfTpK, <span class="string">"EFTPK"</span>, <span class="number">566</span>, <span class="bool-val">false</span>),
+<a href=#547 id=547 data-nosnippet>547</a>    (Op1::EfTpL, <span class="string">"EFTPL"</span>, <span class="number">568</span>, <span class="bool-val">false</span>),
+<a href=#548 id=548 data-nosnippet>548</a>    (Op1::EfTpM, <span class="string">"EFTPM"</span>, <span class="number">570</span>, <span class="bool-val">false</span>),
+<a href=#549 id=549 data-nosnippet>549</a>    (Op1::WrDrP, <span class="string">"WRDRP"</span>, <span class="number">497</span>, <span class="bool-val">true</span>),
+<a href=#550 id=550 data-nosnippet>550</a>    (Op1::WrDrQ, <span class="string">"WRDRQ"</span>, <span class="number">498</span>, <span class="bool-val">true</span>),
+<a href=#551 id=551 data-nosnippet>551</a>    (Op1::RfDrP, <span class="string">"RFDRP"</span>, <span class="number">526</span>, <span class="bool-val">false</span>),
+<a href=#552 id=552 data-nosnippet>552</a>    (Op1::RfDrQ, <span class="string">"RFDRQ"</span>, <span class="number">528</span>, <span class="bool-val">false</span>),
+<a href=#553 id=553 data-nosnippet>553</a>    (Op1::Print, <span class="string">"PRINT"</span>, <span class="number">580</span>, <span class="bool-val">false</span>),
+<a href=#554 id=554 data-nosnippet>554</a>    (Op1::NoOp, <span class="string">"NOOP"</span>, <span class="number">751</span>, <span class="bool-val">false</span>),
+<a href=#555 id=555 data-nosnippet>555</a>];
+<a href=#556 id=556 data-nosnippet>556</a>
+<a href=#557 id=557 data-nosnippet>557</a><span class="kw">impl </span>Op1 {
+<a href=#558 id=558 data-nosnippet>558</a>    <span class="doccomment">/// Returns the 3-digit numerical operation code for `OP1`.
+<a href=#559 id=559 data-nosnippet>559</a>    </span><span class="kw">pub fn </span>code(<span class="self">self</span>) -&gt; u16 {
 <a href=#560 id=560 data-nosnippet>560</a>        OP1_TABLE
 <a href=#561 id=561 data-nosnippet>561</a>            .iter()
 <a href=#562 id=562 data-nosnippet>562</a>            .find(|&amp;&amp;(op, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>)| op == <span class="self">self</span>)
 <a href=#563 id=563 data-nosnippet>563</a>            .expect(<span class="string">"every Op1 variant exists in OP1_TABLE"</span>)
-<a href=#564 id=564 data-nosnippet>564</a>            .<span class="number">1
+<a href=#564 id=564 data-nosnippet>564</a>            .<span class="number">2
 <a href=#565 id=565 data-nosnippet>565</a>    </span>}
 <a href=#566 id=566 data-nosnippet>566</a>
-<a href=#567 id=567 data-nosnippet>567</a>    <span class="doccomment">/// Decodes a 3-digit numerical `OP1` code.
-<a href=#568 id=568 data-nosnippet>568</a>    </span><span class="kw">pub fn </span>from_code(code: u16) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, SpeedError&gt; {
+<a href=#567 id=567 data-nosnippet>567</a>    <span class="doccomment">/// Returns the alphabetical mnemonic for `OP1`.
+<a href=#568 id=568 data-nosnippet>568</a>    </span><span class="kw">pub fn </span>mnemonic(<span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">'static </span>str {
 <a href=#569 id=569 data-nosnippet>569</a>        OP1_TABLE
 <a href=#570 id=570 data-nosnippet>570</a>            .iter()
-<a href=#571 id=571 data-nosnippet>571</a>            .find(|&amp;&amp;(<span class="kw">_</span>, <span class="kw">_</span>, c, <span class="kw">_</span>)| c == code)
-<a href=#572 id=572 data-nosnippet>572</a>            .map(|<span class="kw-2">&amp;</span>(op, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>)| op)
-<a href=#573 id=573 data-nosnippet>573</a>            .ok_or(SpeedError::InvalidOp1Code(code))
-<a href=#574 id=574 data-nosnippet>574</a>    }
+<a href=#571 id=571 data-nosnippet>571</a>            .find(|&amp;&amp;(op, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>)| op == <span class="self">self</span>)
+<a href=#572 id=572 data-nosnippet>572</a>            .expect(<span class="string">"every Op1 variant exists in OP1_TABLE"</span>)
+<a href=#573 id=573 data-nosnippet>573</a>            .<span class="number">1
+<a href=#574 id=574 data-nosnippet>574</a>    </span>}
 <a href=#575 id=575 data-nosnippet>575</a>
-<a href=#576 id=576 data-nosnippet>576</a>    <span class="doccomment">/// Decodes an alphabetical `OP1` mnemonic.
-<a href=#577 id=577 data-nosnippet>577</a>    </span><span class="kw">pub fn </span>from_mnemonic(s: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, SpeedError&gt; {
-<a href=#578 id=578 data-nosnippet>578</a>        <span class="kw">let </span>trimmed = s.trim();
-<a href=#579 id=579 data-nosnippet>579</a>        OP1_TABLE
-<a href=#580 id=580 data-nosnippet>580</a>            .iter()
-<a href=#581 id=581 data-nosnippet>581</a>            .find(|&amp;&amp;(<span class="kw">_</span>, mnem, <span class="kw">_</span>, <span class="kw">_</span>)| mnem == trimmed)
-<a href=#582 id=582 data-nosnippet>582</a>            .map(|<span class="kw-2">&amp;</span>(op, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>)| op)
-<a href=#583 id=583 data-nosnippet>583</a>            .ok_or_else(|| SpeedError::InvalidMnemonic(s.to_string()))
-<a href=#584 id=584 data-nosnippet>584</a>    }
-<a href=#585 id=585 data-nosnippet>585</a>
-<a href=#586 id=586 data-nosnippet>586</a>    <span class="doccomment">/// Returns `true` for `OP1` operations with automatic skips (`RFTP*`, `RBTP*`, `SFTP*`, `SBTP*`, `WRDR*`).
-<a href=#587 id=587 data-nosnippet>587</a>    </span><span class="kw">pub fn </span>forbids_op2(<span class="self">self</span>) -&gt; bool {
+<a href=#576 id=576 data-nosnippet>576</a>    <span class="doccomment">/// Decodes a 3-digit numerical `OP1` code.
+<a href=#577 id=577 data-nosnippet>577</a>    </span><span class="kw">pub fn </span>from_code(code: u16) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, SpeedError&gt; {
+<a href=#578 id=578 data-nosnippet>578</a>        OP1_TABLE
+<a href=#579 id=579 data-nosnippet>579</a>            .iter()
+<a href=#580 id=580 data-nosnippet>580</a>            .find(|&amp;&amp;(<span class="kw">_</span>, <span class="kw">_</span>, c, <span class="kw">_</span>)| c == code)
+<a href=#581 id=581 data-nosnippet>581</a>            .map(|<span class="kw-2">&amp;</span>(op, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>)| op)
+<a href=#582 id=582 data-nosnippet>582</a>            .ok_or(SpeedError::InvalidOp1Code(code))
+<a href=#583 id=583 data-nosnippet>583</a>    }
+<a href=#584 id=584 data-nosnippet>584</a>
+<a href=#585 id=585 data-nosnippet>585</a>    <span class="doccomment">/// Decodes an alphabetical `OP1` mnemonic.
+<a href=#586 id=586 data-nosnippet>586</a>    </span><span class="kw">pub fn </span>from_mnemonic(s: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, SpeedError&gt; {
+<a href=#587 id=587 data-nosnippet>587</a>        <span class="kw">let </span>trimmed = s.trim();
 <a href=#588 id=588 data-nosnippet>588</a>        OP1_TABLE
 <a href=#589 id=589 data-nosnippet>589</a>            .iter()
-<a href=#590 id=590 data-nosnippet>590</a>            .find(|&amp;&amp;(op, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>)| op == <span class="self">self</span>)
-<a href=#591 id=591 data-nosnippet>591</a>            .expect(<span class="string">"every Op1 variant exists in OP1_TABLE"</span>)
-<a href=#592 id=592 data-nosnippet>592</a>            .<span class="number">3
-<a href=#593 id=593 data-nosnippet>593</a>    </span>}
-<a href=#594 id=594 data-nosnippet>594</a>}
-<a href=#595 id=595 data-nosnippet>595</a>
-<a href=#596 id=596 data-nosnippet>596</a><span class="doccomment">/// All 48 SpeedCo I `OP2` operations (manual pages 5-3 through 5-5).
-<a href=#597 id=597 data-nosnippet>597</a></span><span class="attr">#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-<a href=#598 id=598 data-nosnippet>598</a></span><span class="kw">pub enum </span>Op2 {
-<a href=#599 id=599 data-nosnippet>599</a>    Tr,
-<a href=#600 id=600 data-nosnippet>600</a>    TrPl,
-<a href=#601 id=601 data-nosnippet>601</a>    TrMn,
-<a href=#602 id=602 data-nosnippet>602</a>    TrZ,
-<a href=#603 id=603 data-nosnippet>603</a>    SnTrP,
-<a href=#604 id=604 data-nosnippet>604</a>    SnTrQ,
-<a href=#605 id=605 data-nosnippet>605</a>    TiA,
-<a href=#606 id=606 data-nosnippet>606</a>    TiB,
-<a href=#607 id=607 data-nosnippet>607</a>    TiC,
-<a href=#608 id=608 data-nosnippet>608</a>    TiAB,
-<a href=#609 id=609 data-nosnippet>609</a>    TiBC,
-<a href=#610 id=610 data-nosnippet>610</a>    TiAC,
-<a href=#611 id=611 data-nosnippet>611</a>    TiABC,
-<a href=#612 id=612 data-nosnippet>612</a>    TdA,
-<a href=#613 id=613 data-nosnippet>613</a>    TdB,
-<a href=#614 id=614 data-nosnippet>614</a>    TdC,
-<a href=#615 id=615 data-nosnippet>615</a>    TdAB,
-<a href=#616 id=616 data-nosnippet>616</a>    TdBC,
-<a href=#617 id=617 data-nosnippet>617</a>    TdAC,
-<a href=#618 id=618 data-nosnippet>618</a>    TdABC,
-<a href=#619 id=619 data-nosnippet>619</a>    SetRA,
-<a href=#620 id=620 data-nosnippet>620</a>    SetRB,
-<a href=#621 id=621 data-nosnippet>621</a>    SetRC,
-<a href=#622 id=622 data-nosnippet>622</a>    SkRA,
-<a href=#623 id=623 data-nosnippet>623</a>    SkRB,
-<a href=#624 id=624 data-nosnippet>624</a>    SkRC,
-<a href=#625 id=625 data-nosnippet>625</a>    RAddA,
-<a href=#626 id=626 data-nosnippet>626</a>    RAddB,
-<a href=#627 id=627 data-nosnippet>627</a>    RAddC,
-<a href=#628 id=628 data-nosnippet>628</a>    RAddD,
-<a href=#629 id=629 data-nosnippet>629</a>    AddA,
-<a href=#630 id=630 data-nosnippet>630</a>    AddB,
-<a href=#631 id=631 data-nosnippet>631</a>    AddC,
-<a href=#632 id=632 data-nosnippet>632</a>    AddD,
-<a href=#633 id=633 data-nosnippet>633</a>    SubA,
-<a href=#634 id=634 data-nosnippet>634</a>    SubB,
-<a href=#635 id=635 data-nosnippet>635</a>    SubC,
-<a href=#636 id=636 data-nosnippet>636</a>    SubD,
-<a href=#637 id=637 data-nosnippet>637</a>    StA,
-<a href=#638 id=638 data-nosnippet>638</a>    StB,
-<a href=#639 id=639 data-nosnippet>639</a>    StC,
-<a href=#640 id=640 data-nosnippet>640</a>    StD,
-<a href=#641 id=641 data-nosnippet>641</a>    Skip,
-<a href=#642 id=642 data-nosnippet>642</a>    PrCh,
-<a href=#643 id=643 data-nosnippet>643</a>    StCh,
-<a href=#644 id=644 data-nosnippet>644</a>    EchTr,
-<a href=#645 id=645 data-nosnippet>645</a>    Stop,
-<a href=#646 id=646 data-nosnippet>646</a>    NoOp,
-<a href=#647 id=647 data-nosnippet>647</a>}
-<a href=#648 id=648 data-nosnippet>648</a>
-<a href=#649 id=649 data-nosnippet>649</a><span class="kw">const </span>OP2_TABLE: <span class="kw-2">&amp;</span>[(Op2, <span class="kw-2">&amp;</span>str, u16)] = <span class="kw-2">&amp;</span>[
-<a href=#650 id=650 data-nosnippet>650</a>    (Op2::Tr, <span class="string">"TR"</span>, <span class="number">104</span>),
-<a href=#651 id=651 data-nosnippet>651</a>    (Op2::TrPl, <span class="string">"TRPL"</span>, <span class="number">109</span>),
-<a href=#652 id=652 data-nosnippet>652</a>    (Op2::TrMn, <span class="string">"TRMN"</span>, <span class="number">115</span>),
-<a href=#653 id=653 data-nosnippet>653</a>    (Op2::TrZ, <span class="string">"TRZ"</span>, <span class="number">112</span>),
-<a href=#654 id=654 data-nosnippet>654</a>    (Op2::SnTrP, <span class="string">"SNTRP"</span>, <span class="number">117</span>),
-<a href=#655 id=655 data-nosnippet>655</a>    (Op2::SnTrQ, <span class="string">"SNTRQ"</span>, <span class="number">120</span>),
-<a href=#656 id=656 data-nosnippet>656</a>    (Op2::TiA, <span class="string">"TIA"</span>, <span class="number">128</span>),
-<a href=#657 id=657 data-nosnippet>657</a>    (Op2::TiB, <span class="string">"TIB"</span>, <span class="number">126</span>),
-<a href=#658 id=658 data-nosnippet>658</a>    (Op2::TiC, <span class="string">"TIC"</span>, <span class="number">125</span>),
-<a href=#659 id=659 data-nosnippet>659</a>    (Op2::TiAB, <span class="string">"TIAB"</span>, <span class="number">130</span>),
-<a href=#660 id=660 data-nosnippet>660</a>    (Op2::TiBC, <span class="string">"TIBC"</span>, <span class="number">127</span>),
-<a href=#661 id=661 data-nosnippet>661</a>    (Op2::TiAC, <span class="string">"TIAC"</span>, <span class="number">129</span>),
-<a href=#662 id=662 data-nosnippet>662</a>    (Op2::TiABC, <span class="string">"TIABC"</span>, <span class="number">131</span>),
-<a href=#663 id=663 data-nosnippet>663</a>    (Op2::TdA, <span class="string">"TDA"</span>, <span class="number">135</span>),
-<a href=#664 id=664 data-nosnippet>664</a>    (Op2::TdB, <span class="string">"TDB"</span>, <span class="number">133</span>),
-<a href=#665 id=665 data-nosnippet>665</a>    (Op2::TdC, <span class="string">"TDC"</span>, <span class="number">132</span>),
-<a href=#666 id=666 data-nosnippet>666</a>    (Op2::TdAB, <span class="string">"TDAB"</span>, <span class="number">137</span>),
-<a href=#667 id=667 data-nosnippet>667</a>    (Op2::TdBC, <span class="string">"TDBC"</span>, <span class="number">134</span>),
-<a href=#668 id=668 data-nosnippet>668</a>    (Op2::TdAC, <span class="string">"TDAC"</span>, <span class="number">136</span>),
-<a href=#669 id=669 data-nosnippet>669</a>    (Op2::TdABC, <span class="string">"TDABC"</span>, <span class="number">138</span>),
-<a href=#670 id=670 data-nosnippet>670</a>    (Op2::SetRA, <span class="string">"SETRA"</span>, <span class="number">139</span>),
-<a href=#671 id=671 data-nosnippet>671</a>    (Op2::SetRB, <span class="string">"SETRB"</span>, <span class="number">250</span>),
-<a href=#672 id=672 data-nosnippet>672</a>    (Op2::SetRC, <span class="string">"SETRC"</span>, <span class="number">145</span>),
-<a href=#673 id=673 data-nosnippet>673</a>    (Op2::SkRA, <span class="string">"SKRA"</span>, <span class="number">152</span>),
-<a href=#674 id=674 data-nosnippet>674</a>    (Op2::SkRB, <span class="string">"SKRB"</span>, <span class="number">159</span>),
-<a href=#675 id=675 data-nosnippet>675</a>    (Op2::SkRC, <span class="string">"SKRC"</span>, <span class="number">162</span>),
-<a href=#676 id=676 data-nosnippet>676</a>    (Op2::RAddA, <span class="string">"RADDA"</span>, <span class="number">199</span>),
-<a href=#677 id=677 data-nosnippet>677</a>    (Op2::RAddB, <span class="string">"RADDB"</span>, <span class="number">202</span>),
-<a href=#678 id=678 data-nosnippet>678</a>    (Op2::RAddC, <span class="string">"RADDC"</span>, <span class="number">205</span>),
-<a href=#679 id=679 data-nosnippet>679</a>    (Op2::RAddD, <span class="string">"RADDD"</span>, <span class="number">208</span>),
-<a href=#680 id=680 data-nosnippet>680</a>    (Op2::AddA, <span class="string">"ADDA"</span>, <span class="number">177</span>),
-<a href=#681 id=681 data-nosnippet>681</a>    (Op2::AddB, <span class="string">"ADDB"</span>, <span class="number">184</span>),
-<a href=#682 id=682 data-nosnippet>682</a>    (Op2::AddC, <span class="string">"ADDC"</span>, <span class="number">190</span>),
-<a href=#683 id=683 data-nosnippet>683</a>    (Op2::AddD, <span class="string">"ADDD"</span>, <span class="number">193</span>),
-<a href=#684 id=684 data-nosnippet>684</a>    (Op2::SubA, <span class="string">"SUBA"</span>, <span class="number">211</span>),
-<a href=#685 id=685 data-nosnippet>685</a>    (Op2::SubB, <span class="string">"SUBB"</span>, <span class="number">216</span>),
-<a href=#686 id=686 data-nosnippet>686</a>    (Op2::SubC, <span class="string">"SUBC"</span>, <span class="number">221</span>),
-<a href=#687 id=687 data-nosnippet>687</a>    (Op2::SubD, <span class="string">"SUBD"</span>, <span class="number">226</span>),
-<a href=#688 id=688 data-nosnippet>688</a>    (Op2::StA, <span class="string">"STA"</span>, <span class="number">251</span>),
-<a href=#689 id=689 data-nosnippet>689</a>    (Op2::StB, <span class="string">"STB"</span>, <span class="number">252</span>),
-<a href=#690 id=690 data-nosnippet>690</a>    (Op2::StC, <span class="string">"STC"</span>, <span class="number">235</span>),
-<a href=#691 id=691 data-nosnippet>691</a>    (Op2::StD, <span class="string">"STD"</span>, <span class="number">244</span>),
-<a href=#692 id=692 data-nosnippet>692</a>    (Op2::Skip, <span class="string">"SKIP"</span>, <span class="number">165</span>),
-<a href=#693 id=693 data-nosnippet>693</a>    (Op2::PrCh, <span class="string">"PRCH"</span>, <span class="number">232</span>),
-<a href=#694 id=694 data-nosnippet>694</a>    (Op2::StCh, <span class="string">"STCH"</span>, <span class="number">253</span>),
-<a href=#695 id=695 data-nosnippet>695</a>    (Op2::EchTr, <span class="string">"ECHTR"</span>, <span class="number">254</span>),
-<a href=#696 id=696 data-nosnippet>696</a>    (Op2::Stop, <span class="string">"STOP"</span>, <span class="number">123</span>),
-<a href=#697 id=697 data-nosnippet>697</a>    (Op2::NoOp, <span class="string">""</span>, <span class="number">0</span>),
-<a href=#698 id=698 data-nosnippet>698</a>];
-<a href=#699 id=699 data-nosnippet>699</a>
-<a href=#700 id=700 data-nosnippet>700</a><span class="kw">impl </span>Op2 {
-<a href=#701 id=701 data-nosnippet>701</a>    <span class="doccomment">/// Returns the 3-digit numerical operation code for `OP2`.
-<a href=#702 id=702 data-nosnippet>702</a>    </span><span class="kw">pub fn </span>code(<span class="self">self</span>) -&gt; u16 {
-<a href=#703 id=703 data-nosnippet>703</a>        OP2_TABLE
-<a href=#704 id=704 data-nosnippet>704</a>            .iter()
-<a href=#705 id=705 data-nosnippet>705</a>            .find(|&amp;&amp;(op, <span class="kw">_</span>, <span class="kw">_</span>)| op == <span class="self">self</span>)
-<a href=#706 id=706 data-nosnippet>706</a>            .expect(<span class="string">"every Op2 variant exists in OP2_TABLE"</span>)
-<a href=#707 id=707 data-nosnippet>707</a>            .<span class="number">2
-<a href=#708 id=708 data-nosnippet>708</a>    </span>}
-<a href=#709 id=709 data-nosnippet>709</a>
-<a href=#710 id=710 data-nosnippet>710</a>    <span class="doccomment">/// Returns the alphabetical mnemonic for `OP2` (`""` for `NoOp`).
-<a href=#711 id=711 data-nosnippet>711</a>    </span><span class="kw">pub fn </span>mnemonic(<span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">'static </span>str {
+<a href=#590 id=590 data-nosnippet>590</a>            .find(|&amp;&amp;(<span class="kw">_</span>, mnem, <span class="kw">_</span>, <span class="kw">_</span>)| mnem == trimmed)
+<a href=#591 id=591 data-nosnippet>591</a>            .map(|<span class="kw-2">&amp;</span>(op, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>)| op)
+<a href=#592 id=592 data-nosnippet>592</a>            .ok_or_else(|| SpeedError::InvalidMnemonic(s.to_string()))
+<a href=#593 id=593 data-nosnippet>593</a>    }
+<a href=#594 id=594 data-nosnippet>594</a>
+<a href=#595 id=595 data-nosnippet>595</a>    <span class="doccomment">/// Returns `true` for `OP1` operations with automatic skips (`RFTP*`, `RBTP*`, `SFTP*`, `SBTP*`, `WRDR*`).
+<a href=#596 id=596 data-nosnippet>596</a>    </span><span class="kw">pub fn </span>forbids_op2(<span class="self">self</span>) -&gt; bool {
+<a href=#597 id=597 data-nosnippet>597</a>        OP1_TABLE
+<a href=#598 id=598 data-nosnippet>598</a>            .iter()
+<a href=#599 id=599 data-nosnippet>599</a>            .find(|&amp;&amp;(op, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>)| op == <span class="self">self</span>)
+<a href=#600 id=600 data-nosnippet>600</a>            .expect(<span class="string">"every Op1 variant exists in OP1_TABLE"</span>)
+<a href=#601 id=601 data-nosnippet>601</a>            .<span class="number">3
+<a href=#602 id=602 data-nosnippet>602</a>    </span>}
+<a href=#603 id=603 data-nosnippet>603</a>}
+<a href=#604 id=604 data-nosnippet>604</a>
+<a href=#605 id=605 data-nosnippet>605</a><span class="doccomment">/// All 48 SpeedCo I `OP2` operations (manual pages 5-3 through 5-5).
+<a href=#606 id=606 data-nosnippet>606</a></span><span class="attr">#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+<a href=#607 id=607 data-nosnippet>607</a></span><span class="kw">pub enum </span>Op2 {
+<a href=#608 id=608 data-nosnippet>608</a>    Tr,
+<a href=#609 id=609 data-nosnippet>609</a>    TrPl,
+<a href=#610 id=610 data-nosnippet>610</a>    TrMn,
+<a href=#611 id=611 data-nosnippet>611</a>    TrZ,
+<a href=#612 id=612 data-nosnippet>612</a>    SnTrP,
+<a href=#613 id=613 data-nosnippet>613</a>    SnTrQ,
+<a href=#614 id=614 data-nosnippet>614</a>    TiA,
+<a href=#615 id=615 data-nosnippet>615</a>    TiB,
+<a href=#616 id=616 data-nosnippet>616</a>    TiC,
+<a href=#617 id=617 data-nosnippet>617</a>    TiAB,
+<a href=#618 id=618 data-nosnippet>618</a>    TiBC,
+<a href=#619 id=619 data-nosnippet>619</a>    TiAC,
+<a href=#620 id=620 data-nosnippet>620</a>    TiABC,
+<a href=#621 id=621 data-nosnippet>621</a>    TdA,
+<a href=#622 id=622 data-nosnippet>622</a>    TdB,
+<a href=#623 id=623 data-nosnippet>623</a>    TdC,
+<a href=#624 id=624 data-nosnippet>624</a>    TdAB,
+<a href=#625 id=625 data-nosnippet>625</a>    TdBC,
+<a href=#626 id=626 data-nosnippet>626</a>    TdAC,
+<a href=#627 id=627 data-nosnippet>627</a>    TdABC,
+<a href=#628 id=628 data-nosnippet>628</a>    SetRA,
+<a href=#629 id=629 data-nosnippet>629</a>    SetRB,
+<a href=#630 id=630 data-nosnippet>630</a>    SetRC,
+<a href=#631 id=631 data-nosnippet>631</a>    SkRA,
+<a href=#632 id=632 data-nosnippet>632</a>    SkRB,
+<a href=#633 id=633 data-nosnippet>633</a>    SkRC,
+<a href=#634 id=634 data-nosnippet>634</a>    RAddA,
+<a href=#635 id=635 data-nosnippet>635</a>    RAddB,
+<a href=#636 id=636 data-nosnippet>636</a>    RAddC,
+<a href=#637 id=637 data-nosnippet>637</a>    RAddD,
+<a href=#638 id=638 data-nosnippet>638</a>    AddA,
+<a href=#639 id=639 data-nosnippet>639</a>    AddB,
+<a href=#640 id=640 data-nosnippet>640</a>    AddC,
+<a href=#641 id=641 data-nosnippet>641</a>    AddD,
+<a href=#642 id=642 data-nosnippet>642</a>    SubA,
+<a href=#643 id=643 data-nosnippet>643</a>    SubB,
+<a href=#644 id=644 data-nosnippet>644</a>    SubC,
+<a href=#645 id=645 data-nosnippet>645</a>    SubD,
+<a href=#646 id=646 data-nosnippet>646</a>    StA,
+<a href=#647 id=647 data-nosnippet>647</a>    StB,
+<a href=#648 id=648 data-nosnippet>648</a>    StC,
+<a href=#649 id=649 data-nosnippet>649</a>    StD,
+<a href=#650 id=650 data-nosnippet>650</a>    Skip,
+<a href=#651 id=651 data-nosnippet>651</a>    PrCh,
+<a href=#652 id=652 data-nosnippet>652</a>    StCh,
+<a href=#653 id=653 data-nosnippet>653</a>    EchTr,
+<a href=#654 id=654 data-nosnippet>654</a>    Stop,
+<a href=#655 id=655 data-nosnippet>655</a>    NoOp,
+<a href=#656 id=656 data-nosnippet>656</a>}
+<a href=#657 id=657 data-nosnippet>657</a>
+<a href=#658 id=658 data-nosnippet>658</a><span class="kw">const </span>OP2_TABLE: <span class="kw-2">&amp;</span>[(Op2, <span class="kw-2">&amp;</span>str, u16)] = <span class="kw-2">&amp;</span>[
+<a href=#659 id=659 data-nosnippet>659</a>    (Op2::Tr, <span class="string">"TR"</span>, <span class="number">104</span>),
+<a href=#660 id=660 data-nosnippet>660</a>    (Op2::TrPl, <span class="string">"TRPL"</span>, <span class="number">109</span>),
+<a href=#661 id=661 data-nosnippet>661</a>    (Op2::TrMn, <span class="string">"TRMN"</span>, <span class="number">115</span>),
+<a href=#662 id=662 data-nosnippet>662</a>    (Op2::TrZ, <span class="string">"TRZ"</span>, <span class="number">112</span>),
+<a href=#663 id=663 data-nosnippet>663</a>    (Op2::SnTrP, <span class="string">"SNTRP"</span>, <span class="number">117</span>),
+<a href=#664 id=664 data-nosnippet>664</a>    (Op2::SnTrQ, <span class="string">"SNTRQ"</span>, <span class="number">120</span>),
+<a href=#665 id=665 data-nosnippet>665</a>    (Op2::TiA, <span class="string">"TIA"</span>, <span class="number">128</span>),
+<a href=#666 id=666 data-nosnippet>666</a>    (Op2::TiB, <span class="string">"TIB"</span>, <span class="number">126</span>),
+<a href=#667 id=667 data-nosnippet>667</a>    (Op2::TiC, <span class="string">"TIC"</span>, <span class="number">125</span>),
+<a href=#668 id=668 data-nosnippet>668</a>    (Op2::TiAB, <span class="string">"TIAB"</span>, <span class="number">130</span>),
+<a href=#669 id=669 data-nosnippet>669</a>    (Op2::TiBC, <span class="string">"TIBC"</span>, <span class="number">127</span>),
+<a href=#670 id=670 data-nosnippet>670</a>    (Op2::TiAC, <span class="string">"TIAC"</span>, <span class="number">129</span>),
+<a href=#671 id=671 data-nosnippet>671</a>    (Op2::TiABC, <span class="string">"TIABC"</span>, <span class="number">131</span>),
+<a href=#672 id=672 data-nosnippet>672</a>    (Op2::TdA, <span class="string">"TDA"</span>, <span class="number">135</span>),
+<a href=#673 id=673 data-nosnippet>673</a>    (Op2::TdB, <span class="string">"TDB"</span>, <span class="number">133</span>),
+<a href=#674 id=674 data-nosnippet>674</a>    (Op2::TdC, <span class="string">"TDC"</span>, <span class="number">132</span>),
+<a href=#675 id=675 data-nosnippet>675</a>    (Op2::TdAB, <span class="string">"TDAB"</span>, <span class="number">137</span>),
+<a href=#676 id=676 data-nosnippet>676</a>    (Op2::TdBC, <span class="string">"TDBC"</span>, <span class="number">134</span>),
+<a href=#677 id=677 data-nosnippet>677</a>    (Op2::TdAC, <span class="string">"TDAC"</span>, <span class="number">136</span>),
+<a href=#678 id=678 data-nosnippet>678</a>    (Op2::TdABC, <span class="string">"TDABC"</span>, <span class="number">138</span>),
+<a href=#679 id=679 data-nosnippet>679</a>    (Op2::SetRA, <span class="string">"SETRA"</span>, <span class="number">139</span>),
+<a href=#680 id=680 data-nosnippet>680</a>    (Op2::SetRB, <span class="string">"SETRB"</span>, <span class="number">250</span>),
+<a href=#681 id=681 data-nosnippet>681</a>    (Op2::SetRC, <span class="string">"SETRC"</span>, <span class="number">145</span>),
+<a href=#682 id=682 data-nosnippet>682</a>    (Op2::SkRA, <span class="string">"SKRA"</span>, <span class="number">152</span>),
+<a href=#683 id=683 data-nosnippet>683</a>    (Op2::SkRB, <span class="string">"SKRB"</span>, <span class="number">159</span>),
+<a href=#684 id=684 data-nosnippet>684</a>    (Op2::SkRC, <span class="string">"SKRC"</span>, <span class="number">162</span>),
+<a href=#685 id=685 data-nosnippet>685</a>    (Op2::RAddA, <span class="string">"RADDA"</span>, <span class="number">199</span>),
+<a href=#686 id=686 data-nosnippet>686</a>    (Op2::RAddB, <span class="string">"RADDB"</span>, <span class="number">202</span>),
+<a href=#687 id=687 data-nosnippet>687</a>    (Op2::RAddC, <span class="string">"RADDC"</span>, <span class="number">205</span>),
+<a href=#688 id=688 data-nosnippet>688</a>    (Op2::RAddD, <span class="string">"RADDD"</span>, <span class="number">208</span>),
+<a href=#689 id=689 data-nosnippet>689</a>    (Op2::AddA, <span class="string">"ADDA"</span>, <span class="number">177</span>),
+<a href=#690 id=690 data-nosnippet>690</a>    (Op2::AddB, <span class="string">"ADDB"</span>, <span class="number">184</span>),
+<a href=#691 id=691 data-nosnippet>691</a>    (Op2::AddC, <span class="string">"ADDC"</span>, <span class="number">190</span>),
+<a href=#692 id=692 data-nosnippet>692</a>    (Op2::AddD, <span class="string">"ADDD"</span>, <span class="number">193</span>),
+<a href=#693 id=693 data-nosnippet>693</a>    (Op2::SubA, <span class="string">"SUBA"</span>, <span class="number">211</span>),
+<a href=#694 id=694 data-nosnippet>694</a>    (Op2::SubB, <span class="string">"SUBB"</span>, <span class="number">216</span>),
+<a href=#695 id=695 data-nosnippet>695</a>    (Op2::SubC, <span class="string">"SUBC"</span>, <span class="number">221</span>),
+<a href=#696 id=696 data-nosnippet>696</a>    (Op2::SubD, <span class="string">"SUBD"</span>, <span class="number">226</span>),
+<a href=#697 id=697 data-nosnippet>697</a>    (Op2::StA, <span class="string">"STA"</span>, <span class="number">251</span>),
+<a href=#698 id=698 data-nosnippet>698</a>    (Op2::StB, <span class="string">"STB"</span>, <span class="number">252</span>),
+<a href=#699 id=699 data-nosnippet>699</a>    (Op2::StC, <span class="string">"STC"</span>, <span class="number">235</span>),
+<a href=#700 id=700 data-nosnippet>700</a>    (Op2::StD, <span class="string">"STD"</span>, <span class="number">244</span>),
+<a href=#701 id=701 data-nosnippet>701</a>    (Op2::Skip, <span class="string">"SKIP"</span>, <span class="number">165</span>),
+<a href=#702 id=702 data-nosnippet>702</a>    (Op2::PrCh, <span class="string">"PRCH"</span>, <span class="number">232</span>),
+<a href=#703 id=703 data-nosnippet>703</a>    (Op2::StCh, <span class="string">"STCH"</span>, <span class="number">253</span>),
+<a href=#704 id=704 data-nosnippet>704</a>    (Op2::EchTr, <span class="string">"ECHTR"</span>, <span class="number">254</span>),
+<a href=#705 id=705 data-nosnippet>705</a>    (Op2::Stop, <span class="string">"STOP"</span>, <span class="number">123</span>),
+<a href=#706 id=706 data-nosnippet>706</a>    (Op2::NoOp, <span class="string">""</span>, <span class="number">0</span>),
+<a href=#707 id=707 data-nosnippet>707</a>];
+<a href=#708 id=708 data-nosnippet>708</a>
+<a href=#709 id=709 data-nosnippet>709</a><span class="kw">impl </span>Op2 {
+<a href=#710 id=710 data-nosnippet>710</a>    <span class="doccomment">/// Returns the 3-digit numerical operation code for `OP2`.
+<a href=#711 id=711 data-nosnippet>711</a>    </span><span class="kw">pub fn </span>code(<span class="self">self</span>) -&gt; u16 {
 <a href=#712 id=712 data-nosnippet>712</a>        OP2_TABLE
 <a href=#713 id=713 data-nosnippet>713</a>            .iter()
 <a href=#714 id=714 data-nosnippet>714</a>            .find(|&amp;&amp;(op, <span class="kw">_</span>, <span class="kw">_</span>)| op == <span class="self">self</span>)
 <a href=#715 id=715 data-nosnippet>715</a>            .expect(<span class="string">"every Op2 variant exists in OP2_TABLE"</span>)
-<a href=#716 id=716 data-nosnippet>716</a>            .<span class="number">1
+<a href=#716 id=716 data-nosnippet>716</a>            .<span class="number">2
 <a href=#717 id=717 data-nosnippet>717</a>    </span>}
 <a href=#718 id=718 data-nosnippet>718</a>
-<a href=#719 id=719 data-nosnippet>719</a>    <span class="doccomment">/// Decodes a 3-digit numerical `OP2` code (`0` -&gt; `Op2::NoOp`).
-<a href=#720 id=720 data-nosnippet>720</a>    </span><span class="kw">pub fn </span>from_code(code: u16) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, SpeedError&gt; {
+<a href=#719 id=719 data-nosnippet>719</a>    <span class="doccomment">/// Returns the alphabetical mnemonic for `OP2` (`""` for `NoOp`).
+<a href=#720 id=720 data-nosnippet>720</a>    </span><span class="kw">pub fn </span>mnemonic(<span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">'static </span>str {
 <a href=#721 id=721 data-nosnippet>721</a>        OP2_TABLE
 <a href=#722 id=722 data-nosnippet>722</a>            .iter()
-<a href=#723 id=723 data-nosnippet>723</a>            .find(|&amp;&amp;(<span class="kw">_</span>, <span class="kw">_</span>, c)| c == code)
-<a href=#724 id=724 data-nosnippet>724</a>            .map(|<span class="kw-2">&amp;</span>(op, <span class="kw">_</span>, <span class="kw">_</span>)| op)
-<a href=#725 id=725 data-nosnippet>725</a>            .ok_or(SpeedError::InvalidOp2Code(code))
-<a href=#726 id=726 data-nosnippet>726</a>    }
+<a href=#723 id=723 data-nosnippet>723</a>            .find(|&amp;&amp;(op, <span class="kw">_</span>, <span class="kw">_</span>)| op == <span class="self">self</span>)
+<a href=#724 id=724 data-nosnippet>724</a>            .expect(<span class="string">"every Op2 variant exists in OP2_TABLE"</span>)
+<a href=#725 id=725 data-nosnippet>725</a>            .<span class="number">1
+<a href=#726 id=726 data-nosnippet>726</a>    </span>}
 <a href=#727 id=727 data-nosnippet>727</a>
-<a href=#728 id=728 data-nosnippet>728</a>    <span class="doccomment">/// Decodes an alphabetical `OP2` mnemonic (`""` or `"-"` -&gt; `Op2::NoOp`).
-<a href=#729 id=729 data-nosnippet>729</a>    </span><span class="kw">pub fn </span>from_mnemonic(s: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, SpeedError&gt; {
-<a href=#730 id=730 data-nosnippet>730</a>        <span class="kw">let </span>trimmed = s.trim();
-<a href=#731 id=731 data-nosnippet>731</a>        <span class="kw">if </span>trimmed.is_empty() || trimmed == <span class="string">"-" </span>{
-<a href=#732 id=732 data-nosnippet>732</a>            <span class="kw">return </span><span class="prelude-val">Ok</span>(Op2::NoOp);
-<a href=#733 id=733 data-nosnippet>733</a>        }
-<a href=#734 id=734 data-nosnippet>734</a>        OP2_TABLE
-<a href=#735 id=735 data-nosnippet>735</a>            .iter()
-<a href=#736 id=736 data-nosnippet>736</a>            .find(|&amp;&amp;(<span class="kw">_</span>, mnem, <span class="kw">_</span>)| mnem == trimmed)
-<a href=#737 id=737 data-nosnippet>737</a>            .map(|<span class="kw-2">&amp;</span>(op, <span class="kw">_</span>, <span class="kw">_</span>)| op)
-<a href=#738 id=738 data-nosnippet>738</a>            .ok_or_else(|| SpeedError::InvalidMnemonic(s.to_string()))
-<a href=#739 id=739 data-nosnippet>739</a>    }
-<a href=#740 id=740 data-nosnippet>740</a>}
-<a href=#741 id=741 data-nosnippet>741</a>
-<a href=#742 id=742 data-nosnippet>742</a><span class="doccomment">/// Decoded SpeedCo I instruction occupying one 72-bit word (manual page 4-4).
-<a href=#743 id=743 data-nosnippet>743</a></span><span class="attr">#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-<a href=#744 id=744 data-nosnippet>744</a></span><span class="kw">pub struct </span>Instruction {
-<a href=#745 id=745 data-nosnippet>745</a>    <span class="kw">pub </span>r_code: RCode,
-<a href=#746 id=746 data-nosnippet>746</a>    <span class="kw">pub </span>op1: Op1,
-<a href=#747 id=747 data-nosnippet>747</a>    <span class="kw">pub </span>op2: Op2,
-<a href=#748 id=748 data-nosnippet>748</a>    <span class="kw">pub </span>d: Address,
-<a href=#749 id=749 data-nosnippet>749</a>    <span class="kw">pub </span>a: Address,
-<a href=#750 id=750 data-nosnippet>750</a>    <span class="kw">pub </span>b: Address,
-<a href=#751 id=751 data-nosnippet>751</a>    <span class="kw">pub </span>c: Address,
-<a href=#752 id=752 data-nosnippet>752</a>    <span class="kw">pub </span>l_code: LCode,
-<a href=#753 id=753 data-nosnippet>753</a>}
-<a href=#754 id=754 data-nosnippet>754</a>
-<a href=#755 id=755 data-nosnippet>755</a><span class="kw">impl </span>Instruction {
-<a href=#756 id=756 data-nosnippet>756</a>    <span class="doccomment">/// Encodes the instruction into its 72-bit memory layout (page 4-4).
-<a href=#757 id=757 data-nosnippet>757</a>    </span><span class="kw">pub fn </span>to_word(<span class="self">self</span>) -&gt; Word72 {
-<a href=#758 id=758 data-nosnippet>758</a>        <span class="kw">let </span>bits = ((<span class="self">self</span>.r_code.raw() <span class="kw">as </span>u128) &lt;&lt; <span class="number">67</span>)
-<a href=#759 id=759 data-nosnippet>759</a>            | ((<span class="self">self</span>.op1.code() <span class="kw">as </span>u128) &lt;&lt; <span class="number">54</span>)
-<a href=#760 id=760 data-nosnippet>760</a>            | ((<span class="self">self</span>.op2.code() <span class="kw">as </span>u128) &lt;&lt; <span class="number">46</span>)
-<a href=#761 id=761 data-nosnippet>761</a>            | ((<span class="self">self</span>.d.raw() <span class="kw">as </span>u128) &lt;&lt; <span class="number">36</span>)
-<a href=#762 id=762 data-nosnippet>762</a>            | ((<span class="self">self</span>.a.raw() <span class="kw">as </span>u128) &lt;&lt; <span class="number">25</span>)
-<a href=#763 id=763 data-nosnippet>763</a>            | ((<span class="self">self</span>.b.raw() <span class="kw">as </span>u128) &lt;&lt; <span class="number">15</span>)
-<a href=#764 id=764 data-nosnippet>764</a>            | ((<span class="self">self</span>.l_code.raw() <span class="kw">as </span>u128) &lt;&lt; <span class="number">10</span>)
-<a href=#765 id=765 data-nosnippet>765</a>            | (<span class="self">self</span>.c.raw() <span class="kw">as </span>u128);
-<a href=#766 id=766 data-nosnippet>766</a>        Word72 { bits }
-<a href=#767 id=767 data-nosnippet>767</a>    }
-<a href=#768 id=768 data-nosnippet>768</a>
-<a href=#769 id=769 data-nosnippet>769</a>    <span class="doccomment">/// Decodes a 72-bit instruction word and validates field constraints.
-<a href=#770 id=770 data-nosnippet>770</a>    </span><span class="kw">pub fn </span>from_word(word: Word72) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, SpeedError&gt; {
-<a href=#771 id=771 data-nosnippet>771</a>        <span class="kw">if </span>word.bit(<span class="number">2</span>) || word.bit(<span class="number">6</span>) || word.bit(<span class="number">37</span>) || word.bits(<span class="number">58</span>, <span class="number">59</span>) != <span class="number">0 </span>{
-<a href=#772 id=772 data-nosnippet>772</a>            <span class="kw">return </span><span class="prelude-val">Err</span>(SpeedError::InvalidWordBits(word.raw()));
-<a href=#773 id=773 data-nosnippet>773</a>        }
-<a href=#774 id=774 data-nosnippet>774</a>        <span class="kw">let </span>r_code = RCode::new(word.bits(<span class="number">3</span>, <span class="number">5</span>) <span class="kw">as </span>u8)<span class="question-mark">?</span>;
-<a href=#775 id=775 data-nosnippet>775</a>        <span class="kw">let </span>op1 = Op1::from_code(word.bits(<span class="number">7</span>, <span class="number">18</span>) <span class="kw">as </span>u16)<span class="question-mark">?</span>;
-<a href=#776 id=776 data-nosnippet>776</a>        <span class="kw">let </span>op2 = Op2::from_code(word.bits(<span class="number">19</span>, <span class="number">26</span>) <span class="kw">as </span>u16)<span class="question-mark">?</span>;
-<a href=#777 id=777 data-nosnippet>777</a>        <span class="kw">if </span>op1.forbids_op2() &amp;&amp; op2 != Op2::NoOp {
-<a href=#778 id=778 data-nosnippet>778</a>            <span class="kw">return </span><span class="prelude-val">Err</span>(SpeedError::ForbiddenOp2WithSkipOp1 { op1, op2 });
-<a href=#779 id=779 data-nosnippet>779</a>        }
-<a href=#780 id=780 data-nosnippet>780</a>        <span class="kw">let </span>d = Address::new(word.bits(<span class="number">27</span>, <span class="number">36</span>) <span class="kw">as </span>u16)<span class="question-mark">?</span>;
-<a href=#781 id=781 data-nosnippet>781</a>        <span class="kw">let </span>a = Address::new(word.bits(<span class="number">38</span>, <span class="number">47</span>) <span class="kw">as </span>u16)<span class="question-mark">?</span>;
-<a href=#782 id=782 data-nosnippet>782</a>        <span class="kw">let </span>b = Address::new(word.bits(<span class="number">48</span>, <span class="number">57</span>) <span class="kw">as </span>u16)<span class="question-mark">?</span>;
-<a href=#783 id=783 data-nosnippet>783</a>        <span class="kw">let </span>l_code = LCode::new(word.bits(<span class="number">60</span>, <span class="number">62</span>) <span class="kw">as </span>u8)<span class="question-mark">?</span>;
-<a href=#784 id=784 data-nosnippet>784</a>        <span class="kw">let </span>c = Address::new(word.bits(<span class="number">63</span>, <span class="number">72</span>) <span class="kw">as </span>u16)<span class="question-mark">?</span>;
-<a href=#785 id=785 data-nosnippet>785</a>
-<a href=#786 id=786 data-nosnippet>786</a>        <span class="prelude-val">Ok</span>(<span class="self">Self </span>{
-<a href=#787 id=787 data-nosnippet>787</a>            r_code,
-<a href=#788 id=788 data-nosnippet>788</a>            op1,
-<a href=#789 id=789 data-nosnippet>789</a>            op2,
-<a href=#790 id=790 data-nosnippet>790</a>            d,
-<a href=#791 id=791 data-nosnippet>791</a>            a,
-<a href=#792 id=792 data-nosnippet>792</a>            b,
-<a href=#793 id=793 data-nosnippet>793</a>            c,
-<a href=#794 id=794 data-nosnippet>794</a>            l_code,
-<a href=#795 id=795 data-nosnippet>795</a>        })
-<a href=#796 id=796 data-nosnippet>796</a>    }
-<a href=#797 id=797 data-nosnippet>797</a>}
-<a href=#798 id=798 data-nosnippet>798</a>
-<a href=#799 id=799 data-nosnippet>799</a><span class="doccomment">/// 1024-word electrostatic cathode-ray-tube memory with user-accessible cells `300..=1013`.
-<a href=#800 id=800 data-nosnippet>800</a></span><span class="attr">#[derive(Debug, Clone)]
-<a href=#801 id=801 data-nosnippet>801</a></span><span class="kw">pub struct </span>ElectrostaticMemory {
-<a href=#802 id=802 data-nosnippet>802</a>    words: Vec&lt;Word72&gt;,
-<a href=#803 id=803 data-nosnippet>803</a>}
-<a href=#804 id=804 data-nosnippet>804</a>
-<a href=#805 id=805 data-nosnippet>805</a><span class="kw">impl </span>Default <span class="kw">for </span>ElectrostaticMemory {
-<a href=#806 id=806 data-nosnippet>806</a>    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-<a href=#807 id=807 data-nosnippet>807</a>        <span class="self">Self</span>::new()
-<a href=#808 id=808 data-nosnippet>808</a>    }
-<a href=#809 id=809 data-nosnippet>809</a>}
-<a href=#810 id=810 data-nosnippet>810</a>
-<a href=#811 id=811 data-nosnippet>811</a><span class="kw">impl </span>ElectrostaticMemory {
-<a href=#812 id=812 data-nosnippet>812</a>    <span class="doccomment">/// Creates zero-initialized electrostatic memory.
-<a href=#813 id=813 data-nosnippet>813</a>    </span><span class="kw">pub fn </span>new() -&gt; <span class="self">Self </span>{
-<a href=#814 id=814 data-nosnippet>814</a>        <span class="self">Self </span>{
-<a href=#815 id=815 data-nosnippet>815</a>            words: <span class="macro">vec!</span>[Word72::default(); TOTAL_MEM_WORDS],
-<a href=#816 id=816 data-nosnippet>816</a>        }
+<a href=#728 id=728 data-nosnippet>728</a>    <span class="doccomment">/// Decodes a 3-digit numerical `OP2` code (`0` -&gt; `Op2::NoOp`).
+<a href=#729 id=729 data-nosnippet>729</a>    </span><span class="kw">pub fn </span>from_code(code: u16) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, SpeedError&gt; {
+<a href=#730 id=730 data-nosnippet>730</a>        OP2_TABLE
+<a href=#731 id=731 data-nosnippet>731</a>            .iter()
+<a href=#732 id=732 data-nosnippet>732</a>            .find(|&amp;&amp;(<span class="kw">_</span>, <span class="kw">_</span>, c)| c == code)
+<a href=#733 id=733 data-nosnippet>733</a>            .map(|<span class="kw-2">&amp;</span>(op, <span class="kw">_</span>, <span class="kw">_</span>)| op)
+<a href=#734 id=734 data-nosnippet>734</a>            .ok_or(SpeedError::InvalidOp2Code(code))
+<a href=#735 id=735 data-nosnippet>735</a>    }
+<a href=#736 id=736 data-nosnippet>736</a>
+<a href=#737 id=737 data-nosnippet>737</a>    <span class="doccomment">/// Decodes an alphabetical `OP2` mnemonic (`""` or `"-"` -&gt; `Op2::NoOp`).
+<a href=#738 id=738 data-nosnippet>738</a>    </span><span class="kw">pub fn </span>from_mnemonic(s: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, SpeedError&gt; {
+<a href=#739 id=739 data-nosnippet>739</a>        <span class="kw">let </span>trimmed = s.trim();
+<a href=#740 id=740 data-nosnippet>740</a>        <span class="kw">if </span>trimmed.is_empty() || trimmed == <span class="string">"-" </span>{
+<a href=#741 id=741 data-nosnippet>741</a>            <span class="kw">return </span><span class="prelude-val">Ok</span>(Op2::NoOp);
+<a href=#742 id=742 data-nosnippet>742</a>        }
+<a href=#743 id=743 data-nosnippet>743</a>        OP2_TABLE
+<a href=#744 id=744 data-nosnippet>744</a>            .iter()
+<a href=#745 id=745 data-nosnippet>745</a>            .find(|&amp;&amp;(<span class="kw">_</span>, mnem, <span class="kw">_</span>)| mnem == trimmed)
+<a href=#746 id=746 data-nosnippet>746</a>            .map(|<span class="kw-2">&amp;</span>(op, <span class="kw">_</span>, <span class="kw">_</span>)| op)
+<a href=#747 id=747 data-nosnippet>747</a>            .ok_or_else(|| SpeedError::InvalidMnemonic(s.to_string()))
+<a href=#748 id=748 data-nosnippet>748</a>    }
+<a href=#749 id=749 data-nosnippet>749</a>}
+<a href=#750 id=750 data-nosnippet>750</a>
+<a href=#751 id=751 data-nosnippet>751</a><span class="doccomment">/// Decoded SpeedCo I instruction occupying one 72-bit word (manual page 4-4).
+<a href=#752 id=752 data-nosnippet>752</a></span><span class="attr">#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+<a href=#753 id=753 data-nosnippet>753</a></span><span class="kw">pub struct </span>Instruction {
+<a href=#754 id=754 data-nosnippet>754</a>    <span class="kw">pub </span>r_code: RCode,
+<a href=#755 id=755 data-nosnippet>755</a>    <span class="kw">pub </span>op1: Op1,
+<a href=#756 id=756 data-nosnippet>756</a>    <span class="kw">pub </span>op2: Op2,
+<a href=#757 id=757 data-nosnippet>757</a>    <span class="kw">pub </span>d: Address,
+<a href=#758 id=758 data-nosnippet>758</a>    <span class="kw">pub </span>a: Address,
+<a href=#759 id=759 data-nosnippet>759</a>    <span class="kw">pub </span>b: Address,
+<a href=#760 id=760 data-nosnippet>760</a>    <span class="kw">pub </span>c: Address,
+<a href=#761 id=761 data-nosnippet>761</a>    <span class="kw">pub </span>l_code: LCode,
+<a href=#762 id=762 data-nosnippet>762</a>}
+<a href=#763 id=763 data-nosnippet>763</a>
+<a href=#764 id=764 data-nosnippet>764</a><span class="kw">impl </span>Instruction {
+<a href=#765 id=765 data-nosnippet>765</a>    <span class="doccomment">/// Encodes the instruction into its 72-bit memory layout (page 4-4).
+<a href=#766 id=766 data-nosnippet>766</a>    </span><span class="kw">pub fn </span>to_word(<span class="self">self</span>) -&gt; Word72 {
+<a href=#767 id=767 data-nosnippet>767</a>        <span class="kw">let </span>bits = ((<span class="self">self</span>.r_code.raw() <span class="kw">as </span>u128) &lt;&lt; <span class="number">67</span>)
+<a href=#768 id=768 data-nosnippet>768</a>            | ((<span class="self">self</span>.op1.code() <span class="kw">as </span>u128) &lt;&lt; <span class="number">54</span>)
+<a href=#769 id=769 data-nosnippet>769</a>            | ((<span class="self">self</span>.op2.code() <span class="kw">as </span>u128) &lt;&lt; <span class="number">46</span>)
+<a href=#770 id=770 data-nosnippet>770</a>            | ((<span class="self">self</span>.d.raw() <span class="kw">as </span>u128) &lt;&lt; <span class="number">36</span>)
+<a href=#771 id=771 data-nosnippet>771</a>            | ((<span class="self">self</span>.a.raw() <span class="kw">as </span>u128) &lt;&lt; <span class="number">25</span>)
+<a href=#772 id=772 data-nosnippet>772</a>            | ((<span class="self">self</span>.b.raw() <span class="kw">as </span>u128) &lt;&lt; <span class="number">15</span>)
+<a href=#773 id=773 data-nosnippet>773</a>            | ((<span class="self">self</span>.l_code.raw() <span class="kw">as </span>u128) &lt;&lt; <span class="number">10</span>)
+<a href=#774 id=774 data-nosnippet>774</a>            | (<span class="self">self</span>.c.raw() <span class="kw">as </span>u128);
+<a href=#775 id=775 data-nosnippet>775</a>        Word72 { bits }
+<a href=#776 id=776 data-nosnippet>776</a>    }
+<a href=#777 id=777 data-nosnippet>777</a>
+<a href=#778 id=778 data-nosnippet>778</a>    <span class="doccomment">/// Decodes a 72-bit instruction word and validates field constraints.
+<a href=#779 id=779 data-nosnippet>779</a>    </span><span class="kw">pub fn </span>from_word(word: Word72) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, SpeedError&gt; {
+<a href=#780 id=780 data-nosnippet>780</a>        <span class="kw">if </span>word.bit(<span class="number">2</span>) || word.bit(<span class="number">6</span>) || word.bit(<span class="number">37</span>) || word.bits(<span class="number">58</span>, <span class="number">59</span>) != <span class="number">0 </span>{
+<a href=#781 id=781 data-nosnippet>781</a>            <span class="kw">return </span><span class="prelude-val">Err</span>(SpeedError::InvalidWordBits(word.raw()));
+<a href=#782 id=782 data-nosnippet>782</a>        }
+<a href=#783 id=783 data-nosnippet>783</a>        <span class="kw">let </span>r_code = RCode::new(word.bits(<span class="number">3</span>, <span class="number">5</span>) <span class="kw">as </span>u8)<span class="question-mark">?</span>;
+<a href=#784 id=784 data-nosnippet>784</a>        <span class="kw">let </span>op1 = Op1::from_code(word.bits(<span class="number">7</span>, <span class="number">18</span>) <span class="kw">as </span>u16)<span class="question-mark">?</span>;
+<a href=#785 id=785 data-nosnippet>785</a>        <span class="kw">let </span>op2 = Op2::from_code(word.bits(<span class="number">19</span>, <span class="number">26</span>) <span class="kw">as </span>u16)<span class="question-mark">?</span>;
+<a href=#786 id=786 data-nosnippet>786</a>        <span class="kw">if </span>op1.forbids_op2() &amp;&amp; op2 != Op2::NoOp {
+<a href=#787 id=787 data-nosnippet>787</a>            <span class="kw">return </span><span class="prelude-val">Err</span>(SpeedError::ForbiddenOp2WithSkipOp1 { op1, op2 });
+<a href=#788 id=788 data-nosnippet>788</a>        }
+<a href=#789 id=789 data-nosnippet>789</a>        <span class="kw">let </span>d = Address::new(word.bits(<span class="number">27</span>, <span class="number">36</span>) <span class="kw">as </span>u16)<span class="question-mark">?</span>;
+<a href=#790 id=790 data-nosnippet>790</a>        <span class="kw">let </span>a = Address::new(word.bits(<span class="number">38</span>, <span class="number">47</span>) <span class="kw">as </span>u16)<span class="question-mark">?</span>;
+<a href=#791 id=791 data-nosnippet>791</a>        <span class="kw">let </span>b = Address::new(word.bits(<span class="number">48</span>, <span class="number">57</span>) <span class="kw">as </span>u16)<span class="question-mark">?</span>;
+<a href=#792 id=792 data-nosnippet>792</a>        <span class="kw">let </span>l_code = LCode::new(word.bits(<span class="number">60</span>, <span class="number">62</span>) <span class="kw">as </span>u8)<span class="question-mark">?</span>;
+<a href=#793 id=793 data-nosnippet>793</a>        <span class="kw">let </span>c = Address::new(word.bits(<span class="number">63</span>, <span class="number">72</span>) <span class="kw">as </span>u16)<span class="question-mark">?</span>;
+<a href=#794 id=794 data-nosnippet>794</a>
+<a href=#795 id=795 data-nosnippet>795</a>        <span class="prelude-val">Ok</span>(<span class="self">Self </span>{
+<a href=#796 id=796 data-nosnippet>796</a>            r_code,
+<a href=#797 id=797 data-nosnippet>797</a>            op1,
+<a href=#798 id=798 data-nosnippet>798</a>            op2,
+<a href=#799 id=799 data-nosnippet>799</a>            d,
+<a href=#800 id=800 data-nosnippet>800</a>            a,
+<a href=#801 id=801 data-nosnippet>801</a>            b,
+<a href=#802 id=802 data-nosnippet>802</a>            c,
+<a href=#803 id=803 data-nosnippet>803</a>            l_code,
+<a href=#804 id=804 data-nosnippet>804</a>        })
+<a href=#805 id=805 data-nosnippet>805</a>    }
+<a href=#806 id=806 data-nosnippet>806</a>}
+<a href=#807 id=807 data-nosnippet>807</a>
+<a href=#808 id=808 data-nosnippet>808</a><span class="doccomment">/// 1024-word electrostatic cathode-ray-tube memory with user-accessible cells `300..=1013`.
+<a href=#809 id=809 data-nosnippet>809</a></span><span class="attr">#[derive(Debug, Clone)]
+<a href=#810 id=810 data-nosnippet>810</a></span><span class="kw">pub struct </span>ElectrostaticMemory {
+<a href=#811 id=811 data-nosnippet>811</a>    words: Vec&lt;Word72&gt;,
+<a href=#812 id=812 data-nosnippet>812</a>}
+<a href=#813 id=813 data-nosnippet>813</a>
+<a href=#814 id=814 data-nosnippet>814</a><span class="kw">impl </span>Default <span class="kw">for </span>ElectrostaticMemory {
+<a href=#815 id=815 data-nosnippet>815</a>    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+<a href=#816 id=816 data-nosnippet>816</a>        <span class="self">Self</span>::new()
 <a href=#817 id=817 data-nosnippet>817</a>    }
-<a href=#818 id=818 data-nosnippet>818</a>
-<a href=#819 id=819 data-nosnippet>819</a>    <span class="doccomment">/// Reads a raw 72-bit word from user storage (`300..=1013`), rejecting control cells.
-<a href=#820 id=820 data-nosnippet>820</a>    </span><span class="kw">pub fn </span>read(<span class="kw-2">&amp;</span><span class="self">self</span>, addr: Address) -&gt; <span class="prelude-ty">Result</span>&lt;Word72, SpeedError&gt; {
-<a href=#821 id=821 data-nosnippet>821</a>        <span class="kw">if </span>!addr.is_user_accessible() {
-<a href=#822 id=822 data-nosnippet>822</a>            <span class="kw">return </span><span class="prelude-val">Err</span>(SpeedError::ControlRegionAccess(addr.raw()));
-<a href=#823 id=823 data-nosnippet>823</a>        }
-<a href=#824 id=824 data-nosnippet>824</a>        <span class="prelude-val">Ok</span>(<span class="self">self</span>.words[addr.raw() <span class="kw">as </span>usize])
-<a href=#825 id=825 data-nosnippet>825</a>    }
-<a href=#826 id=826 data-nosnippet>826</a>
-<a href=#827 id=827 data-nosnippet>827</a>    <span class="doccomment">/// Writes a raw 72-bit word into user storage (`300..=1013`), rejecting control cells.
-<a href=#828 id=828 data-nosnippet>828</a>    </span><span class="kw">pub fn </span>write(<span class="kw-2">&amp;mut </span><span class="self">self</span>, addr: Address, word: Word72) -&gt; <span class="prelude-ty">Result</span>&lt;(), SpeedError&gt; {
-<a href=#829 id=829 data-nosnippet>829</a>        <span class="kw">if </span>!addr.is_user_accessible() {
-<a href=#830 id=830 data-nosnippet>830</a>            <span class="kw">return </span><span class="prelude-val">Err</span>(SpeedError::ControlRegionAccess(addr.raw()));
-<a href=#831 id=831 data-nosnippet>831</a>        }
-<a href=#832 id=832 data-nosnippet>832</a>        <span class="self">self</span>.words[addr.raw() <span class="kw">as </span>usize] = word;
-<a href=#833 id=833 data-nosnippet>833</a>        <span class="prelude-val">Ok</span>(())
+<a href=#818 id=818 data-nosnippet>818</a>}
+<a href=#819 id=819 data-nosnippet>819</a>
+<a href=#820 id=820 data-nosnippet>820</a><span class="kw">impl </span>ElectrostaticMemory {
+<a href=#821 id=821 data-nosnippet>821</a>    <span class="doccomment">/// Creates zero-initialized electrostatic memory.
+<a href=#822 id=822 data-nosnippet>822</a>    </span><span class="kw">pub fn </span>new() -&gt; <span class="self">Self </span>{
+<a href=#823 id=823 data-nosnippet>823</a>        <span class="self">Self </span>{
+<a href=#824 id=824 data-nosnippet>824</a>            words: <span class="macro">vec!</span>[Word72::default(); TOTAL_MEM_WORDS],
+<a href=#825 id=825 data-nosnippet>825</a>        }
+<a href=#826 id=826 data-nosnippet>826</a>    }
+<a href=#827 id=827 data-nosnippet>827</a>
+<a href=#828 id=828 data-nosnippet>828</a>    <span class="doccomment">/// Reads a raw 72-bit word from user storage (`300..=1013`), rejecting control cells.
+<a href=#829 id=829 data-nosnippet>829</a>    </span><span class="kw">pub fn </span>read(<span class="kw-2">&amp;</span><span class="self">self</span>, addr: Address) -&gt; <span class="prelude-ty">Result</span>&lt;Word72, SpeedError&gt; {
+<a href=#830 id=830 data-nosnippet>830</a>        <span class="kw">if </span>!addr.is_user_accessible() {
+<a href=#831 id=831 data-nosnippet>831</a>            <span class="kw">return </span><span class="prelude-val">Err</span>(SpeedError::ControlRegionAccess(addr.raw()));
+<a href=#832 id=832 data-nosnippet>832</a>        }
+<a href=#833 id=833 data-nosnippet>833</a>        <span class="prelude-val">Ok</span>(<span class="self">self</span>.words[addr.raw() <span class="kw">as </span>usize])
 <a href=#834 id=834 data-nosnippet>834</a>    }
 <a href=#835 id=835 data-nosnippet>835</a>
-<a href=#836 id=836 data-nosnippet>836</a>    <span class="doccomment">/// Reads and decodes a `SpeedFloat` from user storage (`300..=1013`).
-<a href=#837 id=837 data-nosnippet>837</a>    </span><span class="kw">pub fn </span>read_float(<span class="kw-2">&amp;</span><span class="self">self</span>, addr: Address) -&gt; <span class="prelude-ty">Result</span>&lt;SpeedFloat, SpeedError&gt; {
-<a href=#838 id=838 data-nosnippet>838</a>        <span class="prelude-val">Ok</span>(SpeedFloat::from_word(<span class="self">self</span>.read(addr)<span class="question-mark">?</span>))
-<a href=#839 id=839 data-nosnippet>839</a>    }
-<a href=#840 id=840 data-nosnippet>840</a>
-<a href=#841 id=841 data-nosnippet>841</a>    <span class="doccomment">/// Encodes and writes a `SpeedFloat` into user storage (`300..=1013`).
-<a href=#842 id=842 data-nosnippet>842</a>    </span><span class="kw">pub fn </span>write_float(<span class="kw-2">&amp;mut </span><span class="self">self</span>, addr: Address, val: SpeedFloat) -&gt; <span class="prelude-ty">Result</span>&lt;(), SpeedError&gt; {
-<a href=#843 id=843 data-nosnippet>843</a>        <span class="self">self</span>.write(addr, val.to_word())
-<a href=#844 id=844 data-nosnippet>844</a>    }
-<a href=#845 id=845 data-nosnippet>845</a>
-<a href=#846 id=846 data-nosnippet>846</a>    <span class="doccomment">/// Reads and decodes an `Instruction` from user storage (`300..=1013`).
-<a href=#847 id=847 data-nosnippet>847</a>    </span><span class="kw">pub fn </span>read_instruction(<span class="kw-2">&amp;</span><span class="self">self</span>, addr: Address) -&gt; <span class="prelude-ty">Result</span>&lt;Instruction, SpeedError&gt; {
-<a href=#848 id=848 data-nosnippet>848</a>        Instruction::from_word(<span class="self">self</span>.read(addr)<span class="question-mark">?</span>)
-<a href=#849 id=849 data-nosnippet>849</a>    }
-<a href=#850 id=850 data-nosnippet>850</a>
-<a href=#851 id=851 data-nosnippet>851</a>    <span class="doccomment">/// Encodes and writes an `Instruction` into user storage (`300..=1013`).
-<a href=#852 id=852 data-nosnippet>852</a>    </span><span class="kw">pub fn </span>write_instruction(<span class="kw-2">&amp;mut </span><span class="self">self</span>, addr: Address, instr: Instruction) -&gt; <span class="prelude-ty">Result</span>&lt;(), SpeedError&gt; {
-<a href=#853 id=853 data-nosnippet>853</a>        <span class="self">self</span>.write(addr, instr.to_word())
-<a href=#854 id=854 data-nosnippet>854</a>    }
-<a href=#855 id=855 data-nosnippet>855</a>}
+<a href=#836 id=836 data-nosnippet>836</a>    <span class="doccomment">/// Writes a raw 72-bit word into user storage (`300..=1013`), rejecting control cells.
+<a href=#837 id=837 data-nosnippet>837</a>    </span><span class="kw">pub fn </span>write(<span class="kw-2">&amp;mut </span><span class="self">self</span>, addr: Address, word: Word72) -&gt; <span class="prelude-ty">Result</span>&lt;(), SpeedError&gt; {
+<a href=#838 id=838 data-nosnippet>838</a>        <span class="kw">if </span>!addr.is_user_accessible() {
+<a href=#839 id=839 data-nosnippet>839</a>            <span class="kw">return </span><span class="prelude-val">Err</span>(SpeedError::ControlRegionAccess(addr.raw()));
+<a href=#840 id=840 data-nosnippet>840</a>        }
+<a href=#841 id=841 data-nosnippet>841</a>        <span class="self">self</span>.words[addr.raw() <span class="kw">as </span>usize] = word;
+<a href=#842 id=842 data-nosnippet>842</a>        <span class="prelude-val">Ok</span>(())
+<a href=#843 id=843 data-nosnippet>843</a>    }
+<a href=#844 id=844 data-nosnippet>844</a>
+<a href=#845 id=845 data-nosnippet>845</a>    <span class="doccomment">/// Reads and decodes a `SpeedFloat` from user storage (`300..=1013`).
+<a href=#846 id=846 data-nosnippet>846</a>    </span><span class="kw">pub fn </span>read_float(<span class="kw-2">&amp;</span><span class="self">self</span>, addr: Address) -&gt; <span class="prelude-ty">Result</span>&lt;SpeedFloat, SpeedError&gt; {
+<a href=#847 id=847 data-nosnippet>847</a>        <span class="prelude-val">Ok</span>(SpeedFloat::from_word(<span class="self">self</span>.read(addr)<span class="question-mark">?</span>))
+<a href=#848 id=848 data-nosnippet>848</a>    }
+<a href=#849 id=849 data-nosnippet>849</a>
+<a href=#850 id=850 data-nosnippet>850</a>    <span class="doccomment">/// Encodes and writes a `SpeedFloat` into user storage (`300..=1013`).
+<a href=#851 id=851 data-nosnippet>851</a>    </span><span class="kw">pub fn </span>write_float(<span class="kw-2">&amp;mut </span><span class="self">self</span>, addr: Address, val: SpeedFloat) -&gt; <span class="prelude-ty">Result</span>&lt;(), SpeedError&gt; {
+<a href=#852 id=852 data-nosnippet>852</a>        <span class="self">self</span>.write(addr, val.to_word())
+<a href=#853 id=853 data-nosnippet>853</a>    }
+<a href=#854 id=854 data-nosnippet>854</a>
+<a href=#855 id=855 data-nosnippet>855</a>    <span class="doccomment">/// Reads and decodes an `Instruction` from user storage (`300..=1013`).
+<a href=#856 id=856 data-nosnippet>856</a>    </span><span class="kw">pub fn </span>read_instruction(<span class="kw-2">&amp;</span><span class="self">self</span>, addr: Address) -&gt; <span class="prelude-ty">Result</span>&lt;Instruction, SpeedError&gt; {
+<a href=#857 id=857 data-nosnippet>857</a>        Instruction::from_word(<span class="self">self</span>.read(addr)<span class="question-mark">?</span>)
+<a href=#858 id=858 data-nosnippet>858</a>    }
+<a href=#859 id=859 data-nosnippet>859</a>
+<a href=#860 id=860 data-nosnippet>860</a>    <span class="doccomment">/// Encodes and writes an `Instruction` into user storage (`300..=1013`).
+<a href=#861 id=861 data-nosnippet>861</a>    </span><span class="kw">pub fn </span>write_instruction(<span class="kw-2">&amp;mut </span><span class="self">self</span>, addr: Address, instr: Instruction) -&gt; <span class="prelude-ty">Result</span>&lt;(), SpeedError&gt; {
+<a href=#862 id=862 data-nosnippet>862</a>        <span class="self">self</span>.write(addr, instr.to_word())
+<a href=#863 id=863 data-nosnippet>863</a>    }
+<a href=#864 id=864 data-nosnippet>864</a>}
 </code></pre></div></section></main></body></html>
