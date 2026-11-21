@@ -23,7 +23,7 @@
         <span class="brand-mark">speedcoding</span>
         <span>IBM 701 Speedcoding System (SpeedCo I)</span>
         <div class="badges">
-          <span class="badge rust">v0.1.0-alpha.3 · Rust 2024</span>
+          <span class="badge rust">v0.1.0-alpha.4 · Rust 2024</span>
           <span class="badge lic">MIT OR Apache-2.0</span>
         </div>
       </div>
@@ -31,7 +31,7 @@
         <button class="btn" id="open-search" type="button" aria-label="Open quick jump search">Search <kbd>Ctrl K</kbd></button>
         <a class="btn" href="./report/index.html">Reports</a>
         <a class="btn primary" href="./speedcoding/index.html">Rustdoc API</a>
-        <a class="btn" href="https://github.com/Mr-Kumar-Abhishek/speedcoding/releases/tag/v0.1.0-alpha.3" target="_blank" rel="noopener">Pre-release</a>
+        <a class="btn" href="https://github.com/Mr-Kumar-Abhishek/speedcoding/releases/tag/v0.1.0-alpha.4" target="_blank" rel="noopener">Pre-release</a>
         <a class="btn" href="https://github.com/Mr-Kumar-Abhishek/speedcoding" target="_blank" rel="noopener">GitHub Repo</a>
         <button class="btn" id="theme-toggle" type="button" aria-label="Toggle theme">Light Mode</button>
       </div>
@@ -102,7 +102,7 @@
         <div class="hero-grid">
           <div class="stat-card">
             <div class="stat-label">Crate &amp; Release</div>
-            <div class="stat-value"><code>speedcoding</code> v0.1.0-alpha.3</div>
+            <div class="stat-value"><code>speedcoding</code> v0.1.0-alpha.4</div>
           </div>
           <div class="stat-card">
             <div class="stat-label">Instruction Set</div>
@@ -110,11 +110,11 @@
           </div>
           <div class="stat-card">
             <div class="stat-label">TDD Test Suite</div>
-            <div class="stat-value">71 Tests (27 Green · 44 Red)</div>
+            <div class="stat-value">71 Tests (37 Green · 34 Red)</div>
           </div>
           <div class="stat-card">
             <div class="stat-label">Agile Roadmap</div>
-            <div class="stat-value">Sprints 0–7 (Sprint 2 Done)</div>
+            <div class="stat-value">Sprints 0–7 (Sprint 3 Done)</div>
           </div>
         </div>
       </div>
@@ -162,7 +162,7 @@ flowchart TD
             <h4><code>Cargo.toml</code> Dependency &amp; Licensing</h4>
             <pre><code>[package]
 name = "speedcoding"
-version = "0.1.0-alpha.3"
+version = "0.1.0-alpha.4"
 edition = "2024"
 license = "MIT OR Apache-2.0"
 exclude = ["102632810-05-01-acc.pdf"]
@@ -173,7 +173,7 @@ mpc = { git = "https://github.com/Mr-Kumar-Abhishek/mpc-rs.git" }</code></pre>
           <div class="card">
             <h4>CLI Usage &amp; Historical Attribution</h4>
             <pre><code>speedcoding --help      # Usage and status
-speedcoding --version   # 0.1.0-alpha.3
+speedcoding --version   # 0.1.0-alpha.4
 speedcoding info        # SpeedCo I machine constants</code></pre>
             <p>
               Crate source is dual-licensed under <code>MIT OR Apache-2.0</code> (<code>LICENSE-MIT</code>, <code>LICENSE-APACHE</code>).
@@ -441,7 +441,7 @@ flowchart LR
               <tr><td><strong>Sprint 0</strong></td><td><span class="status-pill status-done">Done</span></td><td><code>develop</code> &rarr; <code>master</code></td><td><code>v0.1.0-alpha.1</code></td><td>Crate init, <code>mpc-rs</code>, <code>MIT OR Apache-2.0</code> + <code>NOTICE</code>, Red-phase stubs, 66 TDD + 5 bench tests, docs, Pages, reports, CLI, CI</td><td>1/66 TDD + 5/5 bench; 71/71 compile</td></tr>
               <tr><td><strong>Sprint 1</strong></td><td><span class="status-pill status-done">Done</span></td><td><code>phase-1/core-types</code> &rarr; <code>develop</code> &rarr; <code>master</code></td><td><code>v0.1.0-alpha.2</code></td><td>Implement <code>src/core_types.rs</code></td><td>12/66 green (Run <code>#44944881890</code>)</td></tr>
               <tr><td><strong>Sprint 2</strong></td><td><span class="status-pill status-done">Done</span></td><td><code>phase-2/parser</code> &rarr; <code>develop</code> &rarr; <code>master</code></td><td><code>v0.1.0-alpha.3</code></td><td>Implement <code>src/parser.rs</code> with <code>mpc-rs</code></td><td>22/66 green (Run <code>#44946046507</code>)</td></tr>
-              <tr><td><strong>Sprint 3</strong></td><td><span class="status-pill status-planned">Planned</span></td><td><code>phase-3/arithmetic-math</code> &rarr; <code>develop</code> &rarr; <code>master</code></td><td><code>v0.1.0-alpha.4</code></td><td>Implement <code>src/arithmetic.rs</code></td><td>32/66 green</td></tr>
+              <tr><td><strong>Sprint 3</strong></td><td><span class="status-pill status-done">Done</span></td><td><code>phase-3/arithmetic-math</code> &rarr; <code>develop</code> &rarr; <code>master</code></td><td><code>v0.1.0-alpha.4</code></td><td>Implement <code>src/arithmetic.rs</code> &amp; strict Clippy CI</td><td>32/66 green (Run <code>#44948301907</code>)</td></tr>
               <tr><td><strong>Sprint 4</strong></td><td><span class="status-pill status-planned">Planned</span></td><td><code>phase-4/control-addressing</code> &rarr; <code>develop</code> &rarr; <code>master</code></td><td><code>v0.1.0-alpha.5</code></td><td>Implement <code>src/control.rs</code> &amp; <code>SpeedCoMachine</code></td><td>44/66 green</td></tr>
               <tr><td><strong>Sprint 5</strong></td><td><span class="status-pill status-planned">Planned</span></td><td><code>phase-5/io-storage</code> &rarr; <code>develop</code> &rarr; <code>master</code></td><td><code>v0.1.0-alpha.6</code></td><td>Implement <code>src/io.rs</code> &amp; <code>load_deck</code></td><td>55/66 green</td></tr>
               <tr><td><strong>Sprint 6</strong></td><td><span class="status-pill status-planned">Planned</span></td><td><code>phase-6/checking-listing-timing</code> &rarr; <code>develop</code> &rarr; <code>master</code></td><td><code>v0.1.0-beta.1</code></td><td>Implement <code>src/diagnostics.rs</code></td><td>66/66 green</td></tr>
@@ -463,8 +463,8 @@ flowchart LR
               <tr><td><code>US-06</code></td><td>Sprint 1</td><td><code>RCode</code>, <code>LCode</code>, all 49 <code>Op1</code> + 48 <code>Op2</code> codes, 72-bit instruction roundtrip</td><td>High</td><td class="num">5</td><td><span class="status-pill status-done">Done</span></td></tr>
               <tr><td><code>US-07</code></td><td>Sprint 2</td><td><code>mpc</code> symbolic instruction &amp; program parser with skip-<code>OP1</code> enforcement</td><td>High</td><td class="num">5</td><td><span class="status-pill status-done">Done</span></td></tr>
               <tr><td><code>US-08</code></td><td>Sprint 2</td><td>80-col instruction/data/control card parsers + gang-punch translation</td><td>High</td><td class="num">8</td><td><span class="status-pill status-done">Done</span></td></tr>
-              <tr><td><code>US-09</code></td><td>Sprint 3</td><td>Add/Sub (6 variants, cancellation, &le;76 diff), Mpy truncation, Div + DivideCheck</td><td>High</td><td class="num">5</td><td><span class="status-pill status-planned">Planned</span></td></tr>
-              <tr><td><code>US-10</code></td><td>Sprint 3</td><td>Set 1 <code>SQRT</code>, <code>SINE</code>, <code>ARTAN</code>, <code>EXP</code>, <code>LN</code> precision &amp; Appendix quirks</td><td>Medium</td><td class="num">8</td><td><span class="status-pill status-planned">Planned</span></td></tr>
+              <tr><td><code>US-09</code></td><td>Sprint 3</td><td>Add/Sub (6 variants, cancellation, &le;76 diff), Mpy truncation, Div + DivideCheck</td><td>High</td><td class="num">5</td><td><span class="status-pill status-done">Done</span></td></tr>
+              <tr><td><code>US-10</code></td><td>Sprint 3</td><td>Set 1 <code>SQRT</code>, <code>SINE</code>, <code>ARTAN</code>, <code>EXP</code>, <code>LN</code> precision &amp; Appendix quirks</td><td>Medium</td><td class="num">8</td><td><span class="status-pill status-done">Done</span></td></tr>
               <tr><td><code>US-11</code></td><td>Sprint 4</td><td><code>PC=300</code>, conditional/switch transfers, <code>STOP</code>, non-destructive <code>R</code>-code indexing</td><td>High</td><td class="num">8</td><td><span class="status-pill status-planned">Planned</span></td></tr>
               <tr><td><code>US-12</code></td><td>Sprint 4</td><td>18-bit <code>AddressCounter</code>, location <code>0025</code> save/restore, control region guard</td><td>High</td><td class="num">5</td><td><span class="status-pill status-planned">Planned</span></td></tr>
               <tr><td><code>US-13</code></td><td>Sprint 5</td><td>7-ch parity <code>TapeUnit</code> (<code>J..M</code>), <code>DrumUnit</code> (<code>P..Q</code>), <code>LinePrinter</code>, <code>load_deck</code></td><td>High</td><td class="num">8</td><td><span class="status-pill status-planned">Planned</span></td></tr>
@@ -531,8 +531,8 @@ flowchart LR
           </ul>
         </details>
 
-        <details>
-          <summary>Phase 3 — <code>tests/phase_3_arithmetic_math.rs</code> (10 tests)</summary>
+        <details open>
+          <summary>Phase 3 — <code>tests/phase_3_arithmetic_math.rs</code> (10 tests &mdash; <span class="status-pill status-done">10/10 Passing</span>)</summary>
           <ul>
             <li><code>add_sub_six_variants_with_signed_operands</code></li>
             <li><code>exact_cancellation_preserves_exponent_without_shifting</code></li>
@@ -618,11 +618,11 @@ cargo doc --no-deps
 cargo package --list --allow-dirty</code></pre>
           </div>
           <div class="card">
-            <h4>GitHub Actions &amp; <code>v0.1.0-alpha.3</code></h4>
+            <h4>GitHub Actions &amp; <code>v0.1.0-alpha.4</code></h4>
             <ul>
-              <li><strong>CI Gate:</strong> <code>.github/workflows/rust.yml</code> validates debug, release, docs, and packaging on <code>master</code>, <code>develop</code>, and <code>phase-*/*</code> (running <code>phase_1_core_types</code>, <code>phase_2_parser</code>, and <code>bench_speedcoding</code> in Debug &amp; Release).</li>
+              <li><strong>CI Gate:</strong> <code>.github/workflows/rust.yml</code> validates debug, strict Clippy (<code>--all-targets -- -D warnings</code>), release, docs, and packaging on <code>master</code>, <code>develop</code>, and <code>phase-*/*</code> (running <code>phase_1_core_types</code>, <code>phase_2_parser</code>, <code>phase_3_arithmetic_math</code>, and <code>bench_speedcoding</code> in Debug &amp; Release).</li>
               <li><strong>Pages Deploy:</strong> <code>.github/workflows/gh-pages.yml</code> publishes <code>docs/index.html</code>, <code>docs/assets/*</code>, <code>docs/*.md</code>, <code>report/index.html</code>, and <code>report/*.md</code> (<a href="./report/index.html">Reports Portal</a> &middot; <a href="#benchmark-report">Benchmark</a> &middot; <a href="#compliance-report">Compliance</a>), and Rustdoc to <code>gh-pages</code>.</li>
-              <li><strong>Pre-release Assets:</strong> <a href="https://github.com/Mr-Kumar-Abhishek/speedcoding/releases/tag/v0.1.0-alpha.3" target="_blank" rel="noopener"><code>speedcoding-v0.1.0-alpha.3-x86_64-pc-windows-msvc.zip</code></a> (<code>speedcoding.exe</code> + <code>libspeedcoding.rlib</code> + licenses) and <code>SHA256SUMS.txt</code>.</li>
+              <li><strong>Pre-release Assets:</strong> <a href="https://github.com/Mr-Kumar-Abhishek/speedcoding/releases/tag/v0.1.0-alpha.4" target="_blank" rel="noopener"><code>speedcoding-v0.1.0-alpha.4-x86_64-pc-windows-msvc.zip</code></a> (<code>speedcoding.exe</code> + <code>libspeedcoding.rlib</code> + licenses) and <code>SHA256SUMS.txt</code>.</li>
             </ul>
           </div>
         </div>
@@ -784,11 +784,11 @@ cargo package --list --allow-dirty</code></pre>
 
       <!-- 9. Compliance Report -->
       <section id="compliance-report" class="doc-section">
-        <h2>9. Compliance Report (<code>v0.1.0-alpha.3</code>)</h2>
+        <h2>9. Compliance Report (<code>v0.1.0-alpha.4</code>)</h2>
         <div class="actions">
           <a class="btn primary" href="./report/index.html#compliance">Standalone Report</a>
           <a class="btn" href="./report/compliance-report.md">Raw Markdown</a>
-          <a class="btn" href="https://github.com/Mr-Kumar-Abhishek/speedcoding/releases/tag/v0.1.0-alpha.3" target="_blank" rel="noopener">v0.1.0-alpha.3 Pre-release</a>
+          <a class="btn" href="https://github.com/Mr-Kumar-Abhishek/speedcoding/releases/tag/v0.1.0-alpha.4" target="_blank" rel="noopener">v0.1.0-alpha.4 Pre-release</a>
         </div>
 
         <div class="hero-grid">
@@ -806,7 +806,7 @@ cargo package --list --allow-dirty</code></pre>
           </div>
           <div class="stat-card">
             <div class="stat-label">Audit Status</div>
-            <div class="stat-value">Pass · Sprint 2 / Phases 1–2 Green</div>
+            <div class="stat-value">Pass · Sprint 3 / Phases 1–3 Green</div>
           </div>
         </div>
 
@@ -816,7 +816,7 @@ cargo package --list --allow-dirty</code></pre>
             <table>
               <thead><tr><th>Component</th><th>Version / Source</th><th>License</th><th>Transitive</th><th>Status</th></tr></thead>
               <tbody>
-                <tr><td><code>speedcoding</code></td><td><code>v0.1.0-alpha.3</code></td><td><code>MIT OR Apache-2.0</code> (<code>LICENSE-MIT</code>, <code>LICENSE-APACHE</code>)</td><td>1 direct (<code>mpc</code>)</td><td><span class="status-pill status-done">Compliant</span></td></tr>
+                <tr><td><code>speedcoding</code></td><td><code>v0.1.0-alpha.4</code></td><td><code>MIT OR Apache-2.0</code> (<code>LICENSE-MIT</code>, <code>LICENSE-APACHE</code>)</td><td>1 direct (<code>mpc</code>)</td><td><span class="status-pill status-done">Compliant</span></td></tr>
                 <tr><td><code>mpc</code></td><td><code>v0.1.0</code> (<code>mpc-rs.git#011d12ec</code>)</td><td><code>MIT</code> (<code>Copyright (c) 2025 Abhishek Kumar</code>)</td><td>0 transitive</td><td><span class="status-pill status-done">Compatible</span></td></tr>
               </tbody>
             </table>
@@ -835,12 +835,12 @@ cargo package --list --allow-dirty</code></pre>
           <table>
             <thead><tr><th>Module / Target</th><th>Phase / Scope</th><th>Manual Sections Covered</th><th>Test File &amp; Count</th><th>Execution Status</th></tr></thead>
             <tbody>
-              <tr><td><code>src/lib.rs</code></td><td>Crate root &amp; parser library check</td><td>— (<code>mpc</code> integration)</td><td><code>src/lib.rs</code> (<code>mpc_library_inclusion</code>, <strong>1</strong>)</td><td><span class="status-pill status-done">Passing</span> in CI (<code>0.00s</code>, Run <code>#44946046507</code>)</td></tr>
+              <tr><td><code>src/lib.rs</code></td><td>Crate root &amp; parser library check</td><td>— (<code>mpc</code> integration)</td><td><code>src/lib.rs</code> (<code>mpc_library_inclusion</code>, <strong>1</strong>)</td><td><span class="status-pill status-done">Passing</span> in CI (<code>0.00s</code>, Run <code>#44948301907</code>)</td></tr>
               <tr><td><code>src/main.rs</code></td><td>Thin CLI binary (<code>speedcoding</code>)</td><td>—</td><td><code>0</code> binary unit tests</td><td>Compiles cleanly (Debug &amp; Release)</td></tr>
-              <tr><td><code>src/parser.rs</code> (bench)</td><td>Speedcoding parser throughput</td><td>Sec. 5, 7</td><td><code>tests/bench_speedcoding.rs</code> (<strong>5</strong>)</td><td><span class="status-pill status-done">Passing</span> in CI (<code>5/5</code>; Debug <code>0.13s</code>, Release <code>0.04s</code>, Run <code>#44946046507</code>)</td></tr>
-              <tr><td><code>src/core_types.rs</code></td><td>Phase 1: 72-bit word, float/half-word, opcodes, accumulators</td><td>Sec. 1-1, 2-1, 3-1..3-2, 4-2, 4-4, 5-1..5-5, 9-11, 11-2</td><td><code>tests/phase_1_core_types.rs</code> (<strong>11</strong>)</td><td><span class="status-pill status-done">Passing</span> in CI (<code>11/11</code> in Debug &amp; Release, Run <code>#44946046507</code>)</td></tr>
-              <tr><td><code>src/parser.rs</code></td><td>Phase 2: Card/assembly text parsing (<code>mpc</code>)</td><td>Sec. 5, 7-1..7-4, 7-10..7-17, 9-5..9-6, 10-2</td><td><code>tests/phase_2_parser.rs</code> (<strong>10</strong>)</td><td><span class="status-pill status-done">Passing</span> in CI (<code>10/10</code> in Debug &amp; Release, Run <code>#44946046507</code>)</td></tr>
-              <tr><td><code>src/arithmetic.rs</code></td><td>Phase 3: Floating/fixed ops, scaling, math subroutines</td><td>Sec. 3-3..3-4, 6, Appendix 1-2</td><td><code>tests/phase_3_arithmetic_math.rs</code> (<strong>10</strong>)</td><td>Compiles <code>0</code> warnings; Red-phase <code>todo!()</code></td></tr>
+              <tr><td><code>src/parser.rs</code> (bench)</td><td>Speedcoding parser throughput</td><td>Sec. 5, 7</td><td><code>tests/bench_speedcoding.rs</code> (<strong>5</strong>)</td><td><span class="status-pill status-done">Passing</span> in CI (<code>5/5</code>; Debug <code>0.15s</code>, Release <code>0.04s</code>, Run <code>#44948301907</code>)</td></tr>
+              <tr><td><code>src/core_types.rs</code></td><td>Phase 1: 72-bit word, float/half-word, opcodes, accumulators</td><td>Sec. 1-1, 2-1, 3-1..3-2, 4-2, 4-4, 5-1..5-5, 9-11, 11-2</td><td><code>tests/phase_1_core_types.rs</code> (<strong>11</strong>)</td><td><span class="status-pill status-done">Passing</span> in CI (<code>11/11</code> in Debug &amp; Release, Run <code>#44948301907</code>)</td></tr>
+              <tr><td><code>src/parser.rs</code></td><td>Phase 2: Card/assembly text parsing (<code>mpc</code>)</td><td>Sec. 5, 7-1..7-4, 7-10..7-17, 9-5..9-6, 10-2</td><td><code>tests/phase_2_parser.rs</code> (<strong>10</strong>)</td><td><span class="status-pill status-done">Passing</span> in CI (<code>10/10</code> in Debug &amp; Release, Run <code>#44948301907</code>)</td></tr>
+              <tr><td><code>src/arithmetic.rs</code></td><td>Phase 3: Floating/fixed ops, scaling, math subroutines</td><td>Sec. 3-3..3-4, 6, Appendix 1-2</td><td><code>tests/phase_3_arithmetic_math.rs</code> (<strong>10</strong>)</td><td><span class="status-pill status-done">Passing</span> in CI (<code>10/10</code> in Debug &amp; Release, Run <code>#44948301907</code>)</td></tr>
               <tr><td><code>src/control.rs</code></td><td>Phase 4: Transfers, index registers, address modification</td><td>Sec. 4-1..4-3, 5-5, 8-1..8-3, 9-1..9-12</td><td><code>tests/phase_4_control_addressing.rs</code> (<strong>12</strong>)</td><td>Compiles <code>0</code> warnings; Red-phase <code>todo!()</code></td></tr>
               <tr><td><code>src/io.rs</code></td><td>Phase 5: Cards, printer, magnetic drum, tape storage</td><td>Sec. 7-4..7-19</td><td><code>tests/phase_5_io_storage.rs</code> (<strong>11</strong>)</td><td>Compiles <code>0</code> warnings; Red-phase <code>todo!()</code></td></tr>
               <tr><td><code>src/diagnostics.rs</code></td><td>Phase 6: Checking, listing, timing analysis</td><td>Sec. 10-1..10-4, 11-1..11-2, 12-1..12-5, Appendix 1-2</td><td><code>tests/phase_6_checking_listing_timing.rs</code> (<strong>11</strong>)</td><td>Compiles <code>0</code> warnings; Red-phase <code>todo!()</code></td></tr>
@@ -848,44 +848,44 @@ cargo package --list --allow-dirty</code></pre>
           </table>
         </div>
 
-        <h3><code>v0.1.0-alpha.3</code> SHA-256 Release Asset Verification &amp; Open Gaps</h3>
+        <h3><code>v0.1.0-alpha.4</code> SHA-256 Release Asset Verification &amp; Open Gaps</h3>
         <div class="table-wrap">
           <table>
             <thead><tr><th>Artifact</th><th class="num">Size (Bytes)</th><th>Verified SHA-256 Digest</th><th>Notes</th></tr></thead>
             <tbody>
               <tr>
-                <td><code>speedcoding-v0.1.0-alpha.3-x86_64-pc-windows-msvc.zip</code></td>
-                <td class="num"><code>357990</code></td>
-                <td><button type="button" class="sha256-copy" data-copy="ecd6e7cf70c8781b3844b4597ca54360681ec0b0876da54bc4e7721122d5edc8"><span>ecd6e7cf70c8781b3844b4597ca54360681ec0b0876da54bc4e7721122d5edc8</span><span class="sha-tag">Copy</span></button></td>
-                <td>Sprint 2 binary archive (excludes PDF)</td>
+                <td><code>speedcoding-v0.1.0-alpha.4-x86_64-pc-windows-msvc.zip</code></td>
+                <td class="num"><code>369563</code></td>
+                <td><button type="button" class="sha256-copy" data-copy="12b1ae1606557a52d8812439e13050094b5deef7631a37714df768218af7d64a"><span>12b1ae1606557a52d8812439e13050094b5deef7631a37714df768218af7d64a</span><span class="sha-tag">Copy</span></button></td>
+                <td>Sprint 3 binary archive (excludes PDF)</td>
               </tr>
               <tr>
                 <td><code>speedcoding.exe</code> <em>(inside zip)</em></td>
                 <td class="num"><code>138240</code></td>
-                <td><button type="button" class="sha256-copy" data-copy="0605abd8bebca4afcafd7044a166c898ea3b40ce101552319bf09b7394194751"><span>0605abd8bebca4afcafd7044a166c898ea3b40ce101552319bf09b7394194751</span><span class="sha-tag">Copy</span></button></td>
-                <td>Sprint 2 Release CLI binary</td>
+                <td><button type="button" class="sha256-copy" data-copy="e2a7683d525c334c3722302e1de2b04389a58e1abac206537c41f5ee9a8e2878"><span>e2a7683d525c334c3722302e1de2b04389a58e1abac206537c41f5ee9a8e2878</span><span class="sha-tag">Copy</span></button></td>
+                <td>Sprint 3 Release CLI binary</td>
               </tr>
               <tr>
                 <td><code>libspeedcoding.rlib</code> <em>(inside zip)</em></td>
-                <td class="num"><code>811424</code></td>
-                <td><button type="button" class="sha256-copy" data-copy="175c66e46211b418718947cbea8f49df551c926d06d1adc03c907bb9a6cad701"><span>175c66e46211b418718947cbea8f49df551c926d06d1adc03c907bb9a6cad701</span><span class="sha-tag">Copy</span></button></td>
-                <td>Sprint 2 Release library (<code>core_types</code> + <code>parser</code>)</td>
+                <td class="num"><code>834840</code></td>
+                <td><button type="button" class="sha256-copy" data-copy="0e634b17921efa4aad2bd4f10ba07d782e4dc934e250929c1e75bfd50994e9e7"><span>0e634b17921efa4aad2bd4f10ba07d782e4dc934e250929c1e75bfd50994e9e7</span><span class="sha-tag">Copy</span></button></td>
+                <td>Sprint 3 Release library (<code>core_types</code> + <code>parser</code> + <code>arithmetic</code>)</td>
               </tr>
               <tr><td><code>LICENSE-MIT</code> <em>(inside zip)</em></td><td class="num"><code>1102</code></td><td>—</td><td>MIT license notice</td></tr>
               <tr><td><code>LICENSE-APACHE</code> <em>(inside zip)</em></td><td class="num"><code>10280</code></td><td>—</td><td>Apache-2.0 license notice</td></tr>
               <tr><td><code>NOTICE</code> <em>(inside zip)</em></td><td class="num"><code>1639</code></td><td>—</td><td>Historical reference carve-out</td></tr>
-              <tr><td><code>SHA256SUMS.txt</code></td><td class="num"><code>291</code></td><td>—</td><td>Release checksum manifest</td></tr>
+              <tr><td><code>SHA256SUMS.txt</code></td><td class="num"><code>288</code></td><td>—</td><td>Release checksum manifest</td></tr>
             </tbody>
           </table>
         </div>
 
         <div class="table-wrap">
           <table>
-            <thead><tr><th class="num">#</th><th>Open Gap</th><th>Severity</th><th>Planned Remediation</th><th>Target</th></tr></thead>
+            <thead><tr><th class="num">#</th><th>Open Gap</th><th>Severity</th><th>Planned Remediation / Resolution</th><th>Target</th></tr></thead>
             <tbody>
-              <tr><td class="num">1</td><td>Red-phase <code>todo!()</code> stubs remain for Phases 3–6 (<code>44</code> phase TDD tests)</td><td><span class="status-pill status-planned">Expected (Sprint 2 complete)</span></td><td>Implement Phases 3–6 via TDD Green/Refactor cycles</td><td>Sprints 3–7</td></tr>
+              <tr><td class="num">1</td><td>Red-phase <code>todo!()</code> stubs remain for Phases 4–6 (<code>34</code> phase TDD tests)</td><td><span class="status-pill status-planned">Expected (Sprint 3 complete)</span></td><td>Implement Phases 4–6 via TDD Green/Refactor cycles</td><td>Sprints 4–7</td></tr>
               <tr><td class="num">2</td><td><code>mpc</code> pinned via Git URL (<code>mpc-rs.git</code>)</td><td><span class="status-pill status-skip">Medium (blocks publish)</span></td><td>Publish/pin crates.io release of <code>mpc</code> in <code>Cargo.toml</code></td><td>Pre-<code>v1.0.0</code></td></tr>
-              <tr><td class="num">3</td><td>Local <code>cargo clippy</code> blocked on Windows (<code>os error 4551</code>)</td><td>Low (host env)</td><td>Add <code>cargo clippy --all-targets -- -D warnings</code> on Linux CI</td><td>Sprint 3</td></tr>
+              <tr><td class="num">3</td><td>Local <code>cargo clippy</code> blocked on Windows (<code>os error 4551</code>)</td><td><span class="status-pill status-done">Resolved (Sprint 3)</span></td><td>Added <code>cargo clippy --all-targets -- -D warnings</code> on Linux CI (Run <code>#44948301907</code>)</td><td>Closed (Sprint 3)</td></tr>
             </tbody>
           </table>
         </div>
@@ -894,7 +894,7 @@ cargo package --list --allow-dirty</code></pre>
   </div>
 
   <footer>
-    <span>speedcoding v0.1.0-alpha.3 · Dual-licensed MIT OR Apache-2.0 · Independent Rust implementation of IBM 701 Speedcoding System (1953)</span>
+    <span>speedcoding v0.1.0-alpha.4 · Dual-licensed MIT OR Apache-2.0 · Independent Rust implementation of IBM 701 Speedcoding System (1953)</span>
     <span>
       <a href="./speedcoding/index.html">Rustdoc API</a> &middot;
       <a href="./docs/AGILE-SPRINTS.md">Agile Sprints</a> &middot;
