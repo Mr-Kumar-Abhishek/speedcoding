@@ -29,7 +29,8 @@ jobs:
         run: |
           rm -f target/doc/.lock
           cp docs/index.html target/doc/index.html
-          mkdir -p target/doc/docs target/doc/report
+          mkdir -p target/doc/assets target/doc/docs target/doc/report
+          cp docs/assets/* target/doc/assets/
           cp docs/*.md target/doc/docs/
           cp report/*.md report/*.html target/doc/report/
           touch target/doc/.nojekyll
