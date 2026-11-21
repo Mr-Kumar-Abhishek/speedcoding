@@ -5,7 +5,7 @@ Rust library and CLI implementation of the **1953 IBM 701 Speedcoding System (Sp
 - **Repository:** <https://github.com/Mr-Kumar-Abhishek/speedcoding>
 - **GitHub Pages Portal & Rustdoc:** <https://mr-kumar-abhishek.github.io/speedcoding/>
 - **GitHub Pages Reports Portal:** <https://mr-kumar-abhishek.github.io/speedcoding/report/>
-- **Crate Version:** `0.1.0-alpha.1` (`edition = "2024"`, pre-release tag [`v0.1.0-alpha.1`](https://github.com/Mr-Kumar-Abhishek/speedcoding/releases/tag/v0.1.0-alpha.1))
+- **Crate Version:** `0.1.0-alpha.2` (`edition = "2024"`, Sprint 1 pre-release tag [`v0.1.0-alpha.2`](https://github.com/Mr-Kumar-Abhishek/speedcoding/releases/tag/v0.1.0-alpha.2))
 - **Primary Reference Manual:** *IBM 701 Speedcoding System* (IBM Scientific Computing Service, 1953), archived in `102632810-05-01-acc.pdf` (Computer History Museum Catalog ID `102632810`).
 
 ---
