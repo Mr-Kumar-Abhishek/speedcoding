@@ -19,6 +19,7 @@ Rust library and CLI implementation of the **1953 IBM 701 Speedcoding System (Sp
 | [TDD-TEST-SPECIFICATION.md](TDD-TEST-SPECIFICATION.md) | Complete specification of all 66 Red-phase TDD test cases across `src/lib.rs` and `tests/phase_1..6` |
 | [ARCHITECTURE-AND-SPEC.md](ARCHITECTURE-AND-SPEC.md) | Technical reference distilled from the 1953 SpeedCo I manual: 72-bit layouts, opcodes, cards, I/O, checking, listing, and timing |
 | [speedcoding-benchmark-report.md](../report/speedcoding-benchmark-report.md) | Debug & Release parsing benchmark results (`tests/bench_speedcoding.rs`, CI Run `#44938969997`) |
+| [compliance-report.md](../report/compliance-report.md) | License/IP, SpeedCo I manual traceability, safety/SHA-256, and Agile/CI compliance audit |
 
 ---
 
