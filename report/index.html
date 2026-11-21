@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reports Portal — speedcoding (Benchmark &amp; Compliance Reports)</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface-2: #1f2630;
+      --border: #30363d;
+      --text: #e6edf3;
+      --muted: #9198a1;
+      --accent: #f97316;
+      --accent-soft: rgba(249, 115, 22, 0.14);
+      --link: #58a6ff;
+      --green: #3fb950;
+      --yellow: #d29922;
+      --blue: #58a6ff;
+      --code-bg: #0b0f14;
+      --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+
+    html[data-theme="light"] {
+      --bg: #f6f8fa;
+      --surface: #ffffff;
+      --surface-2: #f0f3f6;
+      --border: #d0d7de;
+      --text: #1f2328;
+      --muted: #59636e;
+      --accent: #d95700;
+      --accent-soft: rgba(217, 87, 0, 0.1);
+      --link: #0969da;
+      --green: #1a7f37;
+      --yellow: #9a6700;
+      --blue: #0969da;
+      --code-bg: #f6f8fa;
+      --shadow: 0 8px 24px rgba(31, 35, 40, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a { color: var(--link); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    header.topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(8px);
+    }
+
+    .topbar-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0.75rem 1.25rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--text);
+      flex-wrap: wrap;
+    }
+
+    .brand-mark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.9rem;
+      border: 1px solid var(--accent);
+    }
+
+    .badges { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; }
+
+    .badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text);
+    }
+
+    .badge.rust { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+    .badge.lic { border-color: var(--blue); color: var(--blue); }
+
+    .actions { display: flex; align-items: center; gap: 0.55rem; flex-wrap: wrap; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.38rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .btn:hover { border-color: var(--accent); text-decoration: none; }
+    .btn.primary { background: var(--accent); color: #ffffff; border-color: var(--accent); }
+    .btn.primary:hover { opacity: 0.92; }
+
+    main { max-width: 1200px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+
+    .hero {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.75rem 2rem;
+      box-shadow: var(--shadow);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 { margin: 0 0 0.45rem; font-size: clamp(1.6rem, 2.8vw, 2.15rem); line-height: 1.2; }
+    .hero p.lead { color: var(--muted); font-size: 1rem; margin: 0 0 1rem; max-width: 82ch; }
+
+    .tab-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .tab-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.55rem 1.05rem;
+      border-radius: 8px;
+      font-size: 0.92rem;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .tab-btn:hover { border-color: var(--accent); }
+    .tab-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #ffffff;
+    }
+
+    .report-panel { display: none; }
+    .report-panel.active { display: block; }
+
+    section.doc-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.75rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow);
+    }
+
+    section.doc-section h2 {
+      margin-top: 0;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 1.4rem;
+    }
+
+    section.doc-section h3 { margin-top: 1.5rem; margin-bottom: 0.6rem; font-size: 1.08rem; color: var(--accent); }
+
+    .report-meta-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 0.75rem 0 1.15rem;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 0.9rem;
+      margin: 1rem 0 1.25rem;
+    }
+
+    .stat-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+    }
+
+    .stat-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+    .stat-value { font-size: 1.08rem; font-weight: 700; margin-top: 0.18rem; }
+
+    .two-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.25rem; }
+
+    .card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.15rem;
+    }
+
+    .card h4 { margin-top: 0; margin-bottom: 0.5rem; }
+
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.88em; }
+
+    p code, li code, td code {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.08rem 0.35rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0.85rem 0 1.25rem;
+      font-size: 0.9rem;
+      display: block;
+      overflow-x: auto;
+    }
+
+    th, td { border: 1px solid var(--border); padding: 0.52rem 0.72rem; text-align: left; vertical-align: top; }
+    th { background: var(--surface-2); font-weight: 600; }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+    .status-pill {
+      display: inline-block;
+      padding: 0.1rem 0.5rem;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .status-done { background: rgba(63, 185, 80, 0.15); color: var(--green); border: 1px solid var(--green); }
+    .status-planned { background: rgba(88, 166, 255, 0.15); color: var(--blue); border: 1px solid var(--blue); }
+    .status-skip { background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent); }
+
+    .note-box {
+      background: var(--code-bg);
+      border-left: 3px solid var(--accent);
+      border-radius: 6px;
+      padding: 0.85rem 1rem;
+      margin: 0.75rem 0;
+      font-size: 0.92rem;
+    }
+
+    footer {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.5rem 1.25rem 3rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.88rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <span class="brand-mark">speedcoding</span>
+        <span>Reports Portal (Benchmark &amp; Compliance)</span>
+        <div class="badges">
+          <span class="badge rust">v0.1.0-alpha.1 · Rust 2024</span>
+          <span class="badge lic">MIT OR Apache-2.0</span>
+        </div>
+      </div>
+      <div class="actions">
+        <a class="btn" href="../index.html">Main Docs Portal</a>
+        <a class="btn primary" href="../speedcoding/index.html">Rustdoc API</a>
+        <a class="btn" href="https://github.com/Mr-Kumar-Abhishek/speedcoding" target="_blank" rel="noopener">GitHub Repo</a>
+        <button class="btn" id="theme-toggle" type="button" aria-label="Toggle theme">Light Mode</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="hero">
+      <h1><code>speedcoding</code> Verification &amp; Audit Reports</h1>
+      <p class="lead">
+        Rendered GitHub Pages reports for the <code>speedcoding</code> crate: SpeedCo I parsing benchmark throughput/scaling
+        and license, historical manual traceability, SHA-256 release, and Agile/CI compliance audits.
+      </p>
+      <div class="report-meta-actions">
+        <a class="btn" href="./speedcoding-benchmark-report.md">Raw Benchmark Markdown</a>
+        <a class="btn" href="./compliance-report.md">Raw Compliance Markdown</a>
+        <a class="btn" href="../index.html#benchmark-report">View in Main Portal</a>
+      </div>
+    </div>
+
+    <div class="tab-bar" role="tablist" aria-label="Report selector">
+      <button class="tab-btn active" id="tab-benchmark" type="button" role="tab" aria-selected="true" aria-controls="panel-benchmark">
+        SpeedCo I Parsing Benchmark Report
+      </button>
+      <button class="tab-btn" id="tab-compliance" type="button" role="tab" aria-selected="false" aria-controls="panel-compliance">
+        Compliance Report (v0.1.0-alpha.1)
+      </button>
+    </div>
+
+    <!-- Benchmark Report Panel -->
+    <div id="panel-benchmark" class="report-panel active" role="tabpanel" aria-labelledby="tab-benchmark">
+      <section class="doc-section">
+        <h2>SpeedCo I Parsing Benchmark Report (<code>speedcoding</code>)</h2>
+        <div class="report-meta-actions">
+          <a class="btn" href="./speedcoding-benchmark-report.md">Raw Markdown</a>
+          <a class="btn" href="../index.html#benchmark-report">Main Portal Summary</a>
+          <a class="btn" href="https://github.com/Mr-Kumar-Abhishek/speedcoding/actions/runs/44938969997" target="_blank" rel="noopener">CI Run #44938969997</a>
+        </div>
+
+        <div class="hero-grid">
+          <div class="stat-card">
+            <div class="stat-label">714-Word Program (Release)</div>
+            <div class="stat-value">1.88 ms · 380,347 lines/s</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">2,000-Card Latency (Release)</div>
+            <div class="stat-value">8.74–11.67 ms (&lt; 1.00 s gate)</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">vs. 1953 IBM 701 Reader</div>
+            <div class="stat-value">~76,756x Instr · ~91,557x Data</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Linear O(n) Scaling (4x)</div>
+            <div class="stat-value">2.90x Debug · 3.40x Release</div>
+          </div>
+        </div>
+
+        <h3>1. Executive Summary &amp; Historical Comparison</h3>
+        <ul>
+          <li><strong>Benchmark Scope:</strong> Measures SpeedCo I (<code>mpc-rs</code>-backed) parsing throughput and asymptotic scaling across realistic 1953 IBM 701 Speedcoding workloads: full 714-word electrostatic memory programs, 2,000-line symbolic AST construction, 2,000 fixed-width 80-column Instruction Cards, and 2,000 80-column Data Cards (<code>10,000</code> signed floating-decimal numbers).</li>
+          <li><strong>Release Latency (<code>opt-level = 3</code>):</strong> All 2,000-line / 2,000-card benchmarks complete in <strong><code>8.74–11.67 ms</code></strong> (<code>~85x–114x</code> faster than the <code>&lt; 1.00 s</code> CI gate), while a full 714-word electrostatic memory program parses in <strong><code>1.88 ms</code></strong> (<code>380,347 lines/s</code>).</li>
+          <li><strong>Debug Latency (<code>opt-level = 0</code>):</strong> Even without compiler optimizations, every benchmark finishes in <strong><code>6.04–37.32 ms</code></strong>.</li>
+          <li><strong>Linear <code>O(n)</code> Scaling:</strong> Increasing input size <code>4x</code> (from <code>500</code> to <code>2,000</code> symbolic lines) yields a <strong><code>2.90x</code></strong> ratio in Debug mode and <strong><code>3.40x</code></strong> in Release mode (well below the <code>&lt; 12.0x</code> threshold).</li>
+          <li><strong>1953 Hardware Comparison:</strong> Manual page 7-5 specifies an IBM 701 card-reader input rate of <strong>150 cards/min</strong> (<code>2.5 cards/s</code>) and <strong>750 data numbers/min</strong> (<code>12.5 numbers/s</code>). In Release mode, <code>tests/bench_speedcoding.rs</code> parses 80-column instruction cards at <strong><code>191,889 cards/s</code></strong> (<strong><code>~76,756x</code></strong> faster) and 5-value data cards at <strong><code>228,893 cards/s</code></strong> / <strong><code>1,144,463 numbers/s</code></strong> (<strong><code>~91,557x</code></strong> faster).</li>
+        </ul>
+
+        <h3>2. Test Environment &amp; Execution Metadata</h3>
+        <table>
+          <thead><tr><th>Property</th><th>Value</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Repository / Commit</strong></td><td><code>Mr-Kumar-Abhishek/speedcoding</code> (<code>239bf342d05c6e9c573b108fa31a7f1a20d5f884</code>)</td></tr>
+            <tr><td><strong>Benchmark Suite</strong></td><td><a href="https://github.com/Mr-Kumar-Abhishek/speedcoding/blob/master/tests/bench_speedcoding.rs" target="_blank" rel="noopener"><code>tests/bench_speedcoding.rs</code></a></td></tr>
+            <tr><td><strong>CI Workflow / Run ID</strong></td><td><code>.github/workflows/rust.yml</code> — Run <a href="https://github.com/Mr-Kumar-Abhishek/speedcoding/actions/runs/44938969997" target="_blank" rel="noopener"><code>#44938969997</code></a> (<span class="status-pill status-done">success</span>)</td></tr>
+            <tr><td><strong>Runner OS</strong></td><td><code>ubuntu-latest</code> (GitHub Actions)</td></tr>
+            <tr><td><strong>Rust Edition / Version</strong></td><td>Rust <code>2024</code> (<code>speedcoding v0.1.0-alpha.1</code> + <code>mpc v0.1.0</code>)</td></tr>
+            <tr><td><strong>Execution Commands</strong></td><td><code>cargo test --test bench_speedcoding --verbose -- --nocapture</code> and <code>cargo test --release --test bench_speedcoding --verbose -- --nocapture</code></td></tr>
+          </tbody>
+        </table>
+
+        <h3>3. Benchmark Results (Debug vs. Release)</h3>
+        <h4>3.1 Latency &amp; Throughput Comparison</h4>
+        <table>
+          <thead>
+            <tr><th>Test Case</th><th class="num">Input Size</th><th class="num">Debug Latency</th><th class="num">Debug Throughput</th><th class="num">Release Latency</th><th class="num">Release Throughput</th><th>&lt; 1s Release Gate</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>bench_parse_714_line_full_memory_program</code></td>
+              <td class="num">714 lines (<code>26,162 B</code>)</td>
+              <td class="num"><code>6.04 ms</code></td>
+              <td class="num"><code>118,151 lines/s</code> (<code>4.13 MB/s</code>)</td>
+              <td class="num"><code>1.88 ms</code></td>
+              <td class="num"><code>380,347 lines/s</code> (<code>13.29 MB/s</code>)</td>
+              <td><span class="status-pill status-done">Pass</span></td>
+            </tr>
+            <tr>
+              <td><code>bench_parse_2000_line_speedco_program_ast</code></td>
+              <td class="num">2,000 lines (<code>73,279 B</code>)</td>
+              <td class="num"><code>37.32 ms</code></td>
+              <td class="num"><code>53,588 lines/s</code> (<code>1.87 MB/s</code>)</td>
+              <td class="num"><code>11.67 ms</code></td>
+              <td class="num"><code>171,328 lines/s</code> (<code>5.99 MB/s</code>)</td>
+              <td><span class="status-pill status-done">Pass</span></td>
+            </tr>
+            <tr>
+              <td><code>bench_parse_2000_instruction_cards_80col</code></td>
+              <td class="num">2,000 cards (<code>162,000 B</code>)</td>
+              <td class="num"><code>35.47 ms</code></td>
+              <td class="num"><code>56,385 cards/s</code> (<code>4.36 MB/s</code>)</td>
+              <td class="num"><code>10.42 ms</code></td>
+              <td class="num"><code>191,889 cards/s</code> (<code>14.82 MB/s</code>)</td>
+              <td><span class="status-pill status-done">Pass</span></td>
+            </tr>
+            <tr>
+              <td><code>bench_parse_2000_data_cards_10000_floats</code></td>
+              <td class="num">2,000 cards / 10,000 nums (<code>162,000 B</code>)</td>
+              <td class="num"><code>36.96 ms</code></td>
+              <td class="num"><code>54,111 cards/s</code> / <code>270,555 nums/s</code> (<code>4.18 MB/s</code>)</td>
+              <td class="num"><code>8.74 ms</code></td>
+              <td class="num"><code>228,893 cards/s</code> / <code>1,144,463 nums/s</code> (<code>17.68 MB/s</code>)</td>
+              <td><span class="status-pill status-done">Pass</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h4>3.2 Workload Descriptions</h4>
+        <ol>
+          <li><strong><code>bench_parse_714_line_full_memory_program</code>:</strong> Generates a full 714-line (<code>USER_MEM_LEN</code>) SpeedCo I symbolic program cycling through <code>OP1</code> (<code>ADDAB</code>, <code>ABSUB</code>, <code>WRTPK</code>, <code>PRINT</code>, <code>SINE</code>, <code>SQRT</code>, <code>NOOP</code>, <code>ADD</code>, <code>SUB</code>, <code>MPY</code>, <code>DIV</code>) and <code>OP2</code> (<code>ECHTR</code>, <code>SETRA</code>, <code>RADDA</code>, <code>TIAB</code>, <code>TRPL</code>, <code>TRMN</code>, <code>SKRA</code>, <code>TIA</code>, <code>STD</code>, <code>TR</code>, <code>-</code>) mnemonics, verifying full cursor consumption (<code>row == 714</code>).</li>
+          <li><strong><code>bench_parse_2000_line_speedco_program_ast</code>:</strong> Parses 2,000 symbolic SpeedCo I lines into a full recursive <code>MpcAst</code> (<code>&gt;|speedco_program</code> root with <code>2,000</code> tagged <code>instr</code> child nodes) using <code>mpca_root</code>, <code>mpca_tag</code>, and <code>mpcf_fold_ast</code>.</li>
+          <li><strong><code>bench_parse_2000_instruction_cards_80col</code>:</strong> Parses 2,000 fixed-width 80-column SpeedCo I Instruction Cards (<code>81</code> bytes/line including <code>\n</code>), validating column 8 (<code>0</code>), column 9 (blank), fixed zero fields (cols <code>14</code>, <code>33–34</code>, <code>52–55</code>), <code>R</code> (<code>0..=7</code>), <code>L</code> (<code>0/3/6</code>), numerical codes, and 25-column remarks.</li>
+          <li><strong><code>bench_parse_2000_data_cards_10000_floats</code>:</strong> Parses 2,000 fixed-width 80-column SpeedCo I Data Cards (<code>10,000</code> 10-digit signed floating-decimal numbers), validating double-punch col 8 (<code>*</code>), col 9 (<code>8</code>), col 45 skip inside <code>N3</code>, IBM 12/11 overpunched sign characters, and col 80 word count.</li>
+        </ol>
+
+        <h3>4. Linear Scaling Check (500 vs. 2,000 Lines)</h3>
+        <p>Test <code>bench_linear_scaling_500_to_2000_lines</code> averages 3 runs of the symbolic SpeedCo I program parser at 500 lines vs. 2,000 lines (<code>4x</code> input growth):</p>
+        <table>
+          <thead><tr><th>Profile</th><th class="num">500 Lines (Avg)</th><th class="num">2,000 Lines (Avg)</th><th class="num">Measured Ratio (4x Input)</th><th>Assertion (&lt; 12.0x)</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Debug</strong></td><td class="num"><code>5.13 ms</code></td><td class="num"><code>14.87 ms</code></td><td class="num"><code>2.90x</code></td><td><span class="status-pill status-done">Pass</span></td></tr>
+            <tr><td><strong>Release</strong></td><td class="num"><code>1.30 ms</code></td><td class="num"><code>4.42 ms</code></td><td class="num"><code>3.40x</code></td><td><span class="status-pill status-done">Pass</span></td></tr>
+          </tbody>
+        </table>
+
+        <h3>5. CI Test &amp; Compilation Summary (<code>Run #44938969997</code>)</h3>
+        <table>
+          <thead><tr><th>Suite / Profile</th><th class="num">Passed</th><th class="num">Failed</th><th class="num">Ignored</th><th class="num">Reported Suite Time</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>Unit tests (<code>src/lib.rs</code>) — Debug</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num"><code>0.00s</code></td><td><code>mpc_library_inclusion</code></td></tr>
+            <tr><td>Binary unit tests (<code>src/main.rs</code>) — Debug</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num"><code>0.00s</code></td><td>Compiles cleanly (<code>0</code> warnings)</td></tr>
+            <tr><td>Benchmark suite (<code>tests/bench_speedcoding.rs</code>) — Debug</td><td class="num">5</td><td class="num">0</td><td class="num">0</td><td class="num"><code>0.06s</code></td><td>All 5 benchmarks printed <code>[bench]</code> metrics</td></tr>
+            <tr><td>Phase 1–6 TDD suites (<code>tests/phase_1..6</code>) — Debug</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">Compiled (<code>--no-run</code>)</td><td>65 Red-phase tests compile cleanly (<code>0</code> warnings)</td></tr>
+            <tr><td>Benchmark suite (<code>tests/bench_speedcoding.rs</code>) — Release</td><td class="num">5</td><td class="num">0</td><td class="num">0</td><td class="num"><code>0.02s</code></td><td>All <code>&lt; 1s</code> release gates passed</td></tr>
+          </tbody>
+        </table>
+
+        <h3>6. How to Reproduce</h3>
+        <pre><code># Debug profile (unoptimized + debuginfo)
+cargo test --test bench_speedcoding --verbose -- --nocapture
+
+# Final Release profile (opt-level = 3, enforces &lt; 1s assertions)
+cargo test --release --test bench_speedcoding --verbose -- --nocapture</code></pre>
+        <div class="note-box">
+          On Windows hosts where an Application Control policy blocks executing local binaries under <code>target\debug\deps\</code> or <code>target\release\deps\</code> with <code>os error 4551</code>, compile locally with <code>--no-run</code> and inspect runtime metrics via <code>.github/workflows/rust.yml</code> on GitHub Actions.
+        </div>
+      </section>
+    </div>
+
+    <!-- Compliance Report Panel -->
+    <div id="panel-compliance" class="report-panel" role="tabpanel" aria-labelledby="tab-compliance">
+      <section class="doc-section">
+        <h2>Compliance Report — <code>speedcoding</code> (<code>v0.1.0-alpha.1</code>)</h2>
+        <div class="report-meta-actions">
+          <a class="btn" href="./compliance-report.md">Raw Markdown</a>
+          <a class="btn" href="../index.html#compliance-report">Main Portal Summary</a>
+          <a class="btn" href="https://github.com/Mr-Kumar-Abhishek/speedcoding/releases/tag/v0.1.0-alpha.1" target="_blank" rel="noopener">v0.1.0-alpha.1 Pre-release</a>
+        </div>
+
+        <div class="hero-grid">
+          <div class="stat-card">
+            <div class="stat-label">Crate &amp; Dependency License</div>
+            <div class="stat-value">MIT OR Apache-2.0 · mpc MIT</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Code Safety &amp; Warnings</div>
+            <div class="stat-value">0 unsafe · 0 warnings</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Historical PDF Exclusion</div>
+            <div class="stat-value">Excluded (NOTICE &amp; Cargo.toml)</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Compliance Status</div>
+            <div class="stat-value">Pass (Open Sprint 1–7 Gaps)</div>
+          </div>
+        </div>
+
+        <h3>1. Executive Summary &amp; Audit Metadata</h3>
+        <table>
+          <thead><tr><th>Audit Attribute</th><th>Observed Value</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Crate / Version</strong></td><td><code>speedcoding</code> <code>v0.1.0-alpha.1</code> (Rust <code>edition = "2024"</code>)</td></tr>
+            <tr><td><strong>Repository</strong></td><td><a href="https://github.com/Mr-Kumar-Abhishek/speedcoding" target="_blank" rel="noopener">https://github.com/Mr-Kumar-Abhishek/speedcoding</a></td></tr>
+            <tr><td><strong>Audited Commit (<code>develop</code> / <code>master</code>)</strong></td><td><code>9afc854077fec53a766c126e498b2718d019210b</code> (<code>9afc854</code>)</td></tr>
+            <tr><td><strong>Synced Phase Branches</strong></td><td><code>phase-1/core-types</code>, <code>phase-2/parser</code>, <code>phase-3/arithmetic-math</code>, <code>phase-4/control-addressing</code>, <code>phase-5/io-storage</code>, <code>phase-6/checking-listing-timing</code></td></tr>
+            <tr><td><strong>Pages Branch (<code>gh-pages</code>)</strong></td><td><code>3a97fa4806b05b4935495a95a5c07d867c8d0b0b</code></td></tr>
+            <tr><td><strong>Toolchain (Local)</strong></td><td><code>cargo</code> 1.95.0 / <code>rustc</code> 1.95.0 (<code>x86_64-pc-windows-msvc</code>)</td></tr>
+            <tr><td><strong>Compliance Status</strong></td><td><span class="status-pill status-done">Pass with Open Development Gaps</span> (Sprint 0 Red-phase baseline compliant; Phases 1–6 implementations pending Sprints 1–7)</td></tr>
+          </tbody>
+        </table>
+
+        <h3>2. License, Dependency &amp; IP Compliance</h3>
+        <h4>2.1 Crate &amp; Third-Party Dependency Licensing</h4>
+        <pre><code>speedcoding v0.1.0-alpha.1 (D:\big-projects\speedcoding) (MIT OR Apache-2.0)
+└── mpc v0.1.0 (https://github.com/Mr-Kumar-Abhishek/mpc-rs.git#011d12ec) (MIT)</code></pre>
+        <table>
+          <thead><tr><th>Component</th><th>Version / Source</th><th>License</th><th>Transitive Dependencies</th><th>Compliance Status</th></tr></thead>
+          <tbody>
+            <tr><td><code>speedcoding</code></td><td><code>v0.1.0-alpha.1</code> (workspace crate)</td><td><code>MIT OR Apache-2.0</code> (<code>LICENSE-MIT</code>, <code>LICENSE-APACHE</code>)</td><td>1 direct (<code>mpc</code>)</td><td><span class="status-pill status-done">Compliant</span></td></tr>
+            <tr><td><code>mpc</code></td><td><code>v0.1.0</code> (<code>mpc-rs.git#011d12ec</code>, <code>Copyright (c) 2025 Abhishek Kumar</code>)</td><td><code>MIT</code></td><td>0 transitive dependencies</td><td><span class="status-pill status-done">Compatible with MIT OR Apache-2.0</span></td></tr>
+          </tbody>
+        </table>
+
+        <h4>2.2 Historical Reference PDF Attribution &amp; Exclusion (<code>102632810-05-01-acc.pdf</code>)</h4>
+        <ul>
+          <li><strong>Archival Document:</strong> <code>102632810-05-01-acc.pdf</code> (7,718,762 bytes, 67 pages) — scanned copy of the 1953 <em>IBM 701 Speedcoding System</em> manual (Introduction dated June 19, 1953 by Cuthbert Hurd, crediting John Backus et al.; Sections 1–12 and Appendices 1–2; XMP metadata <code>Collection of the Computer History Museum, 102632810</code>, iTextSharp 2018-02-12).</li>
+          <li><strong>License Separation (<code>NOTICE</code>):</strong> <code>NOTICE</code> (<code>1639</code> B) explicitly carves <code>102632810-05-01-acc.pdf</code> out of the crate's <code>MIT OR Apache-2.0</code> grant and documents historical provenance and independent implementation boundaries.</li>
+          <li><strong>Cargo Packaging Exclusion:</strong> <code>Cargo.toml</code> specifies <code>exclude = ["102632810-05-01-acc.pdf"]</code>, verified absent in <code>cargo package --list --allow-dirty</code>.</li>
+          <li><strong>Distribution Exclusions:</strong> Excluded from <code>speedcoding-v0.1.0-alpha.1-x86_64-pc-windows-msvc.zip</code> release assets and excluded from GitHub Pages deployment (<code>.github/workflows/gh-pages.yml</code>).</li>
+        </ul>
+
+        <h3>3. 1953 SpeedCo I Manual Traceability Matrix (71 Tests Total)</h3>
+        <table>
+          <thead><tr><th>Module / Target</th><th>Phase / Scope</th><th>Manual Sections Covered</th><th>Test File &amp; Count</th><th>Current Execution Status</th></tr></thead>
+          <tbody>
+            <tr><td><code>src/lib.rs</code></td><td>Crate root &amp; parser library check</td><td>— (<code>mpc</code> integration)</td><td><code>src/lib.rs</code> (<code>mpc_library_inclusion</code>, <strong>1</strong> test)</td><td><span class="status-pill status-done">Passing</span> in Linux CI (<code>0.00s</code>, Run <code>#44938969997</code>)</td></tr>
+            <tr><td><code>src/main.rs</code></td><td>Thin CLI binary (<code>speedcoding</code>)</td><td>—</td><td><code>0</code> binary unit tests</td><td>Compiles cleanly in Debug &amp; Release</td></tr>
+            <tr><td><code>src/parser.rs</code> (bench target)</td><td>Speedcoding parser throughput</td><td>Sec. 5, 7</td><td><code>tests/bench_speedcoding.rs</code> (<strong>5</strong> tests)</td><td><span class="status-pill status-done">Passing</span> in Linux CI (<code>5 passed; 0 failed</code>; Debug <code>0.06s</code>, Release <code>0.02s</code>, Run <code>#44938969997</code>)</td></tr>
+            <tr><td><code>src/core_types.rs</code></td><td>Phase 1: 72-bit word, float/half-word, opcodes, accumulators</td><td>Sec. 1-1, 2-1, 3-1..3-2, 4-2, 4-4, 5-1..5-5, 9-11, 11-2</td><td><code>tests/phase_1_core_types.rs</code> (<strong>11</strong> tests)</td><td>Compiles <code>0</code> warnings; Red-phase <code>todo!()</code> stubs</td></tr>
+            <tr><td><code>src/parser.rs</code></td><td>Phase 2: Card/assembly text parsing (<code>mpc</code>)</td><td>Sec. 5, 7-1..7-4, 7-10..7-17, 9-5..9-6, 10-2</td><td><code>tests/phase_2_parser.rs</code> (<strong>10</strong> tests)</td><td>Compiles <code>0</code> warnings; Red-phase <code>todo!()</code> stubs</td></tr>
+            <tr><td><code>src/arithmetic.rs</code></td><td>Phase 3: Floating/fixed ops, scaling, math subroutines</td><td>Sec. 3-3..3-4, 6, Appendix 1-2</td><td><code>tests/phase_3_arithmetic_math.rs</code> (<strong>10</strong> tests)</td><td>Compiles <code>0</code> warnings; Red-phase <code>todo!()</code> stubs</td></tr>
+            <tr><td><code>src/control.rs</code></td><td>Phase 4: Transfers, index registers, address modification</td><td>Sec. 4-1..4-3, 5-5, 8-1..8-3, 9-1..9-12</td><td><code>tests/phase_4_control_addressing.rs</code> (<strong>12</strong> tests)</td><td>Compiles <code>0</code> warnings; Red-phase <code>todo!()</code> stubs</td></tr>
+            <tr><td><code>src/io.rs</code></td><td>Phase 5: Cards, printer, magnetic drum, tape storage</td><td>Sec. 7-4..7-19</td><td><code>tests/phase_5_io_storage.rs</code> (<strong>11</strong> tests)</td><td>Compiles <code>0</code> warnings; Red-phase <code>todo!()</code> stubs</td></tr>
+            <tr><td><code>src/diagnostics.rs</code></td><td>Phase 6: Checking, listing, timing analysis</td><td>Sec. 10-1..10-4, 11-1..11-2, 12-1..12-5, Appendix 1-2</td><td><code>tests/phase_6_checking_listing_timing.rs</code> (<strong>11</strong> tests)</td><td>Compiles <code>0</code> warnings; Red-phase <code>todo!()</code> stubs</td></tr>
+          </tbody>
+        </table>
+
+        <h3>4. Rust Safety, Packaging &amp; Pre-Release Integrity (<code>v0.1.0-alpha.1</code>)</h3>
+        <ul>
+          <li><strong>Unsafe Code Audit:</strong> <code>Select-String -Path "src\*.rs","tests\*.rs" -Pattern "\bunsafe\b"</code> returned <code>unsafe_matches=0</code> (zero <code>unsafe</code> blocks across all source and test files).</li>
+          <li><strong>Compiler Warnings:</strong> Clean compilation (<code>0</code> warnings) across <code>cargo build</code>, <code>cargo test --no-run</code>, and <code>cargo doc --no-deps</code>.</li>
+          <li><strong>Local Windows Application Control Constraint:</strong> Executing locally compiled <code>.exe</code> binaries (<code>cargo test</code> runtime, <code>target\release\speedcoding.exe</code>, and <code>cargo clippy --all-targets</code>) is blocked on the Windows development host by Application Control policy (<code>os error 4551</code>). Execution verification runs on GitHub Actions <code>ubuntu-latest</code>.</li>
+          <li><strong>Annotated Tag / Target:</strong> <code>v0.1.0-alpha.1</code> (<code>7832185231d681163fa81e65046f29850ab63cff</code> &rarr; <code>c7689af</code>), marked <code>isPrerelease: true</code>.</li>
+        </ul>
+        <table>
+          <thead><tr><th>Artifact</th><th class="num">Size (Bytes)</th><th>Verified SHA-256 Digest</th><th>Compliance Notes</th></tr></thead>
+          <tbody>
+            <tr><td><code>speedcoding-v0.1.0-alpha.1-x86_64-pc-windows-msvc.zip</code></td><td class="num"><code>262679</code></td><td><code>34bdbd1f00fd023f0b8fd46d39c1769bf799bbcd0146cc93c7c9ad90aef387ee</code></td><td>Published binary archive (excludes <code>102632810-05-01-acc.pdf</code>)</td></tr>
+            <tr><td><code>speedcoding.exe</code> <em>(inside zip)</em></td><td class="num"><code>138240</code></td><td><code>b41325859765f4f86e6b9f55102b0a471a57f14e835d232e7a4f3f29ca81fc79</code></td><td>Release binary</td></tr>
+            <tr><td><code>libspeedcoding.rlib</code> <em>(inside zip)</em></td><td class="num"><code>501252</code></td><td><code>1cdc196940b093f005e272c114ea4e1d6ae2d4c2090313f623bf056842dda6fd</code></td><td>Release Rust library artifact</td></tr>
+            <tr><td><code>LICENSE-MIT</code> <em>(inside zip)</em></td><td class="num"><code>1102</code></td><td>—</td><td>MIT license notice bundled</td></tr>
+            <tr><td><code>LICENSE-APACHE</code> <em>(inside zip)</em></td><td class="num"><code>10280</code></td><td>—</td><td>Apache-2.0 license notice bundled</td></tr>
+            <tr><td><code>NOTICE</code> <em>(inside zip)</em></td><td class="num"><code>1639</code></td><td>—</td><td>Historical reference carve-out bundled</td></tr>
+            <tr><td><code>SHA256SUMS.txt</code></td><td class="num"><code>288</code></td><td>—</td><td>Standalone checksum manifest on release</td></tr>
+          </tbody>
+        </table>
+
+        <h3>5. Agile Governance, Branch Alignment &amp; CI Verification</h3>
+        <ul>
+          <li><strong>Agile &amp; Architecture Documentation (<code>docs/</code>):</strong> <a href="../docs/README.md"><code>docs/README.md</code></a>, <a href="../index.html"><code>docs/index.html</code></a>, <a href="../docs/AGILE-SPRINTS.md"><code>docs/AGILE-SPRINTS.md</code></a>, <a href="../docs/TIMELINE-AND-BRANCHES.md"><code>docs/TIMELINE-AND-BRANCHES.md</code></a>, <a href="../docs/TDD-TEST-SPECIFICATION.md"><code>docs/TDD-TEST-SPECIFICATION.md</code></a>, and <a href="../docs/ARCHITECTURE-AND-SPEC.md"><code>docs/ARCHITECTURE-AND-SPEC.md</code></a>.</li>
+          <li><strong>GitHub Repository Templates &amp; Workflows:</strong> <code>.github/ISSUE_TEMPLATE/user-story.md</code>, <code>.github/PULL_REQUEST_TEMPLATE.md</code>, <code>.github/workflows/rust.yml</code>, and <code>.github/workflows/gh-pages.yml</code>.</li>
+          <li><strong>Verified Workflow Runs (Baseline Prior to Report Commit):</strong> <code>Rust Sprint CI</code> Run <code>#44939829185</code> (<code>master</code>, <code>9afc854</code>): <code>completed / success (15s)</code>; <code>Deploy GitHub Pages</code> Run <code>#44939829111</code> (<code>master</code>, <code>9afc854</code>): <code>completed / success (21s)</code>; <code>Rust Sprint CI</code> Run <code>#44938969997</code> (<code>develop</code>, <code>239bf34</code>): <code>completed / success</code>.</li>
+        </ul>
+
+        <h3>6. Open Gaps &amp; Remediation Plan</h3>
+        <table>
+          <thead><tr><th class="num">#</th><th>Open Compliance / Engineering Gap</th><th>Severity</th><th>Planned Remediation</th><th>Target Milestone</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="num">1</td>
+              <td><strong>Red-phase <code>todo!()</code> implementations in <code>src/</code> (<code>65</code> phase TDD tests cannot pass yet)</strong></td>
+              <td><span class="status-pill status-planned">Expected (Sprint 0)</span></td>
+              <td>Implement <code>core_types</code>, <code>parser</code>, <code>arithmetic</code>, <code>control</code>, <code>io</code>, and <code>diagnostics</code> sequentially via TDD Green/Refactor cycles and enable full <code>cargo test</code> in CI as each phase completes</td>
+              <td>Sprints 1–7 (<code>phase-1</code> .. <code>phase-6</code>)</td>
+            </tr>
+            <tr>
+              <td class="num">2</td>
+              <td><strong><code>mpc</code> dependency pinned via Git URL (<code>mpc-rs.git</code>) rather than crates.io version</strong></td>
+              <td><span class="status-pill status-skip">Medium (blocks cargo publish)</span></td>
+              <td>Publish or vendor/pin a crates.io release of <code>mpc</code> in <code>Cargo.toml</code> before cutting the first crates.io release</td>
+              <td>Pre-<code>v1.0.0</code> release prep</td>
+            </tr>
+            <tr>
+              <td class="num">3</td>
+              <td><strong>Local <code>cargo clippy --all-targets</code> blocked by Windows Application Control (<code>os error 4551</code>)</strong></td>
+              <td>Low (host environment)</td>
+              <td>Add <code>cargo clippy --all-targets -- -D warnings</code> to <code>.github/workflows/rust.yml</code> on <code>ubuntu-latest</code> so lint checks run reliably in CI</td>
+              <td>Sprint 1 CI hardening</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <span>speedcoding v0.1.0-alpha.1 · Dual-licensed MIT OR Apache-2.0 · Independent Rust implementation of IBM 701 Speedcoding System (1953)</span>
+    <span>
+      <a href="../index.html">Main Docs Portal</a> &middot;
+      <a href="../speedcoding/index.html">Rustdoc API</a> &middot;
+      <a href="./speedcoding-benchmark-report.md">Benchmark Raw MD</a> &middot;
+      <a href="./compliance-report.md">Compliance Raw MD</a> &middot;
+      <a href="https://github.com/Mr-Kumar-Abhishek/speedcoding" target="_blank" rel="noopener">Repository</a>
+    </span>
+  </footer>
+
+  <script>
+    (function () {
+      const root = document.documentElement;
+      const themeBtn = document.getElementById("theme-toggle");
+      themeBtn.addEventListener("click", () => {
+        const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+        root.setAttribute("data-theme", next);
+        themeBtn.textContent = next === "dark" ? "Light Mode" : "Dark Mode";
+      });
+
+      const tabs = {
+        benchmark: {
+          btn: document.getElementById("tab-benchmark"),
+          panel: document.getElementById("panel-benchmark")
+        },
+        compliance: {
+          btn: document.getElementById("tab-compliance"),
+          panel: document.getElementById("panel-compliance")
+        }
+      };
+
+      function selectTab(name, updateUrl) {
+        const key = tabs[name] ? name : "benchmark";
+        Object.keys(tabs).forEach((k) => {
+          const active = k === key;
+          tabs[k].btn.classList.toggle("active", active);
+          tabs[k].btn.setAttribute("aria-selected", active ? "true" : "false");
+          tabs[k].panel.classList.toggle("active", active);
+        });
+        if (updateUrl && window.history && window.history.replaceState) {
+          window.history.replaceState(null, "", "#" + key);
+        }
+      }
+
+      tabs.benchmark.btn.addEventListener("click", () => selectTab("benchmark", true));
+      tabs.compliance.btn.addEventListener("click", () => selectTab("compliance", true));
+
+      const params = new URLSearchParams(window.location.search);
+      const queryTab = (params.get("tab") || "").toLowerCase();
+      const hashTab = (window.location.hash || "").replace("#", "").toLowerCase();
+      if (tabs[hashTab]) {
+        selectTab(hashTab, false);
+      } else if (tabs[queryTab]) {
+        selectTab(queryTab, false);
+      }
+
+      window.addEventListener("hashchange", () => {
+        const nextHash = (window.location.hash || "").replace("#", "").toLowerCase();
+        if (tabs[nextHash]) selectTab(nextHash, false);
+      });
+    })();
+  </script>
+</body>
+</html>
