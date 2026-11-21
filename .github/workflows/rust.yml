@@ -26,9 +26,14 @@ jobs:
 
       - name: Install stable Rust toolchain
         uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
 
       - name: Debug build
         run: cargo build --verbose
+
+      - name: Run Clippy lints
+        run: cargo clippy --all-targets -- -D warnings
 
       - name: Run library & binary unit tests
         run: cargo test --lib --bins --verbose
@@ -41,6 +46,9 @@ jobs:
 
       - name: Run Phase 2 parser TDD suite (debug)
         run: cargo test --test phase_2_parser --verbose
+
+      - name: Run Phase 3 arithmetic_math TDD suite (debug)
+        run: cargo test --test phase_3_arithmetic_math --verbose
 
       - name: Compile all phase TDD integration suites
         # As each Sprint turns Green on its phase-N/* branch, enable execution for completed phases
@@ -58,6 +66,9 @@ jobs:
 
       - name: Run Phase 2 parser TDD suite (release)
         run: cargo test --release --test phase_2_parser --verbose
+
+      - name: Run Phase 3 arithmetic_math TDD suite (release)
+        run: cargo test --release --test phase_3_arithmetic_math --verbose
 
       - name: Build documentation
         run: cargo doc --no-deps

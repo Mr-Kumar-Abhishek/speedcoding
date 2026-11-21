@@ -12,7 +12,7 @@ fn print_help() {
     println!("speedcoding {}", env!("CARGO_PKG_VERSION"));
     println!("Rust implementation of the 1953 IBM 701 Speedcoding System (SpeedCo I)");
     println!();
-    println!("Status: Sprint 2 pre-release (Phases 1-2 core_types & parser implemented; 22/66 TDD + 5/5 bench passing)");
+    println!("Status: Sprint 3 pre-release (Phases 1-3 core_types, parser & arithmetic implemented; 32/66 TDD + 5/5 bench passing)");
     println!();
     println!("USAGE:");
     println!("    speedcoding [COMMAND | OPTION]");

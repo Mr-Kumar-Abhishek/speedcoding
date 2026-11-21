@@ -111,7 +111,7 @@ fn mpy_and_ngmpy_truncation_and_sub_half_doubling() {
     assert!(!ngmpy.negative);
     assert!((ngmpy.to_f64() - 2.25).abs() < 1e-10);
 
-    // Manual page 3-4: multiplication result is truncated (not rounded) to 35 fraction bits.
+    // Manual pages 3-3..3-4: |Fa*Fb| < 0.5 is doubled (exp - 1) and truncated to 35 fraction bits.
     let odd = SpeedFloat {
         negative: false,
         fraction: (1u64 << 34) | 3,
@@ -119,7 +119,21 @@ fn mpy_and_ngmpy_truncation_and_sub_half_doubling() {
         exponent: 0,
     };
     let prod = unwrap_val(execute_op1_arithmetic(Op1::Mpy, odd, odd).unwrap());
-    assert_eq!(prod.fraction, (1u64 << 33) | 3); // low bits truncated, not rounded up
+    assert!(prod.is_normalized());
+    assert_eq!(prod.signed_exponent(), -1);
+    assert_eq!(prod.fraction, (1u64 << 34) | 6); // doubled because |Fa*Fb| < 0.5, low bits truncated
+
+    // Remainder > 0.5 ULP check: (3*2^33 + 1)^2 = (9*2^31 + 1)*2^35 + (2^34 + 1) -> truncates, not rounds up.
+    let trunc_test = SpeedFloat {
+        negative: false,
+        fraction: (3u64 << 33) | 1,
+        exp_negative: false,
+        exponent: 0,
+    };
+    let trunc_prod = unwrap_val(execute_op1_arithmetic(Op1::Mpy, trunc_test, trunc_test).unwrap());
+    assert!(trunc_prod.is_normalized());
+    assert_eq!(trunc_prod.signed_exponent(), 0);
+    assert_eq!(trunc_prod.fraction, (9u64 << 31) | 1);
 }
 
 #[test]
