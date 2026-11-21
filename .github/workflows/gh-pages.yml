@@ -25,8 +25,9 @@ jobs:
         run: |
           rm -f target/doc/.lock
           cp docs/index.html target/doc/index.html
-          mkdir -p target/doc/docs
+          mkdir -p target/doc/docs target/doc/report
           cp docs/*.md target/doc/docs/
+          cp report/*.md target/doc/report/
           touch target/doc/.nojekyll
 
       - name: Deploy to gh-pages

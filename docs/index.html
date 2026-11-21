@@ -381,6 +381,7 @@
         <a class="doc-pill" href="./docs/TIMELINE-AND-BRANCHES.md">docs/TIMELINE-AND-BRANCHES.md</a>
         <a class="doc-pill" href="./docs/TDD-TEST-SPECIFICATION.md">docs/TDD-TEST-SPECIFICATION.md</a>
         <a class="doc-pill" href="./docs/ARCHITECTURE-AND-SPEC.md">docs/ARCHITECTURE-AND-SPEC.md</a>
+        <a class="doc-pill" href="./report/speedcoding-benchmark-report.md">report/speedcoding-benchmark-report.md</a>
       </div>
       <div class="hero-grid">
         <div class="stat-card">
@@ -818,11 +819,25 @@ cargo package --list --allow-dirty</code></pre>
           <h4>GitHub Actions &amp; <code>v0.1.0-alpha.1</code></h4>
           <ul>
             <li><strong>CI Gate:</strong> <code>.github/workflows/rust.yml</code> validates debug, release, docs, and packaging on <code>master</code>, <code>develop</code>, and <code>phase-*/*</code>.</li>
-            <li><strong>Pages Deploy:</strong> <code>.github/workflows/gh-pages.yml</code> publishes <code>docs/index.html</code>, <code>docs/*.md</code>, and Rustdoc to <code>gh-pages</code>.</li>
+            <li><strong>Pages Deploy:</strong> <code>.github/workflows/gh-pages.yml</code> publishes <code>docs/index.html</code>, <code>docs/*.md</code>, <code>report/*.md</code>, and Rustdoc to <code>gh-pages</code>.</li>
             <li><strong>Pre-release Assets:</strong> <a href="https://github.com/Mr-Kumar-Abhishek/speedcoding/releases/tag/v0.1.0-alpha.1" target="_blank" rel="noopener"><code>speedcoding-v0.1.0-alpha.1-x86_64-pc-windows-msvc.zip</code></a> (<code>speedcoding.exe</code> + <code>libspeedcoding.rlib</code> + licenses) and <code>SHA256SUMS.txt</code>.</li>
           </ul>
         </div>
       </div>
+
+      <h3>Measured Parsing Benchmarks (<a href="https://github.com/Mr-Kumar-Abhishek/speedcoding/actions/runs/44938969997" target="_blank" rel="noopener">CI Run #44938969997</a> &middot; <a href="./report/speedcoding-benchmark-report.md">Full Report</a>)</h3>
+      <table>
+        <thead>
+          <tr><th>Benchmark</th><th>Input</th><th class="num">Debug</th><th class="num">Release</th><th>Throughput (Release)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>bench_parse_714_line_full_memory_program</code></td><td>714 lines (26,162 B)</td><td class="num">6.04 ms</td><td class="num">1.88 ms</td><td>380,347 lines/s (13.29 MB/s)</td></tr>
+          <tr><td><code>bench_parse_2000_line_speedco_program_ast</code></td><td>2,000 lines (73,279 B)</td><td class="num">37.32 ms</td><td class="num">11.67 ms</td><td>171,328 lines/s (5.99 MB/s)</td></tr>
+          <tr><td><code>bench_parse_2000_instruction_cards_80col</code></td><td>2,000 cards (162,000 B)</td><td class="num">35.47 ms</td><td class="num">10.42 ms</td><td>191,889 cards/s (14.82 MB/s)</td></tr>
+          <tr><td><code>bench_parse_2000_data_cards_10000_floats</code></td><td>2,000 cards / 10k floats</td><td class="num">36.96 ms</td><td class="num">8.74 ms</td><td>228,893 cards/s / 1,144,463 nums/s (17.68 MB/s)</td></tr>
+          <tr><td><code>bench_linear_scaling_500_to_2000_lines</code></td><td>500 &rarr; 2,000 lines (4x)</td><td class="num">2.90x</td><td class="num">3.40x</td><td>1.30 ms &rarr; 4.42 ms (linear <code>O(n)</code>)</td></tr>
+        </tbody>
+      </table>
     </section>
   </main>
 
