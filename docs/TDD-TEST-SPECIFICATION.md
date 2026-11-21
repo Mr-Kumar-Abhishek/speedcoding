@@ -3,7 +3,7 @@
 This document catalogs every TDD test case currently defined in the repository (**1** unit test in `src/lib.rs` + **65** phase integration tests across `tests/phase_1_core_types.rs`..`tests/phase_6_checking_listing_timing.rs`).
 
 > [!NOTE]
-> **Current TDD Stage (Red Phase):** All 66 tests compile cleanly in debug mode with 0 warnings against `todo!()` stubs in `src/*.rs`. Running compiled `.exe` binaries under `target\debug\deps\` on this Windows host is also blocked by an Application Control policy (`os error 4551`), so pre-implementation CI/local verification focuses on `cargo build` and `cargo test --no-run` until executed in an unrestricted test environment.
+> **Current TDD Stage (Sprint 1 / Phase 1 Green):** `src/lib.rs` (`1/1`) and Phase 1 [`tests/phase_1_core_types.rs`](../tests/phase_1_core_types.rs) (`11/11`) now pass in both Debug and Release builds in GitHub Actions Linux CI (Run [`#44944881890`](https://github.com/Mr-Kumar-Abhishek/speedcoding/actions/runs/44944881890); `12/66` TDD tests Green alongside `5/5` benchmarks). Phases 2–6 (`54` tests) compile cleanly with 0 warnings against `todo!()` stubs in `src/*.rs`. Running compiled `.exe` binaries under `target\debug\deps\` on this Windows host is blocked by an Application Control policy (`os error 4551`), so runtime test execution is verified via `.github/workflows/rust.yml`.
 
 ---
 
