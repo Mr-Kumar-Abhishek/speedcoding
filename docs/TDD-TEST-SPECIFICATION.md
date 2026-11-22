@@ -1,17 +1,21 @@
-# TDD Test Specification (66 Cases)
+# Test Specification (79 Cases Across All Suites)
 
-This document catalogs every TDD test case currently defined in the repository (**1** unit test in `src/lib.rs` + **65** phase integration tests across `tests/phase_1_core_types.rs`..`tests/phase_6_checking_listing_timing.rs`).
+This document catalogs all **79** automated test cases defined in the `v0.1.0` repository: **1** library unit test in `src/lib.rs`, **4** CLI unit tests in `src/main.rs`, **5** parser benchmarks in `tests/bench_speedcoding.rs`, **65** phase integration tests across `tests/phase_1_core_types.rs`..`tests/phase_6_checking_listing_timing.rs`, and **4** end-to-end SpeedCo I scenarios in `tests/e2e_speedcoding.rs`.
 
 > [!NOTE]
-> **Current TDD Stage (Sprint 6 / Phases 1–6 Green):** `src/lib.rs` (`1/1`), Phase 1 [`tests/phase_1_core_types.rs`](../tests/phase_1_core_types.rs) (`11/11`), Phase 2 [`tests/phase_2_parser.rs`](../tests/phase_2_parser.rs) (`10/10`), Phase 3 [`tests/phase_3_arithmetic_math.rs`](../tests/phase_3_arithmetic_math.rs) (`10/10`), Phase 4 [`tests/phase_4_control_addressing.rs`](../tests/phase_4_control_addressing.rs) (`12/12`), Phase 5 [`tests/phase_5_io_storage.rs`](../tests/phase_5_io_storage.rs) (`11/11`), and Phase 6 [`tests/phase_6_checking_listing_timing.rs`](../tests/phase_6_checking_listing_timing.rs) (`11/11`) now ALL pass in both Debug and Release builds in GitHub Actions Linux CI (Run [`#44984107348`](https://github.com/Mr-Kumar-Abhishek/speedcoding/actions/runs/44984107348), alongside `cargo clippy --all-targets -- -D warnings`; **`66/66` TDD tests Green + `5/5` benchmarks = `71/71` total** with `0` remaining stubs). Running compiled `.exe` binaries on this Windows host is blocked by an Application Control policy (`os error 4551`), so runtime test execution is verified via `.github/workflows/rust.yml`.
+> **Current Verification Status (Sprint 7 / `v0.1.0` Green — `79/79`):** All 10 test/build targets pass in both Debug and Release builds in GitHub Actions Linux CI (Run [`#44987613774`](https://github.com/Mr-Kumar-Abhishek/speedcoding/actions/runs/44987613774)) and locally in Docker (`speedcoding-verify:0.1.0`), alongside `cargo clippy --all-targets -- -D warnings` (`0` warnings, `0` `unsafe`, `0` remaining stubs). Running compiled Windows `.exe` binaries directly on the host is blocked by Windows Application Control (`os error 4551`), so local execution verification runs inside Docker (`docker build --target verify .`) alongside Linux/Windows/macOS CI/CD.
 
 ---
 
-## Smoke Unit Test — `src/lib.rs` (1 Test)
+## Unit & CLI Tests — `src/lib.rs` (1) & `src/main.rs` (4)
 
-| Test Function | Specification / Purpose |
-|---|---|
-| `mpc_library_inclusion` | Verifies `mpc::{MpcResult, mpc_parse, mpc_string}` dependency integration by matching `"speedcoding"`. |
+| # | Test Function | File | Specification / Purpose |
+|---:|---|---|---|
+| 1 | `mpc_library_inclusion` | [`src/lib.rs`](../src/lib.rs) | Verifies `mpc::{MpcResult, mpc_parse, mpc_string}` dependency integration by matching `"speedcoding"`. |
+| 2 | `cli_parses_help_version_info_run_and_trace_flags` | [`src/main.rs`](../src/main.rs) | Validates CLI parsing for `--help`, `-V`, `info`, `run`, `trace`, `--data <ADDR>=<VALUE>`, and `--max-steps <N>`. |
+| 3 | `cli_rejects_unknown_command_or_missing_file_arg` | [`src/main.rs`](../src/main.rs) | Rejects unknown subcommands, missing `<program.sco>`, extra arguments after `info`, and malformed `--data` bindings. |
+| 4 | `cli_execute_source_runs_sum_program_and_prints_output` | [`src/main.rs`](../src/main.rs) | Runs `ADD` + `PRINT` + `STOP` via `execute_source`, confirming `ProgramStop`, memory result (`42.0`), and printer line output. |
+| 5 | `cli_trace_mode_enables_listing_and_computes_timing` | [`src/main.rs`](../src/main.rs) | Enables all 3 listing switches in `trace` mode, flushes a 10-line drum block, computes Section 12 timing ranges, and formats report lines. |
 
 ---
 
@@ -122,23 +126,40 @@ This document catalogs every TDD test case currently defined in the repository (
 
 ---
 
-## Verification Commands
+## End-to-End Integration — [`tests/e2e_speedcoding.rs`](../tests/e2e_speedcoding.rs) (4 Tests)
 
-```powershell
-# Debug build and test compilation (Red-phase & iterative TDD)
-cargo build
-cargo test --no-run
+| # | Test Function | Manual Ref | Specification Verified |
+|---:|---|---|---|
+| 1 | `e2e_page_9_6_matrix_multiplication_worked_example` | Sec. 9-6 | Multiplies 2×3 × 3×2 matrices (`[58, 64, 139, 154]`) combining `R`-quantity indexing (`SETRA/B/C`, `TIAB`, `TIC`, `SKRA/B`) with AC self-modification (`RADDA`, `ADDA`, `STA`, `SUBA`, `SKIP`). |
+| 2 | `e2e_punched_card_deck_checking_loop_and_line_printer` | Sec. 7, 10-2 | Loads 80-col data, loading-control (offloading Drum `P`), and gang-punched instruction cards, runs `PRCH`/`STCH`/`ECHTR` checking loop computing `5.0`, prints line `20501`, and halts at `0307`. |
+| 3 | `e2e_tape_and_drum_machine_instructions_roundtrip` | Sec. 7 | Executes `WRTPJ`, `EFTPJ`, `RWTPJ`, `RFTPJ` (data + EOF 1-instruction skip over `0305 STOP`), `WRDRQ`, and `RFDRQ` roundtripping 3 floats through Tape `J` and Drum `Q`. |
+| 4 | `e2e_timing_and_selective_listing_full_diagnostic_profile` | Sec. 11–12 | Profiles a 10-step program with listing switch `1` flushing 1 drum block (`L = 0`) and validates `ADD`, `SQRT`, and card-loading timing formulas. |
 
-# Run individual phase test suites (once implemented / on unrestricted hosts)
-cargo test --test phase_1_core_types
-cargo test --test phase_2_parser
-cargo test --test phase_3_arithmetic_math
-cargo test --test phase_4_control_addressing
-cargo test --test phase_5_io_storage
-cargo test --test phase_6_checking_listing_timing
+---
 
-# Release verification & packaging
-cargo test --release
+## Benchmarks — [`tests/bench_speedcoding.rs`](../tests/bench_speedcoding.rs) (5 Tests)
+
+| # | Test Function | Scope Verified |
+|---:|---|---|
+| 1 | `bench_parse_714_line_full_memory_program` | Parses a full 714-word (`USER_MEM_LEN`) symbolic SpeedCo I program in Debug and Release (`< 1 s` gate). |
+| 2 | `bench_parse_2000_line_speedco_program_ast` | Constructs a full `MpcAst` across 2,000 SpeedCo I lines (`73,279 B`). |
+| 3 | `bench_parse_2000_instruction_cards_80col` | Parses 2,000 fixed-width 80-column Instruction Cards (`162,000 B`). |
+| 4 | `bench_parse_2000_data_cards_10000_floats` | Parses 2,000 fixed-width 80-column Data Cards (`10,000` floating-decimal values). |
+| 5 | `bench_linear_scaling_500_to_2000_lines` | Verifies near-linear `O(n)` scaling across `4x` input growth (`500` vs `2,000` lines, `< 12.0x` threshold). |
+
+---
+
+## Verification Commands (`79/79` Total)
+
+```bash
+# Reproducible local Linux verification in Docker (recommended on Windows hosts with App Control)
+docker build --target verify --progress=plain -t speedcoding-verify:0.1.0 .
+
+# Or directly on Linux/macOS/unrestricted hosts
+cargo clippy --all-targets -- -D warnings
+cargo test --lib --bins
+cargo test --tests
+cargo test --release --lib --bins --tests
 cargo doc --no-deps
 cargo package --list --allow-dirty
 ```

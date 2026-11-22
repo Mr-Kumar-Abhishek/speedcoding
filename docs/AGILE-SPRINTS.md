@@ -48,11 +48,11 @@ flowchart LR
 | **Sprint 4** | **Done** | `phase-4/control-addressing` -> `develop` -> `master` | `v0.1.0-alpha.5` | Implement `src/control.rs` (`PC=300`, `OP1`-before-`OP2`, `OP2` transfers, `RQuantities`, `AddressCounter`, location `0025`, `SpeedCoMachine` loop) | 44/66 green (`phase_4_control_addressing`: 12/12 in Debug & Release, CI Run `#44980132581`) |
 | **Sprint 5** | **Done** | `phase-5/io-storage` -> `develop` -> `master` | `v0.1.0-alpha.6` | Implement `src/io.rs` & `load_deck` (`TapeUnit` J..M parity/status/skips, `DrumUnit` P..Q, `LinePrinter`, Card Reader offloading, I/O `OP1` ops) | 55/66 green (`phase_5_io_storage`: 11/11 in Debug & Release, CI Run `#44981945061`) |
 | **Sprint 6** | **Done** | `phase-6/checking-listing-timing` -> `develop` -> `master` | `v0.1.0-beta.1` | Implement `src/diagnostics.rs` (`PRCH`/`STCH`/`ECHTR` checking loops, 10-line selective `ListingBuffer`, Section 12 `TimingCalculator`) & machine integration in `src/control.rs` | 66/66 green (`phase_6_checking_listing_timing`: 11/11 in Debug & Release, CI Run `#44984107348`) |
-| **Sprint 7** | Planned | `develop` -> `master` | `v0.1.0` | End-to-end IBM 701 sample programs (Page 9-6 matrix multiplication), full CLI run/trace commands, release verification, stable `v0.1.0` release on `master` | 66/66 TDD + 5/5 bench + E2E sample integration tests green |
+| **Sprint 7** | **Done** | `develop` -> all 8 branches -> `master` (`v0.1.0`) | `v0.1.0` | Page 9-6 matrix & I/O E2E tests (`tests/e2e_speedcoding.rs`), CLI `run`/`trace` (`src/main.rs`), Docker containers (`verify`/`dev`/`runtime`), Release CD (`.github/workflows/release.yml`), 79-test compliance audit | **79/79 green** in Debug & Release (`1` lib + `4` CLI + `5` bench + `65` Phase 1–6 + `4` E2E; CI Run `#44987613774` & Docker `verify`) |
 
 ---
 
-## 3. Product Backlog (`US-01` through `US-14`)
+## 3. Product Backlog (`US-01` through `US-15`)
 
 | Story ID | Sprint | Branch | User Story | Priority | Pts | Status | Acceptance Criteria |
 |---|---|---|---|---|---:|---|---|
@@ -70,19 +70,22 @@ flowchart LR
 | **US-12** | Sprint 4 | `phase-4/control-addressing` | As a self-modifying program, I need the 18-bit `AddressCounter`, `0025` `R`-control tricks, and control-region boundary enforcement. | High | 5 | **Done** | All 12 tests in `tests/phase_4_control_addressing.rs` pass (`12/12` green in Debug & Release) and phase merges to `develop` & `master` (`v0.1.0-alpha.5`). |
 | **US-13** | Sprint 5 | `phase-5/io-storage` | As an I/O subsystem, I need 7-channel parity `TapeUnit`s (`J..M`), 1024-word `DrumUnit`s (`P..Q`), `LinePrinter`, and `load_deck`. | High | 8 | **Done** | All 11 tests in `tests/phase_5_io_storage.rs` pass (`11/11` green in Debug & Release, CI Run `#44981945061`) and phase merges to `develop` & `master` (`v0.1.0-alpha.6`). |
 | **US-14** | Sprint 6 | `phase-6/checking-listing-timing` | As a diagnostic & profiling tool, I need `PRCH`/`STCH`/`ECHTR` checking loops, 10-line `ListingBuffer`, and Section 12 `TimingCalculator`. | Medium | 8 | **Done** | All 11 tests in `tests/phase_6_checking_listing_timing.rs` pass (`66/66` TDD + `5/5` bench = `71/71` green in Debug & Release, CI Run `#44984107348`) and phase merges to `develop` & `master` (`v0.1.0-beta.1`). |
+| **US-15** | Sprint 7 | `develop` -> all 8 branches | As a release user/maintainer, I need E2E SpeedCo I scenarios, CLI `run`/`trace`, local Docker containers, automated multi-OS Release CD, and a full 79-test compliance report. | High | 8 | **Done** | `src/main.rs` (`4/4`), `tests/e2e_speedcoding.rs` (`4/4`), `Dockerfile`/`compose.yaml`, `release.yml`, and **79/79** tests verified in Docker & CI (`#44987613774`); all 8 branches synced & green before `v0.1.0` tag. |
 
 ---
 
 ## 4. Branching, Commit & CI Conventions
 
 - **Long-lived & Milestone Branches:**
-  - `master`: Receives fast-forward / verified merges from `develop` upon completion of each phase (`Sprint 0`, `Phase 1`, ..., `Phase 6`) and hosts release tags (`v0.1.0-alpha.*`, `v0.1.0-beta.1`, `v0.1.0`).
-  - `develop`: Active integration branch for completed sprint work before promotion to `master`.
-  - `phase-1/core-types` .. `phase-6/checking-listing-timing`: Milestone branches mapped 1-to-1 to Sprints 1–6.
+  - `master`: Receives fast-forward / verified merges from `develop` upon completion of each phase (`Sprint 0`, `Phase 1`, ..., `Phase 7`) and hosts release tags (`v0.1.0-alpha.*`, `v0.1.0-beta.1`, `v0.1.0`).
+  - `develop`: Active integration branch for completed sprint work before promotion to `master` and downstream sync across all 8 branches.
+  - `phase-1/core-types` .. `phase-6/checking-listing-timing`: Milestone branches mapped 1-to-1 to Sprints 1–6 and kept fast-forward synchronized prior to release tags.
   - Optional sub-story branches: `sprint-<N>/us-<XX>-<short-slug>` branched from and merged back into the active `phase-N/*` branch.
 - **Commit Message Format:** Imperative, single-purpose summary tied to the story/phase when applicable (e.g., `Sprint 1 (US-05): Implement 72-bit Word72 and SpeedFloat normalization`).
-- **GitHub Automation & Templates:**
-  - CI pipeline: [`.github/workflows/rust.yml`](../.github/workflows/rust.yml) (runs on `push` and `pull_request` for `master`, `develop`, and `phase-*/*`).
+- **GitHub Automation & Containers:**
+  - CI pipeline: [`.github/workflows/rust.yml`](../.github/workflows/rust.yml) (runs on `push` and `pull_request` for `master`, `develop`, and `phase-*/*`, plus `docker-build`).
+  - Release CD pipeline: [`.github/workflows/release.yml`](../.github/workflows/release.yml) (runs `verify`, 3-OS release matrix builds, and `publish-release` on `v*` tags).
+  - Local Docker verification: [`Dockerfile`](../Dockerfile) (`verify`, `dev`, `runtime`) and [`compose.yaml`](../compose.yaml).
   - User story template: [`.github/ISSUE_TEMPLATE/user-story.md`](../.github/ISSUE_TEMPLATE/user-story.md).
   - Sprint PR checklist: [`.github/PULL_REQUEST_TEMPLATE.md`](../.github/PULL_REQUEST_TEMPLATE.md).
 
@@ -96,7 +99,7 @@ flowchart LR
 3. Story points (Fibonacci `1, 2, 3, 5, 8`) and dependencies on earlier phases are clear.
 
 ### Definition of Done (Before Completing a Phase & Merging to `master`)
-1. Target phase tests pass in both debug (`cargo test`) and release (`cargo test --release`) profiles without relaxing assertions, and all earlier phases remain green. *(On hosts where Windows Application Control blocks local test `.exe` execution with `os error 4551`, verification is completed via CI in `.github/workflows/rust.yml` plus local `cargo test --no-run` / `cargo test --release --no-run`.)*
+1. Target phase tests pass in both debug (`cargo test`) and release (`cargo test --release`) profiles without relaxing assertions, and all earlier phases remain green. *(On hosts where Windows Application Control blocks local test `.exe` execution with `os error 4551`, full local Linux verification runs inside Docker via `docker build --target verify .` and in CI via `.github/workflows/rust.yml`.)*
 2. `cargo build`, `cargo build --release`, and `cargo doc --no-deps` complete with **0 compiler or rustdoc warnings**.
 3. `cargo package --list --allow-dirty` produces **0 warnings** and excludes `102632810-05-01-acc.pdf`.
 4. Relevant docs (`docs/AGILE-SPRINTS.md`, `docs/TIMELINE-AND-BRANCHES.md`, `docs/TDD-TEST-SPECIFICATION.md`) reflect updated story status and test counts.

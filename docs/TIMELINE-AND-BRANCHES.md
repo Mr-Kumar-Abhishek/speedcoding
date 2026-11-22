@@ -35,14 +35,14 @@ flowchart LR
 
 | Branch | Role | Current Status |
 |---|---|---|
-| `master` | Completed phases and verified releases; updated from `develop` after each phase passes CI | Synced with Sprint 6 (`v0.1.0-beta.1`, 66/66 TDD + 5/5 bench = 71/71 passing) |
-| `develop` | Primary integration branch hosting shared API stubs, CLI, docs, CI, benchmarks, and all phase test suites | Sprint 6 integrated (`66/66` TDD + `5/5` bench = `71/71` passing; `0` remaining stubs) |
-| `phase-1/core-types` | Sprint 1 implementation branch | **Done** — synced (`src/core_types.rs`, `11/11` passing in Debug & Release) |
-| `phase-2/parser` | Sprint 2 implementation branch | **Done** — synced (`src/parser.rs`, `10/10` passing in Debug & Release) |
-| `phase-3/arithmetic-math` | Sprint 3 implementation branch | **Done** — synced (`src/arithmetic.rs`, `10/10` passing in Debug & Release) |
-| `phase-4/control-addressing` | Sprint 4 implementation branch | **Done** — synced (`src/control.rs`, `12/12` passing in Debug & Release) |
-| `phase-5/io-storage` | Sprint 5 implementation branch | **Done** — synced (`src/io.rs`, `11/11` passing in Debug & Release) |
-| `phase-6/checking-listing-timing` | Sprint 6 implementation branch | **Done** — `src/diagnostics.rs` + machine integration (`11/11` passing in Debug & Release, CI Run `#44984107348`) |
+| `master` | Completed phases and verified releases; updated from `develop` after each phase passes CI | **Done** — Synced for `v0.1.0` (`79/79` passing Debug & Release, CI Run `#44987613774` + Docker + Release CD) |
+| `develop` | Primary integration branch hosting shared API stubs, CLI, docs, CI/CD, Docker, benchmarks, and all test suites | **Done** — Sprint 7 integrated (`79/79` passing; `0` remaining stubs) |
+| `phase-1/core-types` | Sprint 1 implementation branch | **Done** — synced with `v0.1.0` (`src/core_types.rs`, `11/11` passing in Debug & Release) |
+| `phase-2/parser` | Sprint 2 implementation branch | **Done** — synced with `v0.1.0` (`src/parser.rs`, `10/10` passing in Debug & Release) |
+| `phase-3/arithmetic-math` | Sprint 3 implementation branch | **Done** — synced with `v0.1.0` (`src/arithmetic.rs`, `10/10` passing in Debug & Release) |
+| `phase-4/control-addressing` | Sprint 4 implementation branch | **Done** — synced with `v0.1.0` (`src/control.rs`, `12/12` passing in Debug & Release) |
+| `phase-5/io-storage` | Sprint 5 implementation branch | **Done** — synced with `v0.1.0` (`src/io.rs`, `11/11` passing in Debug & Release) |
+| `phase-6/checking-listing-timing` | Sprint 6 implementation branch | **Done** — synced with `v0.1.0` (`src/diagnostics.rs`, `11/11` passing in Debug & Release) |
 
 ---
 
@@ -57,7 +57,7 @@ flowchart LR
 | **Sprint 4** | Phase 4 (`phase-4/control-addressing` -> `develop` -> `master`) | `v0.1.0-alpha.5` *(Done)* | [`src/control.rs`](../src/control.rs) | [`tests/phase_4_control_addressing.rs`](../tests/phase_4_control_addressing.rs) | 12 *(12/12 Green)* | Sec. 4-1 (`PC = 300`), Sec. 8 (Transfers & Sense Switches), Sec. 9 (`R`-quantities, Address Counter, `0025`, Worked Examples) |
 | **Sprint 5** | Phase 5 (`phase-5/io-storage` -> `develop` -> `master`) | `v0.1.0-alpha.6` *(Done)* | [`src/io.rs`](../src/io.rs) + [`src/control.rs`](../src/control.rs) (`load_deck` & I/O `OP1`) | [`tests/phase_5_io_storage.rs`](../tests/phase_5_io_storage.rs) | 11 *(11/11 Green)* | Sec. 7-4..7-19 (7-ch Tape Parity, Status Matrix, `RFTP`/`RBTP`/`SFTP`/`SBTP`, Drums `P`/`Q`, Line Printer, Card Reader) |
 | **Sprint 6** | Phase 6 (`phase-6/checking-listing-timing` -> `develop` -> `master`) | `v0.1.0-beta.1` *(Done)* | [`src/diagnostics.rs`](../src/diagnostics.rs) + [`src/control.rs`](../src/control.rs) (checking & listing) | [`tests/phase_6_checking_listing_timing.rs`](../tests/phase_6_checking_listing_timing.rs) | 11 *(11/11 Green)* | Sec. 10 (`PRCH`/`STCH`/`ECHTR`), Sec. 11 (Selective Listing & 10-line Drum Buffer), Sec. 12 & Appendices (Execution/Tape/Load Timing) |
-| **Sprint 7** | Release (`develop` -> `master`) | `v0.1.0` | End-to-end CLI & Matrix Example | All 66 tests + 5 benchmarks + E2E sample tests | 71+ | Page 9-6 matrix multiplication E2E validation, stable release artifacts |
+| **Sprint 7** | Release (`develop` -> all 8 branches -> `master`) | `v0.1.0` *(Done)* | [`src/main.rs`](../src/main.rs), [`tests/e2e_speedcoding.rs`](../tests/e2e_speedcoding.rs), `Dockerfile`, `compose.yaml`, [`.github/workflows/release.yml`](../.github/workflows/release.yml) | [`src/main.rs`](../src/main.rs) (`4`), [`tests/e2e_speedcoding.rs`](../tests/e2e_speedcoding.rs) (`4`) + all prior targets | **79** *(79/79 Green)* | Sec. 9-6 matrix multiplication, punched-card checking & printer, tape/drum roundtrip, timing/listing E2E, Docker + automated CI/CD release |
 
 ---
 
@@ -74,4 +74,4 @@ A `phase-N/*` Sprint branch is ready to merge into `develop` (and subsequently `
 1. All `tests/phase_N_*.rs` tests (and all prior phase tests + `src/lib.rs` unit tests) compile and pass in both debug (`cargo test`) and release (`cargo test --release`) profiles with **0 warnings**.
 2. Public items carry concise rustdoc comments and `cargo doc --no-deps` builds cleanly.
 3. `cargo package --list --allow-dirty` completes with 0 warnings and keeps `102632810-05-01-acc.pdf` excluded.
-4. Pull Request checks pass in [`.github/workflows/rust.yml`](../.github/workflows/rust.yml) and [AGILE-SPRINTS.md](AGILE-SPRINTS.md) backlog statuses are updated; after merging `phase-N/*` into `develop`, `develop` is fast-forward merged into `master`, tagged, and synced to remaining `phase-*` branches.
+4. Pull Request checks pass in [`.github/workflows/rust.yml`](../.github/workflows/rust.yml), all 8 branches (`master`, `develop`, `phase-1..6`) are fast-forward synced & verified green across CI/Pages **before** tagging, and `v*` release tags trigger [`.github/workflows/release.yml`](../.github/workflows/release.yml).
