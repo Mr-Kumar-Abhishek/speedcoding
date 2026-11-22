@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,11 +10,12 @@
       var t = localStorage.getItem("speedcoding-theme");
       if (!t && window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches) t = "light";
       if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
-    } catch (_) {}
+    } catch (_) { }
   </script>
   <link rel="stylesheet" href="./assets/site.css" />
   <script src="./assets/site.js" defer></script>
 </head>
+
 <body>
   <div id="read-progress" aria-hidden="true"></div>
 
@@ -23,16 +25,19 @@
         <span class="brand-mark">speedcoding</span>
         <span>IBM 701 Speedcoding System (SpeedCo I)</span>
         <div class="badges">
-          <span class="badge rust">v0.1.0-alpha.4 · Rust 2024</span>
+          <span class="badge rust">v0.1.0-alpha.5 · Rust 2024</span>
           <span class="badge lic">MIT OR Apache-2.0</span>
         </div>
       </div>
       <div class="actions">
-        <button class="btn" id="open-search" type="button" aria-label="Open quick jump search">Search <kbd>Ctrl K</kbd></button>
+        <button class="btn" id="open-search" type="button" aria-label="Open quick jump search">Search <kbd>Ctrl
+            K</kbd></button>
         <a class="btn" href="./report/index.html">Reports</a>
         <a class="btn primary" href="./speedcoding/index.html">Rustdoc API</a>
-        <a class="btn" href="https://github.com/Mr-Kumar-Abhishek/speedcoding/releases/tag/v0.1.0-alpha.4" target="_blank" rel="noopener">Pre-release</a>
-        <a class="btn" href="https://github.com/Mr-Kumar-Abhishek/speedcoding" target="_blank" rel="noopener">GitHub Repo</a>
+        <a class="btn" href="https://github.com/Mr-Kumar-Abhishek/speedcoding/releases/tag/v0.1.0-alpha.5"
+          target="_blank" rel="noopener">Pre-release</a>
+        <a class="btn" href="https://github.com/Mr-Kumar-Abhishek/speedcoding" target="_blank" rel="noopener">GitHub
+          Repo</a>
         <button class="btn" id="theme-toggle" type="button" aria-label="Toggle theme">Light Mode</button>
       </div>
     </div>
@@ -61,7 +66,8 @@
         <a class="toc-link" href="./speedcoding/index.html">Rustdoc API &#8599;</a>
         <a class="toc-link" href="./docs/AGILE-SPRINTS.md">AGILE-SPRINTS.md &#8599;</a>
         <a class="toc-link" href="./docs/ARCHITECTURE-AND-SPEC.md">ARCHITECTURE-AND-SPEC.md &#8599;</a>
-        <a class="toc-link" href="https://github.com/Mr-Kumar-Abhishek/speedcoding" target="_blank" rel="noopener">GitHub Repository &#8599;</a>
+        <a class="toc-link" href="https://github.com/Mr-Kumar-Abhishek/speedcoding" target="_blank"
+          rel="noopener">GitHub Repository &#8599;</a>
       </div>
     </aside>
 
@@ -85,8 +91,10 @@
       <div class="hero">
         <h1><code>speedcoding</code> — 1953 IBM 701 Speedcoding System (SpeedCo I)</h1>
         <p class="lead">
-          A faithful Rust library and CLI implementation of John Backus's 1953 IBM 701 floating-point Speedcoding System,
-          powered by <a href="https://github.com/Mr-Kumar-Abhishek/mpc-rs" target="_blank" rel="noopener"><code>mpc-rs</code></a>
+          A faithful Rust library and CLI implementation of John Backus's 1953 IBM 701 floating-point Speedcoding
+          System,
+          powered by <a href="https://github.com/Mr-Kumar-Abhishek/mpc-rs" target="_blank"
+            rel="noopener"><code>mpc-rs</code></a>
           parser combinators and guided by a 2-week Agile Sprint + 6-phase Red-Green-Refactor TDD roadmap.
         </p>
         <div class="doc-pills">
@@ -102,7 +110,7 @@
         <div class="hero-grid">
           <div class="stat-card">
             <div class="stat-label">Crate &amp; Release</div>
-            <div class="stat-value"><code>speedcoding</code> v0.1.0-alpha.4</div>
+            <div class="stat-value"><code>speedcoding</code> v0.1.0-alpha.5</div>
           </div>
           <div class="stat-card">
             <div class="stat-label">Instruction Set</div>
@@ -110,11 +118,11 @@
           </div>
           <div class="stat-card">
             <div class="stat-label">TDD Test Suite</div>
-            <div class="stat-value">71 Tests (37 Green · 34 Red)</div>
+            <div class="stat-value">71 Tests (49 Green · 22 Red)</div>
           </div>
           <div class="stat-card">
             <div class="stat-label">Agile Roadmap</div>
-            <div class="stat-value">Sprints 0–7 (Sprint 3 Done)</div>
+            <div class="stat-value">Sprints 0–7 (Sprint 4 Done)</div>
           </div>
         </div>
       </div>
@@ -124,35 +132,92 @@
         <h2>1. Crate Overview, Module Map &amp; Licensing</h2>
         <div class="diagram-box">
           <div class="mermaid">
-flowchart TD
-    MPC["mpc (git: mpc-rs)"] --> PAR["parser (Phase 2)"]
-    CT["core_types (Phase 1)"] --> PAR
-    CT --> ARITH["arithmetic (Phase 3)"]
-    CT --> IO["io (Phase 5)"]
-    CT --> DIAG["diagnostics (Phase 6)"]
-    CT --> CTRL["control (Phase 4 &amp; Machine)"]
-    PAR --> CTRL
-    ARITH --> CTRL
-    IO --> CTRL
-    DIAG --> CTRL
-    CTRL --> CLI["src/main.rs (speedcoding CLI)"]
+            flowchart TD
+            MPC["mpc (git: mpc-rs)"] --> PAR["parser (Phase 2)"]
+            CT["core_types (Phase 1)"] --> PAR
+            CT --> ARITH["arithmetic (Phase 3)"]
+            CT --> IO["io (Phase 5)"]
+            CT --> DIAG["diagnostics (Phase 6)"]
+            CT --> CTRL["control (Phase 4 &amp; Machine)"]
+            PAR --> CTRL
+            ARITH --> CTRL
+            IO --> CTRL
+            DIAG --> CTRL
+            CTRL --> CLI["src/main.rs (speedcoding CLI)"]
           </div>
         </div>
 
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>Module / Asset</th><th>Path</th><th>Sprint / Phase</th><th>Responsibility</th></tr>
+              <tr>
+                <th>Module / Asset</th>
+                <th>Path</th>
+                <th>Sprint / Phase</th>
+                <th>Responsibility</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td><code>core_types</code></td><td><code>src/core_types.rs</code></td><td>Sprint 1 / Phase 1</td><td><code>Word72</code>, <code>Address</code>, <code>SpeedFloat</code>, <code>DecimalFloat</code>, <code>RCode</code>, <code>LCode</code>, 49 <code>Op1</code> + 48 <code>Op2</code>, <code>Instruction</code>, <code>ElectrostaticMemory</code></td></tr>
-              <tr><td><code>parser</code></td><td><code>src/parser.rs</code></td><td>Sprint 2 / Phase 2</td><td><code>mpc</code> mnemonic/line/program parsers and 80-column instruction, data, and loading-control card parsers</td></tr>
-              <tr><td><code>arithmetic</code></td><td><code>src/arithmetic.rs</code></td><td>Sprint 3 / Phase 3</td><td>Floating-binary <code>OP1</code> arithmetic and Set 1 elementary math (<code>SQRT</code>, <code>SINE</code>, <code>ARTAN</code>, <code>EXP</code>, <code>LN</code>)</td></tr>
-              <tr><td><code>control</code></td><td><code>src/control.rs</code></td><td>Sprint 4 / Phase 4</td><td><code>SpeedCoMachine</code>, <code>PC=300</code>, <code>OP2</code> transfers, <code>RQuantities</code>, <code>AddressCounter</code>, location <code>0025</code> control tricks</td></tr>
-              <tr><td><code>io</code></td><td><code>src/io.rs</code></td><td>Sprint 5 / Phase 5</td><td><code>TapeUnit</code> (<code>J..M</code>) with 7th-channel parity/checksum/status, <code>DrumUnit</code> (<code>P..Q</code>), <code>LinePrinter</code></td></tr>
-              <tr><td><code>diagnostics</code></td><td><code>src/diagnostics.rs</code></td><td>Sprint 6 / Phase 6</td><td><code>CheckingState</code> (<code>PRCH</code>/<code>STCH</code>/<code>ECHTR</code>), selective 10-line <code>ListingBuffer</code>, Section 12 <code>TimingCalculator</code></td></tr>
-              <tr><td><code>speedcoding</code> CLI</td><td><code>src/main.rs</code></td><td>Sprint 0 &amp; 7</td><td>Release CLI entrypoint (<code>--help</code>, <code>--version</code>, <code>info</code>)</td></tr>
-              <tr><td>CI &amp; Pages</td><td><code>.github/workflows/</code></td><td>Sprint 0</td><td><code>rust.yml</code> (Sprint CI), <code>gh-pages.yml</code> (Pages deploy), Agile user story &amp; PR templates</td></tr>
+              <tr>
+                <td><code>core_types</code></td>
+                <td><code>src/core_types.rs</code></td>
+                <td>Sprint 1 / Phase 1</td>
+                <td><code>Word72</code>, <code>Address</code>, <code>SpeedFloat</code>, <code>DecimalFloat</code>,
+                  <code>RCode</code>, <code>LCode</code>, 49 <code>Op1</code> + 48 <code>Op2</code>,
+                  <code>Instruction</code>, <code>ElectrostaticMemory</code>
+                </td>
+              </tr>
+              <tr>
+                <td><code>parser</code></td>
+                <td><code>src/parser.rs</code></td>
+                <td>Sprint 2 / Phase 2</td>
+                <td><code>mpc</code> mnemonic/line/program parsers and 80-column instruction, data, and loading-control
+                  card parsers</td>
+              </tr>
+              <tr>
+                <td><code>arithmetic</code></td>
+                <td><code>src/arithmetic.rs</code></td>
+                <td>Sprint 3 / Phase 3</td>
+                <td>Floating-binary <code>OP1</code> arithmetic and Set 1 elementary math (<code>SQRT</code>,
+                  <code>SINE</code>, <code>ARTAN</code>, <code>EXP</code>, <code>LN</code>)
+                </td>
+              </tr>
+              <tr>
+                <td><code>control</code></td>
+                <td><code>src/control.rs</code></td>
+                <td>Sprint 4 / Phase 4</td>
+                <td><code>SpeedCoMachine</code>, <code>PC=300</code>, <code>OP2</code> transfers,
+                  <code>RQuantities</code>, <code>AddressCounter</code>, location <code>0025</code> control tricks
+                </td>
+              </tr>
+              <tr>
+                <td><code>io</code></td>
+                <td><code>src/io.rs</code></td>
+                <td>Sprint 5 / Phase 5</td>
+                <td><code>TapeUnit</code> (<code>J..M</code>) with 7th-channel parity/checksum/status,
+                  <code>DrumUnit</code> (<code>P..Q</code>), <code>LinePrinter</code>
+                </td>
+              </tr>
+              <tr>
+                <td><code>diagnostics</code></td>
+                <td><code>src/diagnostics.rs</code></td>
+                <td>Sprint 6 / Phase 6</td>
+                <td><code>CheckingState</code> (<code>PRCH</code>/<code>STCH</code>/<code>ECHTR</code>), selective
+                  10-line <code>ListingBuffer</code>, Section 12 <code>TimingCalculator</code></td>
+              </tr>
+              <tr>
+                <td><code>speedcoding</code> CLI</td>
+                <td><code>src/main.rs</code></td>
+                <td>Sprint 0 &amp; 7</td>
+                <td>Release CLI entrypoint (<code>--help</code>, <code>--version</code>, <code>info</code>)</td>
+              </tr>
+              <tr>
+                <td>CI &amp; Pages</td>
+                <td><code>.github/workflows/</code></td>
+                <td>Sprint 0</td>
+                <td><code>rust.yml</code> (Sprint CI), <code>gh-pages.yml</code> (Pages deploy), Agile user story &amp;
+                  PR templates</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -162,7 +227,7 @@ flowchart TD
             <h4><code>Cargo.toml</code> Dependency &amp; Licensing</h4>
             <pre><code>[package]
 name = "speedcoding"
-version = "0.1.0-alpha.4"
+version = "0.1.0-alpha.5"
 edition = "2024"
 license = "MIT OR Apache-2.0"
 exclude = ["102632810-05-01-acc.pdf"]
@@ -173,11 +238,13 @@ mpc = { git = "https://github.com/Mr-Kumar-Abhishek/mpc-rs.git" }</code></pre>
           <div class="card">
             <h4>CLI Usage &amp; Historical Attribution</h4>
             <pre><code>speedcoding --help      # Usage and status
-speedcoding --version   # 0.1.0-alpha.4
+speedcoding --version   # 0.1.0-alpha.5
 speedcoding info        # SpeedCo I machine constants</code></pre>
             <p>
-              Crate source is dual-licensed under <code>MIT OR Apache-2.0</code> (<code>LICENSE-MIT</code>, <code>LICENSE-APACHE</code>).
-              Historical manual <code>102632810-05-01-acc.pdf</code> (Computer History Museum Catalog <code>102632810</code>, IBM 1953)
+              Crate source is dual-licensed under <code>MIT OR Apache-2.0</code> (<code>LICENSE-MIT</code>,
+              <code>LICENSE-APACHE</code>).
+              Historical manual <code>102632810-05-01-acc.pdf</code> (Computer History Museum Catalog
+              <code>102632810</code>, IBM 1953)
               is excluded from Cargo packaging and documented in <code>NOTICE</code>.
             </p>
           </div>
@@ -192,19 +259,34 @@ speedcoding info        # SpeedCo I machine constants</code></pre>
             <h4>Electrostatic &amp; Auxiliary Memory</h4>
             <ul>
               <li><strong>Electrostatic CRT Store:</strong> <code>1024</code> words (<code>0000..=1023</code>).</li>
-              <li><strong>User Storage:</strong> <code>0300..=1013</code> (<code>714</code> words); execution starts at <code>PC = 0300</code>.</li>
-              <li><strong>Control Storage:</strong> <code>0000..=0299</code> &amp; <code>1014..=1023</code> protected (<code>0025</code> holds <code>R</code>-control state).</li>
-              <li><strong>Drums <code>P</code> &amp; <code>Q</code>:</strong> <code>1024</code> words each (<code>0..=1023</code>, no wrap).</li>
-              <li><strong>Tapes <code>J..M</code>:</strong> Variable unit records, 6 data + 1 odd-parity redundancy channel + checksum.</li>
+              <li><strong>User Storage:</strong> <code>0300..=1013</code> (<code>714</code> words); execution starts at
+                <code>PC = 0300</code>.
+              </li>
+              <li><strong>Control Storage:</strong> <code>0000..=0299</code> &amp; <code>1014..=1023</code> protected
+                (<code>0025</code> holds <code>R</code>-control state).</li>
+              <li><strong>Drums <code>P</code> &amp; <code>Q</code>:</strong> <code>1024</code> words each
+                (<code>0..=1023</code>, no wrap).</li>
+              <li><strong>Tapes <code>J..M</code>:</strong> Variable unit records, 6 data + 1 odd-parity redundancy
+                channel + checksum.</li>
             </ul>
           </div>
           <div class="card">
             <h4>Arithmetic &amp; Set 1 Math Rules</h4>
             <ul>
-              <li><strong>Decimal Exponent Limit:</strong> 10-digit fraction with <code>|E<sub>10</sub>| &le; 236</code>; binary <code>|E<sub>2</sub>| &le; 131,071</code>.</li>
-              <li><strong>Add/Sub Restrictions:</strong> Decimal exponent difference <code>&gt; 76</code> rejected; exact cancellation keeps <code>F = 0</code> and operand exponent without shifting.</li>
-              <li><strong>Truncation vs Rounding:</strong> Multiply/add/sub are unrounded; <code>DIV</code>/<code>NGDIV</code> form 34/35-bit rounded quotients; <code>F(B)=0</code> stops with <code>DivideCheck</code>.</li>
-              <li><strong>Set 1 Quirk Rules:</strong> <code>SQRT</code> negative/zero <code>F</code> yields <code>F=0</code>, exp <code>&lceil;E/2&rceil;</code>; <code>SINE</code> zero <code>F</code> yields exp <code>+7</code>; <code>LN</code> treats negative as <code>|x|</code> and zero <code>F</code> as <code>1/2</code>.</li>
+              <li><strong>Decimal Exponent Limit:</strong> 10-digit fraction with
+                <code>|E<sub>10</sub>| &le; 236</code>; binary <code>|E<sub>2</sub>| &le; 131,071</code>.
+              </li>
+              <li><strong>Add/Sub Restrictions:</strong> Decimal exponent difference <code>&gt; 76</code> rejected;
+                exact cancellation keeps <code>F = 0</code> and operand exponent without shifting.</li>
+              <li><strong>Truncation vs Rounding:</strong> Multiply/add/sub are unrounded;
+                <code>DIV</code>/<code>NGDIV</code> form 34/35-bit rounded quotients; <code>F(B)=0</code> stops with
+                <code>DivideCheck</code>.
+              </li>
+              <li><strong>Set 1 Quirk Rules:</strong> <code>SQRT</code> negative/zero <code>F</code> yields
+                <code>F=0</code>, exp <code>&lceil;E/2&rceil;</code>; <code>SINE</code> zero <code>F</code> yields exp
+                <code>+7</code>; <code>LN</code> treats negative as <code>|x|</code> and zero <code>F</code> as
+                <code>1/2</code>.
+              </li>
             </ul>
           </div>
         </div>
@@ -216,15 +298,22 @@ speedcoding info        # SpeedCo I machine constants</code></pre>
             <span class="bit-viz-hint">Click any segment to inspect bit range &amp; rules</span>
           </div>
           <div class="bit-strip">
-            <button type="button" class="bit-seg seg-sign active" data-field="float-sign" style="flex: 2 1 0"><span class="seg-range">1</span><span class="seg-name">&plusmn;S</span></button>
-            <button type="button" class="bit-seg seg-frac" data-field="float-frac" style="flex: 35 1 0"><span class="seg-range">2–36</span><span class="seg-name">Fraction F (35b)</span></button>
-            <button type="button" class="bit-seg seg-sign" data-field="float-esign" style="flex: 2 1 0"><span class="seg-range">37</span><span class="seg-name">E&plusmn;</span></button>
-            <button type="button" class="bit-seg seg-exp" data-field="float-exp" style="flex: 17 1 0"><span class="seg-range">38–54</span><span class="seg-name">Exponent E (17b)</span></button>
-            <button type="button" class="bit-seg seg-pad" data-field="float-unused" style="flex: 18 1 0"><span class="seg-range">55–72</span><span class="seg-name">Unused (18b = 0)</span></button>
+            <button type="button" class="bit-seg seg-sign active" data-field="float-sign" style="flex: 2 1 0"><span
+                class="seg-range">1</span><span class="seg-name">&plusmn;S</span></button>
+            <button type="button" class="bit-seg seg-frac" data-field="float-frac" style="flex: 35 1 0"><span
+                class="seg-range">2–36</span><span class="seg-name">Fraction F (35b)</span></button>
+            <button type="button" class="bit-seg seg-sign" data-field="float-esign" style="flex: 2 1 0"><span
+                class="seg-range">37</span><span class="seg-name">E&plusmn;</span></button>
+            <button type="button" class="bit-seg seg-exp" data-field="float-exp" style="flex: 17 1 0"><span
+                class="seg-range">38–54</span><span class="seg-name">Exponent E (17b)</span></button>
+            <button type="button" class="bit-seg seg-pad" data-field="float-unused" style="flex: 18 1 0"><span
+                class="seg-range">55–72</span><span class="seg-name">Unused (18b = 0)</span></button>
           </div>
           <div class="bit-inspector" aria-live="polite">
             <div class="bit-inspector-title">Quantity Sign Bit (Bit 1 (MSB))</div>
-            <div class="bit-inspector-meta">Width: <strong>1 bit</strong> &middot; Domain: <code>0 = positive (+), 1 = negative (-)</code> &middot; Manual Sec. 3-2 (Floating Binary Number Word)</div>
+            <div class="bit-inspector-meta">Width: <strong>1 bit</strong> &middot; Domain:
+              <code>0 = positive (+), 1 = negative (-)</code> &middot; Manual Sec. 3-2 (Floating Binary Number Word)
+            </div>
             <div>Signed-magnitude representation; applies independently from exponent sign at Bit 37.</div>
           </div>
         </div>
@@ -235,49 +324,117 @@ speedcoding info        # SpeedCo I machine constants</code></pre>
             <span class="bit-viz-hint">Click any field to inspect packing &amp; addressing rules</span>
           </div>
           <div class="bit-strip">
-            <button type="button" class="bit-seg seg-sign" data-field="instr-sign" style="flex: 2 1 0"><span class="seg-range">1</span><span class="seg-name">S</span></button>
-            <button type="button" class="bit-seg seg-pad" data-field="instr-pad1" style="flex: 2 1 0"><span class="seg-range">2</span><span class="seg-name">0</span></button>
-            <button type="button" class="bit-seg seg-op" data-field="instr-r" style="flex: 4 1 0"><span class="seg-range">3–5</span><span class="seg-name">R (3b)</span></button>
-            <button type="button" class="bit-seg seg-pad" data-field="instr-pad2" style="flex: 2 1 0"><span class="seg-range">6</span><span class="seg-name">0</span></button>
-            <button type="button" class="bit-seg seg-op active" data-field="instr-op1" style="flex: 12 1 0"><span class="seg-range">7–18</span><span class="seg-name">OP1 (12b)</span></button>
-            <button type="button" class="bit-seg seg-op" data-field="instr-op2" style="flex: 8 1 0"><span class="seg-range">19–26</span><span class="seg-name">OP2 (8b)</span></button>
-            <button type="button" class="bit-seg seg-addr" data-field="instr-d" style="flex: 10 1 0"><span class="seg-range">27–36</span><span class="seg-name">D (10b)</span></button>
-            <button type="button" class="bit-seg seg-pad" data-field="instr-pad3" style="flex: 2 1 0"><span class="seg-range">37</span><span class="seg-name">0</span></button>
-            <button type="button" class="bit-seg seg-addr" data-field="instr-a" style="flex: 10 1 0"><span class="seg-range">38–47</span><span class="seg-name">A (10b)</span></button>
-            <button type="button" class="bit-seg seg-addr" data-field="instr-b" style="flex: 10 1 0"><span class="seg-range">48–57</span><span class="seg-name">B (10b)</span></button>
-            <button type="button" class="bit-seg seg-pad" data-field="instr-pad4" style="flex: 3 1 0"><span class="seg-range">58–59</span><span class="seg-name">00</span></button>
-            <button type="button" class="bit-seg seg-op" data-field="instr-l" style="flex: 4 1 0"><span class="seg-range">60–62</span><span class="seg-name">L (3b)</span></button>
-            <button type="button" class="bit-seg seg-addr" data-field="instr-c" style="flex: 10 1 0"><span class="seg-range">63–72</span><span class="seg-name">C (10b)</span></button>
+            <button type="button" class="bit-seg seg-sign" data-field="instr-sign" style="flex: 2 1 0"><span
+                class="seg-range">1</span><span class="seg-name">S</span></button>
+            <button type="button" class="bit-seg seg-pad" data-field="instr-pad1" style="flex: 2 1 0"><span
+                class="seg-range">2</span><span class="seg-name">0</span></button>
+            <button type="button" class="bit-seg seg-op" data-field="instr-r" style="flex: 4 1 0"><span
+                class="seg-range">3–5</span><span class="seg-name">R (3b)</span></button>
+            <button type="button" class="bit-seg seg-pad" data-field="instr-pad2" style="flex: 2 1 0"><span
+                class="seg-range">6</span><span class="seg-name">0</span></button>
+            <button type="button" class="bit-seg seg-op active" data-field="instr-op1" style="flex: 12 1 0"><span
+                class="seg-range">7–18</span><span class="seg-name">OP1 (12b)</span></button>
+            <button type="button" class="bit-seg seg-op" data-field="instr-op2" style="flex: 8 1 0"><span
+                class="seg-range">19–26</span><span class="seg-name">OP2 (8b)</span></button>
+            <button type="button" class="bit-seg seg-addr" data-field="instr-d" style="flex: 10 1 0"><span
+                class="seg-range">27–36</span><span class="seg-name">D (10b)</span></button>
+            <button type="button" class="bit-seg seg-pad" data-field="instr-pad3" style="flex: 2 1 0"><span
+                class="seg-range">37</span><span class="seg-name">0</span></button>
+            <button type="button" class="bit-seg seg-addr" data-field="instr-a" style="flex: 10 1 0"><span
+                class="seg-range">38–47</span><span class="seg-name">A (10b)</span></button>
+            <button type="button" class="bit-seg seg-addr" data-field="instr-b" style="flex: 10 1 0"><span
+                class="seg-range">48–57</span><span class="seg-name">B (10b)</span></button>
+            <button type="button" class="bit-seg seg-pad" data-field="instr-pad4" style="flex: 3 1 0"><span
+                class="seg-range">58–59</span><span class="seg-name">00</span></button>
+            <button type="button" class="bit-seg seg-op" data-field="instr-l" style="flex: 4 1 0"><span
+                class="seg-range">60–62</span><span class="seg-name">L (3b)</span></button>
+            <button type="button" class="bit-seg seg-addr" data-field="instr-c" style="flex: 10 1 0"><span
+                class="seg-range">63–72</span><span class="seg-name">C (10b)</span></button>
           </div>
           <div class="bit-inspector" aria-live="polite">
             <div class="bit-inspector-title">OP1 Numeric Code (Bits 7–18)</div>
-            <div class="bit-inspector-meta">Width: <strong>12 bits</strong> &middot; Domain: <code>49 OP1 operations (e.g. 658 ADD .. 784 LN)</code> &middot; Manual Sec. 4-4, 5-1..5-2</div>
-            <div>Executes before OP2; skip-capable OP1 codes (RFTP*, RBTP*, SFTP*, SBTP*, WRDRP/Q) forbid a non-zero OP2.</div>
+            <div class="bit-inspector-meta">Width: <strong>12 bits</strong> &middot; Domain:
+              <code>49 OP1 operations (e.g. 658 ADD .. 784 LN)</code> &middot; Manual Sec. 4-4, 5-1..5-2
+            </div>
+            <div>Executes before OP2; skip-capable OP1 codes (RFTP*, RBTP*, SFTP*, SBTP*, WRDRP/Q) forbid a non-zero
+              OP2.</div>
           </div>
         </div>
 
         <div class="two-col">
           <div class="table-wrap">
             <table>
-              <thead><tr><th>Bits (1-based MSB)</th><th class="num">Width</th><th>Number Field</th></tr></thead>
+              <thead>
+                <tr>
+                  <th>Bits (1-based MSB)</th>
+                  <th class="num">Width</th>
+                  <th>Number Field</th>
+                </tr>
+              </thead>
               <tbody>
-                <tr><td><code>1</code></td><td class="num">1</td><td>Quantity sign (<code>1</code> = negative)</td></tr>
-                <tr><td><code>2–36</code></td><td class="num">35</td><td>Fractional part <code>F</code> (<code>0.5 &le; |F| &lt; 1</code> or <code>0</code>)</td></tr>
-                <tr><td><code>37</code></td><td class="num">1</td><td>Exponent sign</td></tr>
-                <tr><td><code>38–54</code></td><td class="num">17</td><td>Binary exponent <code>E</code> (<code>0..=131,071</code>)</td></tr>
-                <tr><td><code>55–72</code></td><td class="num">18</td><td>Unused (<code>0</code>)</td></tr>
+                <tr>
+                  <td><code>1</code></td>
+                  <td class="num">1</td>
+                  <td>Quantity sign (<code>1</code> = negative)</td>
+                </tr>
+                <tr>
+                  <td><code>2–36</code></td>
+                  <td class="num">35</td>
+                  <td>Fractional part <code>F</code> (<code>0.5 &le; |F| &lt; 1</code> or <code>0</code>)</td>
+                </tr>
+                <tr>
+                  <td><code>37</code></td>
+                  <td class="num">1</td>
+                  <td>Exponent sign</td>
+                </tr>
+                <tr>
+                  <td><code>38–54</code></td>
+                  <td class="num">17</td>
+                  <td>Binary exponent <code>E</code> (<code>0..=131,071</code>)</td>
+                </tr>
+                <tr>
+                  <td><code>55–72</code></td>
+                  <td class="num">18</td>
+                  <td>Unused (<code>0</code>)</td>
+                </tr>
               </tbody>
             </table>
           </div>
           <div class="table-wrap">
             <table>
-              <thead><tr><th>Bits (1-based MSB)</th><th class="num">Width</th><th>Instruction Field</th></tr></thead>
+              <thead>
+                <tr>
+                  <th>Bits (1-based MSB)</th>
+                  <th class="num">Width</th>
+                  <th>Instruction Field</th>
+                </tr>
+              </thead>
               <tbody>
-                <tr><td><code>1</code> / <code>2</code> / <code>3–5</code> / <code>6</code></td><td class="num">1+1+3+1</td><td>Sign / <code>0</code> / <code>R</code>-code (<code>0..=7</code>) / <code>0</code></td></tr>
-                <tr><td><code>7–18</code> / <code>19–26</code></td><td class="num">12 + 8</td><td><code>OP1</code> numeric code / <code>OP2</code> numeric code</td></tr>
-                <tr><td><code>27–36</code> / <code>37</code></td><td class="num">10 + 1</td><td><code>D</code> address / <code>0</code></td></tr>
-                <tr><td><code>38–47</code> / <code>48–57</code></td><td class="num">10 + 10</td><td><code>A</code> address / <code>B</code> address</td></tr>
-                <tr><td><code>58–59</code> / <code>60–62</code> / <code>63–72</code></td><td class="num">2+3+10</td><td><code>00</code> / <code>L</code>-code (<code>0,3,6</code>) / <code>C</code> address</td></tr>
+                <tr>
+                  <td><code>1</code> / <code>2</code> / <code>3–5</code> / <code>6</code></td>
+                  <td class="num">1+1+3+1</td>
+                  <td>Sign / <code>0</code> / <code>R</code>-code (<code>0..=7</code>) / <code>0</code></td>
+                </tr>
+                <tr>
+                  <td><code>7–18</code> / <code>19–26</code></td>
+                  <td class="num">12 + 8</td>
+                  <td><code>OP1</code> numeric code / <code>OP2</code> numeric code</td>
+                </tr>
+                <tr>
+                  <td><code>27–36</code> / <code>37</code></td>
+                  <td class="num">10 + 1</td>
+                  <td><code>D</code> address / <code>0</code></td>
+                </tr>
+                <tr>
+                  <td><code>38–47</code> / <code>48–57</code></td>
+                  <td class="num">10 + 10</td>
+                  <td><code>A</code> address / <code>B</code> address</td>
+                </tr>
+                <tr>
+                  <td><code>58–59</code> / <code>60–62</code> / <code>63–72</code></td>
+                  <td class="num">2+3+10</td>
+                  <td><code>00</code> / <code>L</code>-code (<code>0,3,6</code>) / <code>C</code> address</td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -288,7 +445,8 @@ speedcoding info        # SpeedCo I machine constants</code></pre>
       <section id="opcodes" class="doc-section">
         <h2>3. Complete SpeedCo I Operation Code Reference (49 OP1 + 48 OP2)</h2>
         <div class="filter-bar">
-          <input id="opcode-filter" class="filter-input" type="search" placeholder="Filter OP1 / OP2 by mnemonic, code, or description (e.g. ADD, 437, skip, R_A, check)..." />
+          <input id="opcode-filter" class="filter-input" type="search"
+            placeholder="Filter OP1 / OP2 by mnemonic, code, or description (e.g. ADD, 437, skip, R_A, check)..." />
           <div class="view-toggle" role="group" aria-label="Opcode columns view">
             <button type="button" class="active" data-opcode-view="both">Side-by-Side</button>
             <button type="button" data-opcode-view="op1">OP1 Only</button>
@@ -314,37 +472,189 @@ speedcoding info        # SpeedCo I machine constants</code></pre>
             <h3><code>OP1</code> Operations (49 Codes, Pages 5-1..5-2)</h3>
             <div class="table-wrap">
               <table id="op1-table">
-                <thead><tr><th>Mnemonic</th><th class="num">Code</th><th>Rule</th><th>Description</th></tr></thead>
+                <thead>
+                  <tr>
+                    <th>Mnemonic</th>
+                    <th class="num">Code</th>
+                    <th>Rule</th>
+                    <th>Description</th>
+                  </tr>
+                </thead>
                 <tbody>
-                  <tr data-cat="arith"><td><code>ADD</code></td><td class="num">658</td><td>—</td><td>Q(A) + Q(B) &rarr; Q(C)</td></tr>
-                  <tr data-cat="arith"><td><code>SUB</code></td><td class="num">696</td><td>—</td><td>Q(A) - Q(B) &rarr; Q(C)</td></tr>
-                  <tr data-cat="arith"><td><code>ADDAB</code></td><td class="num">699</td><td>—</td><td>Q(A) + |Q(B)| &rarr; Q(C)</td></tr>
-                  <tr data-cat="arith"><td><code>ABADD</code></td><td class="num">703</td><td>—</td><td>|Q(A)| + |Q(B)| &rarr; Q(C)</td></tr>
-                  <tr data-cat="arith"><td><code>SUBAB</code></td><td class="num">707</td><td>—</td><td>Q(A) - |Q(B)| &rarr; Q(C)</td></tr>
-                  <tr data-cat="arith"><td><code>ABSUB</code></td><td class="num">711</td><td>—</td><td>|Q(A)| - |Q(B)| &rarr; Q(C)</td></tr>
-                  <tr data-cat="arith"><td><code>MPY</code></td><td class="num">715</td><td>—</td><td>Q(A) &middot; Q(B) &rarr; Q(C)</td></tr>
-                  <tr data-cat="arith"><td><code>NGMPY</code></td><td class="num">731</td><td>—</td><td>-(Q(A) &middot; Q(B)) &rarr; Q(C)</td></tr>
-                  <tr data-cat="arith"><td><code>DIV</code></td><td class="num">734</td><td>—</td><td>Q(A) &divide; Q(B) &rarr; Q(C)</td></tr>
-                  <tr data-cat="arith"><td><code>NGDIV</code></td><td class="num">748</td><td>—</td><td>-(Q(A) &divide; Q(B)) &rarr; Q(C)</td></tr>
-                  <tr data-cat="math"><td><code>SQRT</code></td><td class="num">782</td><td>—</td><td>&radic;Q(A) &rarr; Q(C)</td></tr>
-                  <tr data-cat="math"><td><code>SINE</code></td><td class="num">780</td><td>—</td><td>sin Q(A) &rarr; Q(C)</td></tr>
-                  <tr data-cat="math"><td><code>ARTAN</code></td><td class="num">781</td><td>—</td><td>arctan Q(A) &rarr; Q(C)</td></tr>
-                  <tr data-cat="math"><td><code>EXP</code></td><td class="num">783</td><td>—</td><td>exp Q(A) &rarr; Q(C)</td></tr>
-                  <tr data-cat="math"><td><code>LN</code></td><td class="num">784</td><td>—</td><td>ln Q(A) &rarr; Q(C)</td></tr>
-                  <tr data-cat="io"><td><code>WRTPJ..M</code></td><td class="num">532..535</td><td>—</td><td>Write cells A..B to tape J(532), K(533), L(534), M(535)</td></tr>
-                  <tr data-cat="io skip"><td><code>RFTPJ</code></td><td class="num">435</td><td><span class="status-pill status-skip">No OP2</span></td><td>Read forward tape J (B-A+1 words)</td></tr>
-                  <tr data-cat="io skip"><td><code>RFTPK</code></td><td class="num">437</td><td><span class="status-pill status-skip">No OP2</span></td><td>Read forward tape K</td></tr>
-                  <tr data-cat="io skip"><td><code>RFTPL</code></td><td class="num">439</td><td><span class="status-pill status-skip">No OP2</span></td><td>Read forward tape L</td></tr>
-                  <tr data-cat="io skip"><td><code>RFTPM</code></td><td class="num">441</td><td><span class="status-pill status-skip">No OP2</span></td><td>Read forward tape M</td></tr>
-                  <tr data-cat="io skip"><td><code>RBTPJ..M</code></td><td class="num">416..419</td><td><span class="status-pill status-skip">No OP2</span></td><td>Read backward tape J(416), K(417), L(418), M(419)</td></tr>
-                  <tr data-cat="io skip"><td><code>SFTPJ..M</code></td><td class="num">556..559</td><td><span class="status-pill status-skip">No OP2</span></td><td>Skip forward tape J(556), K(557), L(558), M(559)</td></tr>
-                  <tr data-cat="io skip"><td><code>SBTPJ..M</code></td><td class="num">546..549</td><td><span class="status-pill status-skip">No OP2</span></td><td>Skip backward tape J(546), K(547), L(548), M(549)</td></tr>
-                  <tr data-cat="io"><td><code>RWTPJ..M</code></td><td class="num">572..578</td><td>—</td><td>Rewind tape J(572), K(574), L(576), M(578)</td></tr>
-                  <tr data-cat="io"><td><code>EFTPJ..M</code></td><td class="num">564..570</td><td>—</td><td>End file tape J(564), K(566), L(568), M(570)</td></tr>
-                  <tr data-cat="io skip"><td><code>WRDRP</code> / <code>WRDRQ</code></td><td class="num">497 / 498</td><td><span class="status-pill status-skip">No OP2</span></td><td>Write cells A..B to drum P / Q starting at C</td></tr>
-                  <tr data-cat="io"><td><code>RFDRP</code> / <code>RFDRQ</code></td><td class="num">526 / 528</td><td>—</td><td>Read drum P / Q starting at C into cells A..B</td></tr>
-                  <tr data-cat="io"><td><code>PRINT</code></td><td class="num">580</td><td>—</td><td>Print cells A..B (5/line, ID 100*C+n)</td></tr>
-                  <tr data-cat="check"><td><code>NOOP</code></td><td class="num">751</td><td>—</td><td>No OP1 operation (2.736 ms)</td></tr>
+                  <tr data-cat="arith">
+                    <td><code>ADD</code></td>
+                    <td class="num">658</td>
+                    <td>—</td>
+                    <td>Q(A) + Q(B) &rarr; Q(C)</td>
+                  </tr>
+                  <tr data-cat="arith">
+                    <td><code>SUB</code></td>
+                    <td class="num">696</td>
+                    <td>—</td>
+                    <td>Q(A) - Q(B) &rarr; Q(C)</td>
+                  </tr>
+                  <tr data-cat="arith">
+                    <td><code>ADDAB</code></td>
+                    <td class="num">699</td>
+                    <td>—</td>
+                    <td>Q(A) + |Q(B)| &rarr; Q(C)</td>
+                  </tr>
+                  <tr data-cat="arith">
+                    <td><code>ABADD</code></td>
+                    <td class="num">703</td>
+                    <td>—</td>
+                    <td>|Q(A)| + |Q(B)| &rarr; Q(C)</td>
+                  </tr>
+                  <tr data-cat="arith">
+                    <td><code>SUBAB</code></td>
+                    <td class="num">707</td>
+                    <td>—</td>
+                    <td>Q(A) - |Q(B)| &rarr; Q(C)</td>
+                  </tr>
+                  <tr data-cat="arith">
+                    <td><code>ABSUB</code></td>
+                    <td class="num">711</td>
+                    <td>—</td>
+                    <td>|Q(A)| - |Q(B)| &rarr; Q(C)</td>
+                  </tr>
+                  <tr data-cat="arith">
+                    <td><code>MPY</code></td>
+                    <td class="num">715</td>
+                    <td>—</td>
+                    <td>Q(A) &middot; Q(B) &rarr; Q(C)</td>
+                  </tr>
+                  <tr data-cat="arith">
+                    <td><code>NGMPY</code></td>
+                    <td class="num">731</td>
+                    <td>—</td>
+                    <td>-(Q(A) &middot; Q(B)) &rarr; Q(C)</td>
+                  </tr>
+                  <tr data-cat="arith">
+                    <td><code>DIV</code></td>
+                    <td class="num">734</td>
+                    <td>—</td>
+                    <td>Q(A) &divide; Q(B) &rarr; Q(C)</td>
+                  </tr>
+                  <tr data-cat="arith">
+                    <td><code>NGDIV</code></td>
+                    <td class="num">748</td>
+                    <td>—</td>
+                    <td>-(Q(A) &divide; Q(B)) &rarr; Q(C)</td>
+                  </tr>
+                  <tr data-cat="math">
+                    <td><code>SQRT</code></td>
+                    <td class="num">782</td>
+                    <td>—</td>
+                    <td>&radic;Q(A) &rarr; Q(C)</td>
+                  </tr>
+                  <tr data-cat="math">
+                    <td><code>SINE</code></td>
+                    <td class="num">780</td>
+                    <td>—</td>
+                    <td>sin Q(A) &rarr; Q(C)</td>
+                  </tr>
+                  <tr data-cat="math">
+                    <td><code>ARTAN</code></td>
+                    <td class="num">781</td>
+                    <td>—</td>
+                    <td>arctan Q(A) &rarr; Q(C)</td>
+                  </tr>
+                  <tr data-cat="math">
+                    <td><code>EXP</code></td>
+                    <td class="num">783</td>
+                    <td>—</td>
+                    <td>exp Q(A) &rarr; Q(C)</td>
+                  </tr>
+                  <tr data-cat="math">
+                    <td><code>LN</code></td>
+                    <td class="num">784</td>
+                    <td>—</td>
+                    <td>ln Q(A) &rarr; Q(C)</td>
+                  </tr>
+                  <tr data-cat="io">
+                    <td><code>WRTPJ..M</code></td>
+                    <td class="num">532..535</td>
+                    <td>—</td>
+                    <td>Write cells A..B to tape J(532), K(533), L(534), M(535)</td>
+                  </tr>
+                  <tr data-cat="io skip">
+                    <td><code>RFTPJ</code></td>
+                    <td class="num">435</td>
+                    <td><span class="status-pill status-skip">No OP2</span></td>
+                    <td>Read forward tape J (B-A+1 words)</td>
+                  </tr>
+                  <tr data-cat="io skip">
+                    <td><code>RFTPK</code></td>
+                    <td class="num">437</td>
+                    <td><span class="status-pill status-skip">No OP2</span></td>
+                    <td>Read forward tape K</td>
+                  </tr>
+                  <tr data-cat="io skip">
+                    <td><code>RFTPL</code></td>
+                    <td class="num">439</td>
+                    <td><span class="status-pill status-skip">No OP2</span></td>
+                    <td>Read forward tape L</td>
+                  </tr>
+                  <tr data-cat="io skip">
+                    <td><code>RFTPM</code></td>
+                    <td class="num">441</td>
+                    <td><span class="status-pill status-skip">No OP2</span></td>
+                    <td>Read forward tape M</td>
+                  </tr>
+                  <tr data-cat="io skip">
+                    <td><code>RBTPJ..M</code></td>
+                    <td class="num">416..419</td>
+                    <td><span class="status-pill status-skip">No OP2</span></td>
+                    <td>Read backward tape J(416), K(417), L(418), M(419)</td>
+                  </tr>
+                  <tr data-cat="io skip">
+                    <td><code>SFTPJ..M</code></td>
+                    <td class="num">556..559</td>
+                    <td><span class="status-pill status-skip">No OP2</span></td>
+                    <td>Skip forward tape J(556), K(557), L(558), M(559)</td>
+                  </tr>
+                  <tr data-cat="io skip">
+                    <td><code>SBTPJ..M</code></td>
+                    <td class="num">546..549</td>
+                    <td><span class="status-pill status-skip">No OP2</span></td>
+                    <td>Skip backward tape J(546), K(547), L(548), M(549)</td>
+                  </tr>
+                  <tr data-cat="io">
+                    <td><code>RWTPJ..M</code></td>
+                    <td class="num">572..578</td>
+                    <td>—</td>
+                    <td>Rewind tape J(572), K(574), L(576), M(578)</td>
+                  </tr>
+                  <tr data-cat="io">
+                    <td><code>EFTPJ..M</code></td>
+                    <td class="num">564..570</td>
+                    <td>—</td>
+                    <td>End file tape J(564), K(566), L(568), M(570)</td>
+                  </tr>
+                  <tr data-cat="io skip">
+                    <td><code>WRDRP</code> / <code>WRDRQ</code></td>
+                    <td class="num">497 / 498</td>
+                    <td><span class="status-pill status-skip">No OP2</span></td>
+                    <td>Write cells A..B to drum P / Q starting at C</td>
+                  </tr>
+                  <tr data-cat="io">
+                    <td><code>RFDRP</code> / <code>RFDRQ</code></td>
+                    <td class="num">526 / 528</td>
+                    <td>—</td>
+                    <td>Read drum P / Q starting at C into cells A..B</td>
+                  </tr>
+                  <tr data-cat="io">
+                    <td><code>PRINT</code></td>
+                    <td class="num">580</td>
+                    <td>—</td>
+                    <td>Print cells A..B (5/line, ID 100*C+n)</td>
+                  </tr>
+                  <tr data-cat="check">
+                    <td><code>NOOP</code></td>
+                    <td class="num">751</td>
+                    <td>—</td>
+                    <td>No OP1 operation (2.736 ms)</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -354,25 +664,99 @@ speedcoding info        # SpeedCo I machine constants</code></pre>
             <h3><code>OP2</code> Operations (48 Codes, Pages 5-3..5-5)</h3>
             <div class="table-wrap">
               <table id="op2-table">
-                <thead><tr><th>Mnemonic</th><th class="num">Code</th><th>Description</th></tr></thead>
+                <thead>
+                  <tr>
+                    <th>Mnemonic</th>
+                    <th class="num">Code</th>
+                    <th>Description</th>
+                  </tr>
+                </thead>
                 <tbody>
-                  <tr data-cat="transfer"><td><code>TR</code></td><td class="num">104</td><td>Unconditional transfer to D</td></tr>
-                  <tr data-cat="transfer"><td><code>TRPL</code> / <code>TRMN</code> / <code>TRZ</code></td><td class="num">109 / 115 / 112</td><td>Transfer to D if Q(C) &gt; 0, &lt; 0, or F(Q(C)) = 0</td></tr>
-                  <tr data-cat="transfer"><td><code>SNTRP</code> / <code>SNTRQ</code></td><td class="num">117 / 120</td><td>Transfer to D if panel sense switch 4 (P) or 5 (Q) is down</td></tr>
-                  <tr data-cat="r-index transfer"><td><code>TIA</code> / <code>TIB</code> / <code>TIC</code></td><td class="num">128 / 126 / 125</td><td>Increase R_A, R_B, or R_C by 1 and transfer to D</td></tr>
-                  <tr data-cat="r-index transfer"><td><code>TIAB</code> / <code>TIBC</code> / <code>TIAC</code> / <code>TIABC</code></td><td class="num">130 / 127 / 129 / 131</td><td>Increase combination of R_A, R_B, R_C by 1 and transfer to D</td></tr>
-                  <tr data-cat="r-index transfer"><td><code>TDA</code> / <code>TDB</code> / <code>TDC</code></td><td class="num">135 / 133 / 132</td><td>Decrease R_A, R_B, or R_C by 1 and transfer to D (error if &lt; 0)</td></tr>
-                  <tr data-cat="r-index transfer"><td><code>TDAB</code> / <code>TDBC</code> / <code>TDAC</code> / <code>TDABC</code></td><td class="num">137 / 134 / 136 / 138</td><td>Decrease combination of R_A, R_B, R_C by 1 and transfer to D</td></tr>
-                  <tr data-cat="r-index"><td><code>SETRA</code> / <code>SETRB</code> / <code>SETRC</code></td><td class="num">139 / 250 / 145</td><td>Set R_A, R_B, or R_C to D</td></tr>
-                  <tr data-cat="r-index"><td><code>SKRA</code> / <code>SKRB</code> / <code>SKRC</code></td><td class="num">152 / 159 / 162</td><td>Skip next instruction if R_A, R_B, or R_C equals D</td></tr>
-                  <tr data-cat="ac"><td><code>RADDA</code> / <code>RADDB</code> / <code>RADDC</code> / <code>RADDD</code></td><td class="num">199 / 202 / 205 / 208</td><td>Reset AC to 0 and add A, B, C, or D field of cell D</td></tr>
-                  <tr data-cat="ac"><td><code>ADDA</code> / <code>ADDB</code> / <code>ADDC</code> / <code>ADDD</code></td><td class="num">177 / 184 / 190 / 193</td><td>Add A, B, C, or D field of cell D to AC</td></tr>
-                  <tr data-cat="ac"><td><code>SUBA</code> / <code>SUBB</code> / <code>SUBC</code> / <code>SUBD</code></td><td class="num">211 / 216 / 221 / 226</td><td>Subtract A, B, C, or D field of cell D from AC</td></tr>
-                  <tr data-cat="ac"><td><code>STA</code> / <code>STB</code> / <code>STC</code> / <code>STD</code></td><td class="num">251 / 252 / 235 / 244</td><td>Store |AC| mod 1024 into A, B, C, or D field of cell D</td></tr>
-                  <tr data-cat="ac"><td><code>SKIP</code></td><td class="num">165</td><td>Skip next instruction if |AC| = D</td></tr>
-                  <tr data-cat="check"><td><code>PRCH</code> / <code>STCH</code> / <code>ECHTR</code></td><td class="num">232 / 253 / 254</td><td>Prepare check / Start check loop / End check &amp; transfer to D</td></tr>
-                  <tr data-cat="transfer check"><td><code>STOP</code></td><td class="num">123</td><td>Halt machine; manual restart transfers to D</td></tr>
-                  <tr data-cat="check"><td><em>(blank / -)</em></td><td class="num">000</td><td>No OP2 operation (0.000 ms)</td></tr>
+                  <tr data-cat="transfer">
+                    <td><code>TR</code></td>
+                    <td class="num">104</td>
+                    <td>Unconditional transfer to D</td>
+                  </tr>
+                  <tr data-cat="transfer">
+                    <td><code>TRPL</code> / <code>TRMN</code> / <code>TRZ</code></td>
+                    <td class="num">109 / 115 / 112</td>
+                    <td>Transfer to D if Q(C) &gt; 0, &lt; 0, or F(Q(C)) = 0</td>
+                  </tr>
+                  <tr data-cat="transfer">
+                    <td><code>SNTRP</code> / <code>SNTRQ</code></td>
+                    <td class="num">117 / 120</td>
+                    <td>Transfer to D if panel sense switch 4 (P) or 5 (Q) is down</td>
+                  </tr>
+                  <tr data-cat="r-index transfer">
+                    <td><code>TIA</code> / <code>TIB</code> / <code>TIC</code></td>
+                    <td class="num">128 / 126 / 125</td>
+                    <td>Increase R_A, R_B, or R_C by 1 and transfer to D</td>
+                  </tr>
+                  <tr data-cat="r-index transfer">
+                    <td><code>TIAB</code> / <code>TIBC</code> / <code>TIAC</code> / <code>TIABC</code></td>
+                    <td class="num">130 / 127 / 129 / 131</td>
+                    <td>Increase combination of R_A, R_B, R_C by 1 and transfer to D</td>
+                  </tr>
+                  <tr data-cat="r-index transfer">
+                    <td><code>TDA</code> / <code>TDB</code> / <code>TDC</code></td>
+                    <td class="num">135 / 133 / 132</td>
+                    <td>Decrease R_A, R_B, or R_C by 1 and transfer to D (error if &lt; 0)</td>
+                  </tr>
+                  <tr data-cat="r-index transfer">
+                    <td><code>TDAB</code> / <code>TDBC</code> / <code>TDAC</code> / <code>TDABC</code></td>
+                    <td class="num">137 / 134 / 136 / 138</td>
+                    <td>Decrease combination of R_A, R_B, R_C by 1 and transfer to D</td>
+                  </tr>
+                  <tr data-cat="r-index">
+                    <td><code>SETRA</code> / <code>SETRB</code> / <code>SETRC</code></td>
+                    <td class="num">139 / 250 / 145</td>
+                    <td>Set R_A, R_B, or R_C to D</td>
+                  </tr>
+                  <tr data-cat="r-index">
+                    <td><code>SKRA</code> / <code>SKRB</code> / <code>SKRC</code></td>
+                    <td class="num">152 / 159 / 162</td>
+                    <td>Skip next instruction if R_A, R_B, or R_C equals D</td>
+                  </tr>
+                  <tr data-cat="ac">
+                    <td><code>RADDA</code> / <code>RADDB</code> / <code>RADDC</code> / <code>RADDD</code></td>
+                    <td class="num">199 / 202 / 205 / 208</td>
+                    <td>Reset AC to 0 and add A, B, C, or D field of cell D</td>
+                  </tr>
+                  <tr data-cat="ac">
+                    <td><code>ADDA</code> / <code>ADDB</code> / <code>ADDC</code> / <code>ADDD</code></td>
+                    <td class="num">177 / 184 / 190 / 193</td>
+                    <td>Add A, B, C, or D field of cell D to AC</td>
+                  </tr>
+                  <tr data-cat="ac">
+                    <td><code>SUBA</code> / <code>SUBB</code> / <code>SUBC</code> / <code>SUBD</code></td>
+                    <td class="num">211 / 216 / 221 / 226</td>
+                    <td>Subtract A, B, C, or D field of cell D from AC</td>
+                  </tr>
+                  <tr data-cat="ac">
+                    <td><code>STA</code> / <code>STB</code> / <code>STC</code> / <code>STD</code></td>
+                    <td class="num">251 / 252 / 235 / 244</td>
+                    <td>Store |AC| mod 1024 into A, B, C, or D field of cell D</td>
+                  </tr>
+                  <tr data-cat="ac">
+                    <td><code>SKIP</code></td>
+                    <td class="num">165</td>
+                    <td>Skip next instruction if |AC| = D</td>
+                  </tr>
+                  <tr data-cat="check">
+                    <td><code>PRCH</code> / <code>STCH</code> / <code>ECHTR</code></td>
+                    <td class="num">232 / 253 / 254</td>
+                    <td>Prepare check / Start check loop / End check &amp; transfer to D</td>
+                  </tr>
+                  <tr data-cat="transfer check">
+                    <td><code>STOP</code></td>
+                    <td class="num">123</td>
+                    <td>Halt machine; manual restart transfers to D</td>
+                  </tr>
+                  <tr data-cat="check">
+                    <td><em>(blank / -)</em></td>
+                    <td class="num">000</td>
+                    <td>No OP2 operation (0.000 ms)</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -387,17 +771,35 @@ speedcoding info        # SpeedCo I machine constants</code></pre>
           <div class="card">
             <h4>80-Column Card Formats (Section 7)</h4>
             <ul>
-              <li><strong>Instruction Card:</strong> Col <code>8</code> not 0+1, Col <code>9</code> blank, <code>10–13</code> Location, <code>14</code>=<code>0</code>, <code>15–19</code> Alpha OP1, <code>20</code> R, <code>21–32</code> A/B/C, <code>33–34</code>=<code>00</code>, <code>35–39</code> Alpha OP2, <code>40–43</code> D, <code>44</code> L, <code>46–51</code> Num OP1/OP2, <code>52–55</code>=<code>0000</code>.</li>
-              <li><strong>Data Card:</strong> Col <code>8</code> double-punched 0+1, Col <code>9</code>=<code>8</code>, up to 5 decimal floats (Col <code>45</code> skipped in <code>N3</code>; <code>12</code>=<code>+</code>, <code>11</code>=<code>-</code> overpunch), Col <code>80</code> word count <code>1..=5</code>.</li>
-              <li><strong>Loading Control Card:</strong> Col <code>9</code>=<code>9</code>, <code>11–14</code> first, <code>16–19</code> last, <code>21–24</code> drum addr, <code>29</code> unit (<code>J..M</code> or <code>P/Q</code>).</li>
+              <li><strong>Instruction Card:</strong> Col <code>8</code> not 0+1, Col <code>9</code> blank,
+                <code>10–13</code> Location, <code>14</code>=<code>0</code>, <code>15–19</code> Alpha OP1,
+                <code>20</code> R, <code>21–32</code> A/B/C, <code>33–34</code>=<code>00</code>, <code>35–39</code>
+                Alpha OP2, <code>40–43</code> D, <code>44</code> L, <code>46–51</code> Num OP1/OP2,
+                <code>52–55</code>=<code>0000</code>.
+              </li>
+              <li><strong>Data Card:</strong> Col <code>8</code> double-punched 0+1, Col <code>9</code>=<code>8</code>,
+                up to 5 decimal floats (Col <code>45</code> skipped in <code>N3</code>; <code>12</code>=<code>+</code>,
+                <code>11</code>=<code>-</code> overpunch), Col <code>80</code> word count <code>1..=5</code>.
+              </li>
+              <li><strong>Loading Control Card:</strong> Col <code>9</code>=<code>9</code>, <code>11–14</code> first,
+                <code>16–19</code> last, <code>21–24</code> drum addr, <code>29</code> unit (<code>J..M</code> or
+                <code>P/Q</code>).
+              </li>
             </ul>
           </div>
           <div class="card">
             <h4>Checking, Listing &amp; Section 12 Timing</h4>
             <ul>
-              <li><strong>Checking Loop (Sec. 10):</strong> Pass 1 sums fixed-point words in Counter 1; Pass 2 sums in Counter 2 and skips on match. <code>PRINT</code> suppressed on Pass 2 (<code>2.896 ms</code>).</li>
-              <li><strong>Selective Listing (Sec. 11):</strong> Switches 1/2/3 match <code>L</code>=<code>0/3/6</code>; snapshots post-<code>OP1</code>/pre-<code>OP2</code>; flushes every <strong>10 lines</strong> (<code>1.325s</code> avg / <code>1.370s</code> max); <code>|E|&gt;236</code> prints <code>±999</code>.</li>
-              <li><strong>Tape Length &amp; Loading (Sec. 12):</strong> Length = <code>2*72 + sum((n+0.5)*3/25) + (k-1)</code> in at <code>75 in/s</code>; EOF gap = <code>0.96s</code>; load = <code>0.4n + 0.6c + e</code> (<code>e=2</code> or <code>55</code>).</li>
+              <li><strong>Checking Loop (Sec. 10):</strong> Pass 1 sums fixed-point words in Counter 1; Pass 2 sums in
+                Counter 2 and skips on match. <code>PRINT</code> suppressed on Pass 2 (<code>2.896 ms</code>).</li>
+              <li><strong>Selective Listing (Sec. 11):</strong> Switches 1/2/3 match <code>L</code>=<code>0/3/6</code>;
+                snapshots post-<code>OP1</code>/pre-<code>OP2</code>; flushes every <strong>10 lines</strong>
+                (<code>1.325s</code> avg / <code>1.370s</code> max); <code>|E|&gt;236</code> prints <code>±999</code>.
+              </li>
+              <li><strong>Tape Length &amp; Loading (Sec. 12):</strong> Length =
+                <code>2*72 + sum((n+0.5)*3/25) + (k-1)</code> in at <code>75 in/s</code>; EOF gap = <code>0.96s</code>;
+                load = <code>0.4n + 0.6c + e</code> (<code>e=2</code> or <code>55</code>).
+              </li>
             </ul>
           </div>
         </div>
@@ -405,12 +807,39 @@ speedcoding info        # SpeedCo I machine constants</code></pre>
         <h3>Tape Unit Status Transition Matrix (Pages 7-13..7-14)</h3>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Instruction</th><th>Original <code>Read</code></th><th>Original <code>Neutral</code></th><th>Original <code>Write</code></th></tr></thead>
+            <thead>
+              <tr>
+                <th>Instruction</th>
+                <th>Original <code>Read</code></th>
+                <th>Original <code>Neutral</code></th>
+                <th>Original <code>Write</code></th>
+              </tr>
+            </thead>
             <tbody>
-              <tr><td><code>RFTP</code> / <code>RBTP</code> / <code>SFTP</code> / <code>SBTP</code></td><td><code>Read</code></td><td><code>Read</code></td><td><code>Write</code> (Copy-check stop)</td></tr>
-              <tr><td><code>WRTP</code></td><td><code>Read</code> (Copy-check stop)</td><td><code>Write</code></td><td><code>Write</code></td></tr>
-              <tr><td><code>EFTP</code></td><td><code>Read</code> (Ignored, no stop)</td><td><code>Neutral</code></td><td><code>Neutral</code></td></tr>
-              <tr><td><code>RWTP</code></td><td><code>Neutral</code></td><td><code>Neutral</code></td><td><code>Neutral</code></td></tr>
+              <tr>
+                <td><code>RFTP</code> / <code>RBTP</code> / <code>SFTP</code> / <code>SBTP</code></td>
+                <td><code>Read</code></td>
+                <td><code>Read</code></td>
+                <td><code>Write</code> (Copy-check stop)</td>
+              </tr>
+              <tr>
+                <td><code>WRTP</code></td>
+                <td><code>Read</code> (Copy-check stop)</td>
+                <td><code>Write</code></td>
+                <td><code>Write</code></td>
+              </tr>
+              <tr>
+                <td><code>EFTP</code></td>
+                <td><code>Read</code> (Ignored, no stop)</td>
+                <td><code>Neutral</code></td>
+                <td><code>Neutral</code></td>
+              </tr>
+              <tr>
+                <td><code>RWTP</code></td>
+                <td><code>Neutral</code></td>
+                <td><code>Neutral</code></td>
+                <td><code>Neutral</code></td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -421,31 +850,98 @@ speedcoding info        # SpeedCo I machine constants</code></pre>
         <h2>5. Agile Sprint Workflow, Roadmap &amp; Product Backlog</h2>
         <div class="diagram-box">
           <div class="mermaid">
-flowchart LR
-    BKL["Product Backlog (US-01..US-14)"] --> PLN["Sprint Planning (DoR Check)"]
-    PLN --> BR["Phase Branch (phase-N/*)"]
-    BR --> TDD["TDD (Red -&gt; Green -&gt; Refactor)"]
-    TDD --> PR["Sprint PR &amp; CI (rust.yml)"]
-    PR --> MRG["Merge to develop"]
-    MRG --> MST["Merge develop to master &amp; Tag"]
-    MST --> RET["Sprint Review &amp; Retro"]
-    RET -->|Next Sprint| PLN
+            flowchart LR
+            BKL["Product Backlog (US-01..US-14)"] --> PLN["Sprint Planning (DoR Check)"]
+            PLN --> BR["Phase Branch (phase-N/*)"]
+            BR --> TDD["TDD (Red -&gt; Green -&gt; Refactor)"]
+            TDD --> PR["Sprint PR &amp; CI (rust.yml)"]
+            PR --> MRG["Merge to develop"]
+            MRG --> MST["Merge develop to master &amp; Tag"]
+            MST --> RET["Sprint Review &amp; Retro"]
+            RET -->|Next Sprint| PLN
           </div>
         </div>
 
         <h3>Sprints 0–7 Roadmap</h3>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Sprint</th><th>Status</th><th>Branch Flow</th><th>Tag</th><th>Deliverable</th><th>Test Gate</th></tr></thead>
+            <thead>
+              <tr>
+                <th>Sprint</th>
+                <th>Status</th>
+                <th>Branch Flow</th>
+                <th>Tag</th>
+                <th>Deliverable</th>
+                <th>Test Gate</th>
+              </tr>
+            </thead>
             <tbody>
-              <tr><td><strong>Sprint 0</strong></td><td><span class="status-pill status-done">Done</span></td><td><code>develop</code> &rarr; <code>master</code></td><td><code>v0.1.0-alpha.1</code></td><td>Crate init, <code>mpc-rs</code>, <code>MIT OR Apache-2.0</code> + <code>NOTICE</code>, Red-phase stubs, 66 TDD + 5 bench tests, docs, Pages, reports, CLI, CI</td><td>1/66 TDD + 5/5 bench; 71/71 compile</td></tr>
-              <tr><td><strong>Sprint 1</strong></td><td><span class="status-pill status-done">Done</span></td><td><code>phase-1/core-types</code> &rarr; <code>develop</code> &rarr; <code>master</code></td><td><code>v0.1.0-alpha.2</code></td><td>Implement <code>src/core_types.rs</code></td><td>12/66 green (Run <code>#44944881890</code>)</td></tr>
-              <tr><td><strong>Sprint 2</strong></td><td><span class="status-pill status-done">Done</span></td><td><code>phase-2/parser</code> &rarr; <code>develop</code> &rarr; <code>master</code></td><td><code>v0.1.0-alpha.3</code></td><td>Implement <code>src/parser.rs</code> with <code>mpc-rs</code></td><td>22/66 green (Run <code>#44946046507</code>)</td></tr>
-              <tr><td><strong>Sprint 3</strong></td><td><span class="status-pill status-done">Done</span></td><td><code>phase-3/arithmetic-math</code> &rarr; <code>develop</code> &rarr; <code>master</code></td><td><code>v0.1.0-alpha.4</code></td><td>Implement <code>src/arithmetic.rs</code> &amp; strict Clippy CI</td><td>32/66 green (Run <code>#44948301907</code>)</td></tr>
-              <tr><td><strong>Sprint 4</strong></td><td><span class="status-pill status-planned">Planned</span></td><td><code>phase-4/control-addressing</code> &rarr; <code>develop</code> &rarr; <code>master</code></td><td><code>v0.1.0-alpha.5</code></td><td>Implement <code>src/control.rs</code> &amp; <code>SpeedCoMachine</code></td><td>44/66 green</td></tr>
-              <tr><td><strong>Sprint 5</strong></td><td><span class="status-pill status-planned">Planned</span></td><td><code>phase-5/io-storage</code> &rarr; <code>develop</code> &rarr; <code>master</code></td><td><code>v0.1.0-alpha.6</code></td><td>Implement <code>src/io.rs</code> &amp; <code>load_deck</code></td><td>55/66 green</td></tr>
-              <tr><td><strong>Sprint 6</strong></td><td><span class="status-pill status-planned">Planned</span></td><td><code>phase-6/checking-listing-timing</code> &rarr; <code>develop</code> &rarr; <code>master</code></td><td><code>v0.1.0-beta.1</code></td><td>Implement <code>src/diagnostics.rs</code></td><td>66/66 green</td></tr>
-              <tr><td><strong>Sprint 7</strong></td><td><span class="status-pill status-planned">Planned</span></td><td><code>develop</code> &rarr; <code>master</code></td><td><code>v0.1.0</code></td><td>End-to-end sample programs, CLI execution, stable release</td><td>66/66 + 5/5 bench + E2E green</td></tr>
+              <tr>
+                <td><strong>Sprint 0</strong></td>
+                <td><span class="status-pill status-done">Done</span></td>
+                <td><code>develop</code> &rarr; <code>master</code></td>
+                <td><code>v0.1.0-alpha.1</code></td>
+                <td>Crate init, <code>mpc-rs</code>, <code>MIT OR Apache-2.0</code> + <code>NOTICE</code>, Red-phase
+                  stubs, 66 TDD + 5 bench tests, docs, Pages, reports, CLI, CI</td>
+                <td>1/66 TDD + 5/5 bench; 71/71 compile</td>
+              </tr>
+              <tr>
+                <td><strong>Sprint 1</strong></td>
+                <td><span class="status-pill status-done">Done</span></td>
+                <td><code>phase-1/core-types</code> &rarr; <code>develop</code> &rarr; <code>master</code></td>
+                <td><code>v0.1.0-alpha.2</code></td>
+                <td>Implement <code>src/core_types.rs</code></td>
+                <td>12/66 green (Run <code>#44944881890</code>)</td>
+              </tr>
+              <tr>
+                <td><strong>Sprint 2</strong></td>
+                <td><span class="status-pill status-done">Done</span></td>
+                <td><code>phase-2/parser</code> &rarr; <code>develop</code> &rarr; <code>master</code></td>
+                <td><code>v0.1.0-alpha.3</code></td>
+                <td>Implement <code>src/parser.rs</code> with <code>mpc-rs</code></td>
+                <td>22/66 green (Run <code>#44946046507</code>)</td>
+              </tr>
+              <tr>
+                <td><strong>Sprint 3</strong></td>
+                <td><span class="status-pill status-done">Done</span></td>
+                <td><code>phase-3/arithmetic-math</code> &rarr; <code>develop</code> &rarr; <code>master</code></td>
+                <td><code>v0.1.0-alpha.4</code></td>
+                <td>Implement <code>src/arithmetic.rs</code> &amp; strict Clippy CI</td>
+                <td>32/66 green (Run <code>#44948301907</code>)</td>
+              </tr>
+              <tr>
+                <td><strong>Sprint 4</strong></td>
+                <td><span class="status-pill status-done">Done</span></td>
+                <td><code>phase-4/control-addressing</code> &rarr; <code>develop</code> &rarr; <code>master</code></td>
+                <td><code>v0.1.0-alpha.5</code></td>
+                <td>Implement <code>src/control.rs</code> &amp; <code>SpeedCoMachine</code></td>
+                <td>44/66 green (Run <code>#44980132581</code>)</td>
+              </tr>
+              <tr>
+                <td><strong>Sprint 5</strong></td>
+                <td><span class="status-pill status-planned">Planned</span></td>
+                <td><code>phase-5/io-storage</code> &rarr; <code>develop</code> &rarr; <code>master</code></td>
+                <td><code>v0.1.0-alpha.6</code></td>
+                <td>Implement <code>src/io.rs</code> &amp; <code>load_deck</code></td>
+                <td>55/66 green</td>
+              </tr>
+              <tr>
+                <td><strong>Sprint 6</strong></td>
+                <td><span class="status-pill status-planned">Planned</span></td>
+                <td><code>phase-6/checking-listing-timing</code> &rarr; <code>develop</code> &rarr; <code>master</code>
+                </td>
+                <td><code>v0.1.0-beta.1</code></td>
+                <td>Implement <code>src/diagnostics.rs</code></td>
+                <td>66/66 green</td>
+              </tr>
+              <tr>
+                <td><strong>Sprint 7</strong></td>
+                <td><span class="status-pill status-planned">Planned</span></td>
+                <td><code>develop</code> &rarr; <code>master</code></td>
+                <td><code>v0.1.0</code></td>
+                <td>End-to-end sample programs, CLI execution, stable release</td>
+                <td>66/66 + 5/5 bench + E2E green</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -453,22 +949,141 @@ flowchart LR
         <h3>Product Backlog (<code>US-01</code> – <code>US-14</code>)</h3>
         <div class="table-wrap">
           <table id="backlog-table">
-            <thead><tr><th>ID</th><th>Sprint</th><th>Story Summary</th><th>Priority</th><th class="num">Pts</th><th>Status</th></tr></thead>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Sprint</th>
+                <th>Story Summary</th>
+                <th>Priority</th>
+                <th class="num">Pts</th>
+                <th>Status</th>
+              </tr>
+            </thead>
             <tbody>
-              <tr><td><code>US-01</code></td><td>Sprint 0</td><td>Dual-licensed crate (<code>MIT OR Apache-2.0</code>), <code>mpc-rs</code> dependency, CHM <code>NOTICE</code></td><td>High</td><td class="num">3</td><td><span class="status-pill status-done">Done</span></td></tr>
-              <tr><td><code>US-02</code></td><td>Sprint 0</td><td>Public repo, Gitflow + 6 milestone branches, Red-phase API stubs &amp; 66 tests</td><td>High</td><td class="num">5</td><td><span class="status-pill status-done">Done</span></td></tr>
-              <tr><td><code>US-03</code></td><td>Sprint 0</td><td>Markdown docs &amp; GitHub Pages portal + Rustdoc workflow</td><td>Medium</td><td class="num">3</td><td><span class="status-pill status-done">Done</span></td></tr>
-              <tr><td><code>US-04</code></td><td>Sprint 0</td><td>Release CLI (<code>src/main.rs</code>), <code>v0.1.0-alpha.1</code> pre-release, Agile CI/templates</td><td>Medium</td><td class="num">5</td><td><span class="status-pill status-done">Done</span></td></tr>
-              <tr><td><code>US-05</code></td><td>Sprint 1</td><td>72-bit words, floating-binary/decimal conversions, protected electrostatic memory</td><td>High</td><td class="num">8</td><td><span class="status-pill status-done">Done</span></td></tr>
-              <tr><td><code>US-06</code></td><td>Sprint 1</td><td><code>RCode</code>, <code>LCode</code>, all 49 <code>Op1</code> + 48 <code>Op2</code> codes, 72-bit instruction roundtrip</td><td>High</td><td class="num">5</td><td><span class="status-pill status-done">Done</span></td></tr>
-              <tr><td><code>US-07</code></td><td>Sprint 2</td><td><code>mpc</code> symbolic instruction &amp; program parser with skip-<code>OP1</code> enforcement</td><td>High</td><td class="num">5</td><td><span class="status-pill status-done">Done</span></td></tr>
-              <tr><td><code>US-08</code></td><td>Sprint 2</td><td>80-col instruction/data/control card parsers + gang-punch translation</td><td>High</td><td class="num">8</td><td><span class="status-pill status-done">Done</span></td></tr>
-              <tr><td><code>US-09</code></td><td>Sprint 3</td><td>Add/Sub (6 variants, cancellation, &le;76 diff), Mpy truncation, Div + DivideCheck</td><td>High</td><td class="num">5</td><td><span class="status-pill status-done">Done</span></td></tr>
-              <tr><td><code>US-10</code></td><td>Sprint 3</td><td>Set 1 <code>SQRT</code>, <code>SINE</code>, <code>ARTAN</code>, <code>EXP</code>, <code>LN</code> precision &amp; Appendix quirks</td><td>Medium</td><td class="num">8</td><td><span class="status-pill status-done">Done</span></td></tr>
-              <tr><td><code>US-11</code></td><td>Sprint 4</td><td><code>PC=300</code>, conditional/switch transfers, <code>STOP</code>, non-destructive <code>R</code>-code indexing</td><td>High</td><td class="num">8</td><td><span class="status-pill status-planned">Planned</span></td></tr>
-              <tr><td><code>US-12</code></td><td>Sprint 4</td><td>18-bit <code>AddressCounter</code>, location <code>0025</code> save/restore, control region guard</td><td>High</td><td class="num">5</td><td><span class="status-pill status-planned">Planned</span></td></tr>
-              <tr><td><code>US-13</code></td><td>Sprint 5</td><td>7-ch parity <code>TapeUnit</code> (<code>J..M</code>), <code>DrumUnit</code> (<code>P..Q</code>), <code>LinePrinter</code>, <code>load_deck</code></td><td>High</td><td class="num">8</td><td><span class="status-pill status-planned">Planned</span></td></tr>
-              <tr><td><code>US-14</code></td><td>Sprint 6</td><td><code>PRCH</code>/<code>STCH</code>/<code>ECHTR</code> checking loops, 10-line listing, Section 12 timing</td><td>Medium</td><td class="num">8</td><td><span class="status-pill status-planned">Planned</span></td></tr>
+              <tr>
+                <td><code>US-01</code></td>
+                <td>Sprint 0</td>
+                <td>Dual-licensed crate (<code>MIT OR Apache-2.0</code>), <code>mpc-rs</code> dependency, CHM
+                  <code>NOTICE</code>
+                </td>
+                <td>High</td>
+                <td class="num">3</td>
+                <td><span class="status-pill status-done">Done</span></td>
+              </tr>
+              <tr>
+                <td><code>US-02</code></td>
+                <td>Sprint 0</td>
+                <td>Public repo, Gitflow + 6 milestone branches, Red-phase API stubs &amp; 66 tests</td>
+                <td>High</td>
+                <td class="num">5</td>
+                <td><span class="status-pill status-done">Done</span></td>
+              </tr>
+              <tr>
+                <td><code>US-03</code></td>
+                <td>Sprint 0</td>
+                <td>Markdown docs &amp; GitHub Pages portal + Rustdoc workflow</td>
+                <td>Medium</td>
+                <td class="num">3</td>
+                <td><span class="status-pill status-done">Done</span></td>
+              </tr>
+              <tr>
+                <td><code>US-04</code></td>
+                <td>Sprint 0</td>
+                <td>Release CLI (<code>src/main.rs</code>), <code>v0.1.0-alpha.1</code> pre-release, Agile CI/templates
+                </td>
+                <td>Medium</td>
+                <td class="num">5</td>
+                <td><span class="status-pill status-done">Done</span></td>
+              </tr>
+              <tr>
+                <td><code>US-05</code></td>
+                <td>Sprint 1</td>
+                <td>72-bit words, floating-binary/decimal conversions, protected electrostatic memory</td>
+                <td>High</td>
+                <td class="num">8</td>
+                <td><span class="status-pill status-done">Done</span></td>
+              </tr>
+              <tr>
+                <td><code>US-06</code></td>
+                <td>Sprint 1</td>
+                <td><code>RCode</code>, <code>LCode</code>, all 49 <code>Op1</code> + 48 <code>Op2</code> codes, 72-bit
+                  instruction roundtrip</td>
+                <td>High</td>
+                <td class="num">5</td>
+                <td><span class="status-pill status-done">Done</span></td>
+              </tr>
+              <tr>
+                <td><code>US-07</code></td>
+                <td>Sprint 2</td>
+                <td><code>mpc</code> symbolic instruction &amp; program parser with skip-<code>OP1</code> enforcement
+                </td>
+                <td>High</td>
+                <td class="num">5</td>
+                <td><span class="status-pill status-done">Done</span></td>
+              </tr>
+              <tr>
+                <td><code>US-08</code></td>
+                <td>Sprint 2</td>
+                <td>80-col instruction/data/control card parsers + gang-punch translation</td>
+                <td>High</td>
+                <td class="num">8</td>
+                <td><span class="status-pill status-done">Done</span></td>
+              </tr>
+              <tr>
+                <td><code>US-09</code></td>
+                <td>Sprint 3</td>
+                <td>Add/Sub (6 variants, cancellation, &le;76 diff), Mpy truncation, Div + DivideCheck</td>
+                <td>High</td>
+                <td class="num">5</td>
+                <td><span class="status-pill status-done">Done</span></td>
+              </tr>
+              <tr>
+                <td><code>US-10</code></td>
+                <td>Sprint 3</td>
+                <td>Set 1 <code>SQRT</code>, <code>SINE</code>, <code>ARTAN</code>, <code>EXP</code>, <code>LN</code>
+                  precision &amp; Appendix quirks</td>
+                <td>Medium</td>
+                <td class="num">8</td>
+                <td><span class="status-pill status-done">Done</span></td>
+              </tr>
+              <tr>
+                <td><code>US-11</code></td>
+                <td>Sprint 4</td>
+                <td><code>PC=300</code>, conditional/switch transfers, <code>STOP</code>, non-destructive
+                  <code>R</code>-code indexing
+                </td>
+                <td>High</td>
+                <td class="num">8</td>
+                <td><span class="status-pill status-done">Done</span></td>
+              </tr>
+              <tr>
+                <td><code>US-12</code></td>
+                <td>Sprint 4</td>
+                <td>18-bit <code>AddressCounter</code>, location <code>0025</code> save/restore, control region guard
+                </td>
+                <td>High</td>
+                <td class="num">5</td>
+                <td><span class="status-pill status-done">Done</span></td>
+              </tr>
+              <tr>
+                <td><code>US-13</code></td>
+                <td>Sprint 5</td>
+                <td>7-ch parity <code>TapeUnit</code> (<code>J..M</code>), <code>DrumUnit</code> (<code>P..Q</code>),
+                  <code>LinePrinter</code>, <code>load_deck</code>
+                </td>
+                <td>High</td>
+                <td class="num">8</td>
+                <td><span class="status-pill status-planned">Planned</span></td>
+              </tr>
+              <tr>
+                <td><code>US-14</code></td>
+                <td>Sprint 6</td>
+                <td><code>PRCH</code>/<code>STCH</code>/<code>ECHTR</code> checking loops, 10-line listing, Section 12
+                  timing</td>
+                <td>Medium</td>
+                <td class="num">8</td>
+                <td><span class="status-pill status-planned">Planned</span></td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -479,44 +1094,64 @@ flowchart LR
         <h2>6. Red-Green-Refactor TDD Test Specification (66 Tests)</h2>
         <div class="diagram-box">
           <div class="mermaid">
-flowchart LR
-    RED["1. RED: Tests compile cleanly against todo!() stubs"] --> GREEN["2. GREEN: Implement minimal safe Rust to pass phase suite"]
-    GREEN --> REF["3. REFACTOR: Extract helpers, verify zero warnings"]
-    REF --> VER["4. VERIFY: Debug + Release tests, rustdoc, package list"]
+            flowchart LR
+            RED["1. RED: Tests compile cleanly against todo!() stubs"] --> GREEN["2. GREEN: Implement minimal safe Rust
+            to pass phase suite"]
+            GREEN --> REF["3. REFACTOR: Extract helpers, verify zero warnings"]
+            REF --> VER["4. VERIFY: Debug + Release tests, rustdoc, package list"]
           </div>
         </div>
 
         <div class="note-box">
           <strong>Unit Smoke Test (<code>src/lib.rs</code> — 1 test):</strong>
-          <code>mpc_library_inclusion</code> validates <code>mpc::{MpcResult, mpc_parse, mpc_string}</code> integration (passing in CI).
+          <code>mpc_library_inclusion</code> validates <code>mpc::{MpcResult, mpc_parse, mpc_string}</code> integration
+          (passing in CI).
         </div>
 
         <div class="filter-bar">
-          <input id="tdd-filter" class="filter-input" type="search" placeholder="Search 65 phase TDD tests (e.g. roundtrip, card, sqrt, tape, timing)..." />
+          <input id="tdd-filter" class="filter-input" type="search"
+            placeholder="Search 65 phase TDD tests (e.g. roundtrip, card, sqrt, tape, timing)..." />
           <button type="button" class="btn" id="tdd-expand-all">Expand All</button>
           <button type="button" class="btn" id="tdd-collapse-all">Collapse All</button>
           <span id="tdd-count" class="filter-count">All 65 phase tests</span>
         </div>
 
         <details open>
-          <summary>Phase 1 — <code>tests/phase_1_core_types.rs</code> (11 tests &mdash; <span class="status-pill status-done">11/11 Passing</span>)</summary>
+          <summary>Phase 1 — <code>tests/phase_1_core_types.rs</code> (11 tests &mdash; <span
+              class="status-pill status-done">11/11 Passing</span>)</summary>
           <ul>
-            <li><code>word72_bounds_bits_and_six_bit_groups</code> — 72-bit range, 1-based MSB bit extraction, 12 six-bit tape groups.</li>
-            <li><code>address_and_user_storage_bounds</code> — <code>0..=1023</code>, user <code>300..=1013</code> (714 cells), <code>INITIAL_PC=300</code>, <code>0025</code>.</li>
-            <li><code>speed_float_72bit_layout_and_normalization</code> — <code>SpeedFloat</code> bit positions (1, 2–36, 37, 38–54, 55–72=0) and normalization.</li>
-            <li><code>speed_float_binary_exponent_bounds</code> — Binary exponent bounds <code>&plusmn;131,071</code> roundtrip.</li>
-            <li><code>decimal_float_validation_and_roundtrip</code> — <code>|E| &le; 236</code> check and decimal &harr; binary conversion.</li>
-            <li><code>r_code_flags_and_bounds</code> — <code>RCode</code> <code>0..=7</code> flags for <code>A</code>, <code>B</code>, <code>C</code>.</li>
-            <li><code>l_code_panel_switches_and_validation</code> — <code>LCode</code> <code>0/3/6</code> &rarr; switches <code>1/2/3</code>.</li>
-            <li><code>op1_all_49_operations_and_skip_restrictions</code> — All 49 <code>Op1</code> codes/mnemonics + <code>forbids_op2()</code>.</li>
-            <li><code>op2_all_48_operations_and_noop</code> — All 48 <code>Op2</code> codes/mnemonics including <code>SETRB=250</code>, <code>NoOp=000</code>.</li>
-            <li><code>instruction_72bit_layout_roundtrip</code> — Page 4-4 instruction packing/unpacking and mandatory zero bits.</li>
-            <li><code>electrostatic_memory_user_access_and_control_protection</code> — Protected control regions <code>0..=299</code>, <code>1014..=1023</code>.</li>
+            <li><code>word72_bounds_bits_and_six_bit_groups</code> — 72-bit range, 1-based MSB bit extraction, 12
+              six-bit tape groups.</li>
+            <li><code>address_and_user_storage_bounds</code> — <code>0..=1023</code>, user <code>300..=1013</code> (714
+              cells), <code>INITIAL_PC=300</code>, <code>0025</code>.</li>
+            <li><code>speed_float_72bit_layout_and_normalization</code> — <code>SpeedFloat</code> bit positions (1,
+              2–36, 37, 38–54, 55–72=0) and normalization.</li>
+            <li><code>speed_float_binary_exponent_bounds</code> — Binary exponent bounds <code>&plusmn;131,071</code>
+              roundtrip.</li>
+            <li><code>decimal_float_validation_and_roundtrip</code> — <code>|E| &le; 236</code> check and decimal &harr;
+              binary conversion.</li>
+            <li><code>r_code_flags_and_bounds</code> — <code>RCode</code> <code>0..=7</code> flags for <code>A</code>,
+              <code>B</code>, <code>C</code>.
+            </li>
+            <li><code>l_code_panel_switches_and_validation</code> — <code>LCode</code> <code>0/3/6</code> &rarr;
+              switches <code>1/2/3</code>.</li>
+            <li><code>op1_all_49_operations_and_skip_restrictions</code> — All 49 <code>Op1</code> codes/mnemonics +
+              <code>forbids_op2()</code>.
+            </li>
+            <li><code>op2_all_48_operations_and_noop</code> — All 48 <code>Op2</code> codes/mnemonics including
+              <code>SETRB=250</code>, <code>NoOp=000</code>.
+            </li>
+            <li><code>instruction_72bit_layout_roundtrip</code> — Page 4-4 instruction packing/unpacking and mandatory
+              zero bits.</li>
+            <li><code>electrostatic_memory_user_access_and_control_protection</code> — Protected control regions
+              <code>0..=299</code>, <code>1014..=1023</code>.
+            </li>
           </ul>
         </details>
 
         <details open>
-          <summary>Phase 2 — <code>tests/phase_2_parser.rs</code> (10 tests &mdash; <span class="status-pill status-done">10/10 Passing</span>)</summary>
+          <summary>Phase 2 — <code>tests/phase_2_parser.rs</code> (10 tests &mdash; <span
+              class="status-pill status-done">10/10 Passing</span>)</summary>
           <ul>
             <li><code>mpc_op1_and_op2_mnemonic_parsers</code></li>
             <li><code>symbolic_instruction_line_examples</code></li>
@@ -532,7 +1167,8 @@ flowchart LR
         </details>
 
         <details open>
-          <summary>Phase 3 — <code>tests/phase_3_arithmetic_math.rs</code> (10 tests &mdash; <span class="status-pill status-done">10/10 Passing</span>)</summary>
+          <summary>Phase 3 — <code>tests/phase_3_arithmetic_math.rs</code> (10 tests &mdash; <span
+              class="status-pill status-done">10/10 Passing</span>)</summary>
           <ul>
             <li><code>add_sub_six_variants_with_signed_operands</code></li>
             <li><code>exact_cancellation_preserves_exponent_without_shifting</code></li>
@@ -547,8 +1183,9 @@ flowchart LR
           </ul>
         </details>
 
-        <details>
-          <summary>Phase 4 — <code>tests/phase_4_control_addressing.rs</code> (12 tests)</summary>
+        <details open>
+          <summary>Phase 4 — <code>tests/phase_4_control_addressing.rs</code> (12 tests &mdash; <span
+              class="status-pill status-done">12/12 Passing</span>)</summary>
           <ul>
             <li><code>initial_pc_is_300_and_op1_precedes_op2</code></li>
             <li><code>unconditional_tr_and_conditional_trpl_trmn_trz</code></li>
@@ -618,11 +1255,26 @@ cargo doc --no-deps
 cargo package --list --allow-dirty</code></pre>
           </div>
           <div class="card">
-            <h4>GitHub Actions &amp; <code>v0.1.0-alpha.4</code></h4>
+            <h4>GitHub Actions &amp; <code>v0.1.0-alpha.5</code></h4>
             <ul>
-              <li><strong>CI Gate:</strong> <code>.github/workflows/rust.yml</code> validates debug, strict Clippy (<code>--all-targets -- -D warnings</code>), release, docs, and packaging on <code>master</code>, <code>develop</code>, and <code>phase-*/*</code> (running <code>phase_1_core_types</code>, <code>phase_2_parser</code>, <code>phase_3_arithmetic_math</code>, and <code>bench_speedcoding</code> in Debug &amp; Release).</li>
-              <li><strong>Pages Deploy:</strong> <code>.github/workflows/gh-pages.yml</code> publishes <code>docs/index.html</code>, <code>docs/assets/*</code>, <code>docs/*.md</code>, <code>report/index.html</code>, and <code>report/*.md</code> (<a href="./report/index.html">Reports Portal</a> &middot; <a href="#benchmark-report">Benchmark</a> &middot; <a href="#compliance-report">Compliance</a>), and Rustdoc to <code>gh-pages</code>.</li>
-              <li><strong>Pre-release Assets:</strong> <a href="https://github.com/Mr-Kumar-Abhishek/speedcoding/releases/tag/v0.1.0-alpha.4" target="_blank" rel="noopener"><code>speedcoding-v0.1.0-alpha.4-x86_64-pc-windows-msvc.zip</code></a> (<code>speedcoding.exe</code> + <code>libspeedcoding.rlib</code> + licenses) and <code>SHA256SUMS.txt</code>.</li>
+              <li><strong>CI Gate:</strong> <code>.github/workflows/rust.yml</code> validates debug, strict Clippy
+                (<code>--all-targets -- -D warnings</code>), release, docs, and packaging on <code>master</code>,
+                <code>develop</code>, and <code>phase-*/*</code> (running <code>phase_1_core_types</code>,
+                <code>phase_2_parser</code>, <code>phase_3_arithmetic_math</code>, <code>phase_4_control_addressing</code>,
+                and <code>bench_speedcoding</code> in Debug &amp; Release).
+              </li>
+              <li><strong>Pages Deploy:</strong> <code>.github/workflows/gh-pages.yml</code> publishes
+                <code>docs/index.html</code>, <code>docs/assets/*</code>, <code>docs/*.md</code>,
+                <code>report/index.html</code>, and <code>report/*.md</code> (<a href="./report/index.html">Reports
+                  Portal</a> &middot; <a href="#benchmark-report">Benchmark</a> &middot; <a
+                  href="#compliance-report">Compliance</a>), and Rustdoc to <code>gh-pages</code>.
+              </li>
+              <li><strong>Pre-release Assets:</strong> <a
+                  href="https://github.com/Mr-Kumar-Abhishek/speedcoding/releases/tag/v0.1.0-alpha.5" target="_blank"
+                  rel="noopener"><code>speedcoding-v0.1.0-alpha.5-x86_64-pc-windows-msvc.zip</code></a>
+                (<code>speedcoding.exe</code> + <code>libspeedcoding.rlib</code> + licenses) and
+                <code>SHA256SUMS.txt</code>.
+              </li>
             </ul>
           </div>
         </div>
@@ -634,7 +1286,8 @@ cargo package --list --allow-dirty</code></pre>
         <div class="actions">
           <a class="btn primary" href="./report/index.html#benchmark">Standalone Report</a>
           <a class="btn" href="./report/speedcoding-benchmark-report.md">Raw Markdown</a>
-          <a class="btn" href="https://github.com/Mr-Kumar-Abhishek/speedcoding/actions/runs/44938969997" target="_blank" rel="noopener">CI Run #44938969997</a>
+          <a class="btn" href="https://github.com/Mr-Kumar-Abhishek/speedcoding/actions/runs/44938969997"
+            target="_blank" rel="noopener">CI Run #44938969997</a>
         </div>
 
         <div class="hero-grid">
@@ -668,8 +1321,16 @@ cargo package --list --allow-dirty</code></pre>
               <span class="speedup-badge">3.2x faster in Release · 380,347 lines/s</span>
             </div>
             <div class="bar-pair">
-              <div class="bar-line"><span class="bar-tag">Debug</span><div class="bar-track"><div class="bar-fill debug" style="width: 16.2%"></div></div><span class="bar-val">6.04 ms</span></div>
-              <div class="bar-line"><span class="bar-tag">Release</span><div class="bar-track"><div class="bar-fill release" style="width: 5.0%"></div></div><span class="bar-val">1.88 ms</span></div>
+              <div class="bar-line"><span class="bar-tag">Debug</span>
+                <div class="bar-track">
+                  <div class="bar-fill debug" style="width: 16.2%"></div>
+                </div><span class="bar-val">6.04 ms</span>
+              </div>
+              <div class="bar-line"><span class="bar-tag">Release</span>
+                <div class="bar-track">
+                  <div class="bar-fill release" style="width: 5.0%"></div>
+                </div><span class="bar-val">1.88 ms</span>
+              </div>
             </div>
           </div>
           <div class="bench-row">
@@ -678,8 +1339,16 @@ cargo package --list --allow-dirty</code></pre>
               <span class="speedup-badge">3.2x faster in Release · 171,328 lines/s</span>
             </div>
             <div class="bar-pair">
-              <div class="bar-line"><span class="bar-tag">Debug</span><div class="bar-track"><div class="bar-fill debug" style="width: 100.0%"></div></div><span class="bar-val">37.32 ms</span></div>
-              <div class="bar-line"><span class="bar-tag">Release</span><div class="bar-track"><div class="bar-fill release" style="width: 31.3%"></div></div><span class="bar-val">11.67 ms</span></div>
+              <div class="bar-line"><span class="bar-tag">Debug</span>
+                <div class="bar-track">
+                  <div class="bar-fill debug" style="width: 100.0%"></div>
+                </div><span class="bar-val">37.32 ms</span>
+              </div>
+              <div class="bar-line"><span class="bar-tag">Release</span>
+                <div class="bar-track">
+                  <div class="bar-fill release" style="width: 31.3%"></div>
+                </div><span class="bar-val">11.67 ms</span>
+              </div>
             </div>
           </div>
           <div class="bench-row">
@@ -688,8 +1357,16 @@ cargo package --list --allow-dirty</code></pre>
               <span class="speedup-badge">3.4x faster in Release · 191,889 cards/s</span>
             </div>
             <div class="bar-pair">
-              <div class="bar-line"><span class="bar-tag">Debug</span><div class="bar-track"><div class="bar-fill debug" style="width: 95.0%"></div></div><span class="bar-val">35.47 ms</span></div>
-              <div class="bar-line"><span class="bar-tag">Release</span><div class="bar-track"><div class="bar-fill release" style="width: 27.9%"></div></div><span class="bar-val">10.42 ms</span></div>
+              <div class="bar-line"><span class="bar-tag">Debug</span>
+                <div class="bar-track">
+                  <div class="bar-fill debug" style="width: 95.0%"></div>
+                </div><span class="bar-val">35.47 ms</span>
+              </div>
+              <div class="bar-line"><span class="bar-tag">Release</span>
+                <div class="bar-track">
+                  <div class="bar-fill release" style="width: 27.9%"></div>
+                </div><span class="bar-val">10.42 ms</span>
+              </div>
             </div>
           </div>
           <div class="bench-row">
@@ -698,8 +1375,16 @@ cargo package --list --allow-dirty</code></pre>
               <span class="speedup-badge">4.2x faster in Release · 1,144,463 nums/s</span>
             </div>
             <div class="bar-pair">
-              <div class="bar-line"><span class="bar-tag">Debug</span><div class="bar-track"><div class="bar-fill debug" style="width: 99.0%"></div></div><span class="bar-val">36.96 ms</span></div>
-              <div class="bar-line"><span class="bar-tag">Release</span><div class="bar-track"><div class="bar-fill release" style="width: 23.4%"></div></div><span class="bar-val">8.74 ms</span></div>
+              <div class="bar-line"><span class="bar-tag">Debug</span>
+                <div class="bar-track">
+                  <div class="bar-fill debug" style="width: 99.0%"></div>
+                </div><span class="bar-val">36.96 ms</span>
+              </div>
+              <div class="bar-line"><span class="bar-tag">Release</span>
+                <div class="bar-track">
+                  <div class="bar-fill release" style="width: 23.4%"></div>
+                </div><span class="bar-val">8.74 ms</span>
+              </div>
             </div>
           </div>
         </div>
@@ -708,7 +1393,15 @@ cargo package --list --allow-dirty</code></pre>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>Test Case</th><th class="num">Input Size</th><th class="num">Debug Latency</th><th class="num">Debug Throughput</th><th class="num">Release Latency</th><th class="num">Release Throughput</th><th>&lt; 1s Release Gate</th></tr>
+              <tr>
+                <th>Test Case</th>
+                <th class="num">Input Size</th>
+                <th class="num">Debug Latency</th>
+                <th class="num">Debug Throughput</th>
+                <th class="num">Release Latency</th>
+                <th class="num">Release Throughput</th>
+                <th>&lt; 1s Release Gate</th>
+              </tr>
             </thead>
             <tbody>
               <tr>
@@ -744,7 +1437,8 @@ cargo package --list --allow-dirty</code></pre>
                 <td class="num"><code>36.96 ms</code></td>
                 <td class="num"><code>54,111 cards/s</code> / <code>270,555 nums/s</code> (<code>4.18 MB/s</code>)</td>
                 <td class="num"><code>8.74 ms</code></td>
-                <td class="num"><code>228,893 cards/s</code> / <code>1,144,463 nums/s</code> (<code>17.68 MB/s</code>)</td>
+                <td class="num"><code>228,893 cards/s</code> / <code>1,144,463 nums/s</code> (<code>17.68 MB/s</code>)
+                </td>
                 <td><span class="status-pill status-done">Pass</span></td>
               </tr>
             </tbody>
@@ -756,10 +1450,30 @@ cargo package --list --allow-dirty</code></pre>
             <h3>Linear Scaling Check (500 vs. 2,000 Lines)</h3>
             <div class="table-wrap">
               <table>
-                <thead><tr><th>Profile</th><th class="num">500 Lines</th><th class="num">2,000 Lines</th><th class="num">Ratio (4x)</th><th>&lt; 12.0x</th></tr></thead>
+                <thead>
+                  <tr>
+                    <th>Profile</th>
+                    <th class="num">500 Lines</th>
+                    <th class="num">2,000 Lines</th>
+                    <th class="num">Ratio (4x)</th>
+                    <th>&lt; 12.0x</th>
+                  </tr>
+                </thead>
                 <tbody>
-                  <tr><td><strong>Debug</strong></td><td class="num"><code>5.13 ms</code></td><td class="num"><code>14.87 ms</code></td><td class="num"><code>2.90x</code></td><td><span class="status-pill status-done">Pass</span></td></tr>
-                  <tr><td><strong>Release</strong></td><td class="num"><code>1.30 ms</code></td><td class="num"><code>4.42 ms</code></td><td class="num"><code>3.40x</code></td><td><span class="status-pill status-done">Pass</span></td></tr>
+                  <tr>
+                    <td><strong>Debug</strong></td>
+                    <td class="num"><code>5.13 ms</code></td>
+                    <td class="num"><code>14.87 ms</code></td>
+                    <td class="num"><code>2.90x</code></td>
+                    <td><span class="status-pill status-done">Pass</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Release</strong></td>
+                    <td class="num"><code>1.30 ms</code></td>
+                    <td class="num"><code>4.42 ms</code></td>
+                    <td class="num"><code>3.40x</code></td>
+                    <td><span class="status-pill status-done">Pass</span></td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -768,13 +1482,45 @@ cargo package --list --allow-dirty</code></pre>
             <h3>CI Suite Summary (<code>Run #44938969997</code>)</h3>
             <div class="table-wrap">
               <table>
-                <thead><tr><th>Suite / Profile</th><th class="num">Pass/Fail/Ign</th><th class="num">Time</th><th>Notes</th></tr></thead>
+                <thead>
+                  <tr>
+                    <th>Suite / Profile</th>
+                    <th class="num">Pass/Fail/Ign</th>
+                    <th class="num">Time</th>
+                    <th>Notes</th>
+                  </tr>
+                </thead>
                 <tbody>
-                  <tr><td><code>src/lib.rs</code> (Debug)</td><td class="num">1 / 0 / 0</td><td class="num"><code>0.00s</code></td><td><code>mpc_library_inclusion</code></td></tr>
-                  <tr><td><code>src/main.rs</code> (Debug)</td><td class="num">0 / 0 / 0</td><td class="num"><code>0.00s</code></td><td><code>0</code> warnings</td></tr>
-                  <tr><td><code>tests/bench_speedcoding.rs</code> (Debug)</td><td class="num">5 / 0 / 0</td><td class="num"><code>0.06s</code></td><td><code>[bench]</code> metrics printed</td></tr>
-                  <tr><td><code>tests/phase_1..6</code> (Debug)</td><td class="num">—</td><td class="num"><code>--no-run</code></td><td>65 Red-phase tests compile</td></tr>
-                  <tr><td><code>tests/bench_speedcoding.rs</code> (Release)</td><td class="num">5 / 0 / 0</td><td class="num"><code>0.02s</code></td><td>All <code>&lt; 1s</code> gates passed</td></tr>
+                  <tr>
+                    <td><code>src/lib.rs</code> (Debug)</td>
+                    <td class="num">1 / 0 / 0</td>
+                    <td class="num"><code>0.00s</code></td>
+                    <td><code>mpc_library_inclusion</code></td>
+                  </tr>
+                  <tr>
+                    <td><code>src/main.rs</code> (Debug)</td>
+                    <td class="num">0 / 0 / 0</td>
+                    <td class="num"><code>0.00s</code></td>
+                    <td><code>0</code> warnings</td>
+                  </tr>
+                  <tr>
+                    <td><code>tests/bench_speedcoding.rs</code> (Debug)</td>
+                    <td class="num">5 / 0 / 0</td>
+                    <td class="num"><code>0.06s</code></td>
+                    <td><code>[bench]</code> metrics printed</td>
+                  </tr>
+                  <tr>
+                    <td><code>tests/phase_1..6</code> (Debug)</td>
+                    <td class="num">—</td>
+                    <td class="num"><code>--no-run</code></td>
+                    <td>65 Red-phase tests compile</td>
+                  </tr>
+                  <tr>
+                    <td><code>tests/bench_speedcoding.rs</code> (Release)</td>
+                    <td class="num">5 / 0 / 0</td>
+                    <td class="num"><code>0.02s</code></td>
+                    <td>All <code>&lt; 1s</code> gates passed</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -784,11 +1530,12 @@ cargo package --list --allow-dirty</code></pre>
 
       <!-- 9. Compliance Report -->
       <section id="compliance-report" class="doc-section">
-        <h2>9. Compliance Report (<code>v0.1.0-alpha.4</code>)</h2>
+        <h2>9. Compliance Report (<code>v0.1.0-alpha.5</code>)</h2>
         <div class="actions">
           <a class="btn primary" href="./report/index.html#compliance">Standalone Report</a>
           <a class="btn" href="./report/compliance-report.md">Raw Markdown</a>
-          <a class="btn" href="https://github.com/Mr-Kumar-Abhishek/speedcoding/releases/tag/v0.1.0-alpha.4" target="_blank" rel="noopener">v0.1.0-alpha.4 Pre-release</a>
+          <a class="btn" href="https://github.com/Mr-Kumar-Abhishek/speedcoding/releases/tag/v0.1.0-alpha.5"
+            target="_blank" rel="noopener">v0.1.0-alpha.5 Pre-release</a>
         </div>
 
         <div class="hero-grid">
@@ -806,7 +1553,7 @@ cargo package --list --allow-dirty</code></pre>
           </div>
           <div class="stat-card">
             <div class="stat-label">Audit Status</div>
-            <div class="stat-value">Pass · Sprint 3 / Phases 1–3 Green</div>
+            <div class="stat-value">Pass · Sprint 4 / Phases 1–4 Green</div>
           </div>
         </div>
 
@@ -814,18 +1561,42 @@ cargo package --list --allow-dirty</code></pre>
         <div class="two-col">
           <div class="table-wrap">
             <table>
-              <thead><tr><th>Component</th><th>Version / Source</th><th>License</th><th>Transitive</th><th>Status</th></tr></thead>
+              <thead>
+                <tr>
+                  <th>Component</th>
+                  <th>Version / Source</th>
+                  <th>License</th>
+                  <th>Transitive</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
               <tbody>
-                <tr><td><code>speedcoding</code></td><td><code>v0.1.0-alpha.4</code></td><td><code>MIT OR Apache-2.0</code> (<code>LICENSE-MIT</code>, <code>LICENSE-APACHE</code>)</td><td>1 direct (<code>mpc</code>)</td><td><span class="status-pill status-done">Compliant</span></td></tr>
-                <tr><td><code>mpc</code></td><td><code>v0.1.0</code> (<code>mpc-rs.git#011d12ec</code>)</td><td><code>MIT</code> (<code>Copyright (c) 2025 Abhishek Kumar</code>)</td><td>0 transitive</td><td><span class="status-pill status-done">Compatible</span></td></tr>
+                <tr>
+                  <td><code>speedcoding</code></td>
+                  <td><code>v0.1.0-alpha.5</code></td>
+                  <td><code>MIT OR Apache-2.0</code> (<code>LICENSE-MIT</code>, <code>LICENSE-APACHE</code>)</td>
+                  <td>1 direct (<code>mpc</code>)</td>
+                  <td><span class="status-pill status-done">Compliant</span></td>
+                </tr>
+                <tr>
+                  <td><code>mpc</code></td>
+                  <td><code>v0.1.0</code> (<code>mpc-rs.git#011d12ec</code>)</td>
+                  <td><code>MIT</code> (<code>Copyright (c) 2025 Abhishek Kumar</code>)</td>
+                  <td>0 transitive</td>
+                  <td><span class="status-pill status-done">Compatible</span></td>
+                </tr>
               </tbody>
             </table>
           </div>
           <div class="card">
             <h4>Historical Manual Carve-out (<code>102632810-05-01-acc.pdf</code>)</h4>
             <ul>
-              <li><strong>Document:</strong> 1953 <em>IBM 701 Speedcoding System</em> manual (7,718,762 B, 67 pages, CHM Catalog <code>102632810</code>).</li>
-              <li><strong>Separation:</strong> Excluded from crate license grant via <code>NOTICE</code> (<code>1639</code> B), excluded from Cargo crates via <code>Cargo.toml</code> (<code>exclude = ["102632810-05-01-acc.pdf"]</code>), excluded from release <code>.zip</code> assets, and excluded from GitHub Pages.</li>
+              <li><strong>Document:</strong> 1953 <em>IBM 701 Speedcoding System</em> manual (7,718,762 B, 67 pages, CHM
+                Catalog <code>102632810</code>).</li>
+              <li><strong>Separation:</strong> Excluded from crate license grant via <code>NOTICE</code>
+                (<code>1639</code> B), excluded from Cargo crates via <code>Cargo.toml</code>
+                (<code>exclude = ["102632810-05-01-acc.pdf"]</code>), excluded from release <code>.zip</code> assets,
+                and excluded from GitHub Pages.</li>
             </ul>
           </div>
         </div>
@@ -833,59 +1604,192 @@ cargo package --list --allow-dirty</code></pre>
         <h3>1953 SpeedCo I Manual Traceability Matrix (71 Tests Total)</h3>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Module / Target</th><th>Phase / Scope</th><th>Manual Sections Covered</th><th>Test File &amp; Count</th><th>Execution Status</th></tr></thead>
+            <thead>
+              <tr>
+                <th>Module / Target</th>
+                <th>Phase / Scope</th>
+                <th>Manual Sections Covered</th>
+                <th>Test File &amp; Count</th>
+                <th>Execution Status</th>
+              </tr>
+            </thead>
             <tbody>
-              <tr><td><code>src/lib.rs</code></td><td>Crate root &amp; parser library check</td><td>— (<code>mpc</code> integration)</td><td><code>src/lib.rs</code> (<code>mpc_library_inclusion</code>, <strong>1</strong>)</td><td><span class="status-pill status-done">Passing</span> in CI (<code>0.00s</code>, Run <code>#44948301907</code>)</td></tr>
-              <tr><td><code>src/main.rs</code></td><td>Thin CLI binary (<code>speedcoding</code>)</td><td>—</td><td><code>0</code> binary unit tests</td><td>Compiles cleanly (Debug &amp; Release)</td></tr>
-              <tr><td><code>src/parser.rs</code> (bench)</td><td>Speedcoding parser throughput</td><td>Sec. 5, 7</td><td><code>tests/bench_speedcoding.rs</code> (<strong>5</strong>)</td><td><span class="status-pill status-done">Passing</span> in CI (<code>5/5</code>; Debug <code>0.15s</code>, Release <code>0.04s</code>, Run <code>#44948301907</code>)</td></tr>
-              <tr><td><code>src/core_types.rs</code></td><td>Phase 1: 72-bit word, float/half-word, opcodes, accumulators</td><td>Sec. 1-1, 2-1, 3-1..3-2, 4-2, 4-4, 5-1..5-5, 9-11, 11-2</td><td><code>tests/phase_1_core_types.rs</code> (<strong>11</strong>)</td><td><span class="status-pill status-done">Passing</span> in CI (<code>11/11</code> in Debug &amp; Release, Run <code>#44948301907</code>)</td></tr>
-              <tr><td><code>src/parser.rs</code></td><td>Phase 2: Card/assembly text parsing (<code>mpc</code>)</td><td>Sec. 5, 7-1..7-4, 7-10..7-17, 9-5..9-6, 10-2</td><td><code>tests/phase_2_parser.rs</code> (<strong>10</strong>)</td><td><span class="status-pill status-done">Passing</span> in CI (<code>10/10</code> in Debug &amp; Release, Run <code>#44948301907</code>)</td></tr>
-              <tr><td><code>src/arithmetic.rs</code></td><td>Phase 3: Floating/fixed ops, scaling, math subroutines</td><td>Sec. 3-3..3-4, 6, Appendix 1-2</td><td><code>tests/phase_3_arithmetic_math.rs</code> (<strong>10</strong>)</td><td><span class="status-pill status-done">Passing</span> in CI (<code>10/10</code> in Debug &amp; Release, Run <code>#44948301907</code>)</td></tr>
-              <tr><td><code>src/control.rs</code></td><td>Phase 4: Transfers, index registers, address modification</td><td>Sec. 4-1..4-3, 5-5, 8-1..8-3, 9-1..9-12</td><td><code>tests/phase_4_control_addressing.rs</code> (<strong>12</strong>)</td><td>Compiles <code>0</code> warnings; Red-phase <code>todo!()</code></td></tr>
-              <tr><td><code>src/io.rs</code></td><td>Phase 5: Cards, printer, magnetic drum, tape storage</td><td>Sec. 7-4..7-19</td><td><code>tests/phase_5_io_storage.rs</code> (<strong>11</strong>)</td><td>Compiles <code>0</code> warnings; Red-phase <code>todo!()</code></td></tr>
-              <tr><td><code>src/diagnostics.rs</code></td><td>Phase 6: Checking, listing, timing analysis</td><td>Sec. 10-1..10-4, 11-1..11-2, 12-1..12-5, Appendix 1-2</td><td><code>tests/phase_6_checking_listing_timing.rs</code> (<strong>11</strong>)</td><td>Compiles <code>0</code> warnings; Red-phase <code>todo!()</code></td></tr>
+              <tr>
+                <td><code>src/lib.rs</code></td>
+                <td>Crate root &amp; parser library check</td>
+                <td>— (<code>mpc</code> integration)</td>
+                <td><code>src/lib.rs</code> (<code>mpc_library_inclusion</code>, <strong>1</strong>)</td>
+                <td><span class="status-pill status-done">Passing</span> in CI (<code>0.00s</code>, Run
+                  <code>#44980132581</code>)
+                </td>
+              </tr>
+              <tr>
+                <td><code>src/main.rs</code></td>
+                <td>Thin CLI binary (<code>speedcoding</code>)</td>
+                <td>—</td>
+                <td><code>0</code> binary unit tests</td>
+                <td>Compiles cleanly (Debug &amp; Release)</td>
+              </tr>
+              <tr>
+                <td><code>src/parser.rs</code> (bench)</td>
+                <td>Speedcoding parser throughput</td>
+                <td>Sec. 5, 7</td>
+                <td><code>tests/bench_speedcoding.rs</code> (<strong>5</strong>)</td>
+                <td><span class="status-pill status-done">Passing</span> in CI (<code>5/5</code>; Debug
+                  <code>0.12s</code>, Release <code>0.03s</code>, Run <code>#44980132581</code>)
+                </td>
+              </tr>
+              <tr>
+                <td><code>src/core_types.rs</code></td>
+                <td>Phase 1: 72-bit word, float/half-word, opcodes, accumulators</td>
+                <td>Sec. 1-1, 2-1, 3-1..3-2, 4-2, 4-4, 5-1..5-5, 9-11, 11-2</td>
+                <td><code>tests/phase_1_core_types.rs</code> (<strong>11</strong>)</td>
+                <td><span class="status-pill status-done">Passing</span> in CI (<code>11/11</code> in Debug &amp;
+                  Release, Run <code>#44980132581</code>)</td>
+              </tr>
+              <tr>
+                <td><code>src/parser.rs</code></td>
+                <td>Phase 2: Card/assembly text parsing (<code>mpc</code>)</td>
+                <td>Sec. 5, 7-1..7-4, 7-10..7-17, 9-5..9-6, 10-2</td>
+                <td><code>tests/phase_2_parser.rs</code> (<strong>10</strong>)</td>
+                <td><span class="status-pill status-done">Passing</span> in CI (<code>10/10</code> in Debug &amp;
+                  Release, Run <code>#44980132581</code>)</td>
+              </tr>
+              <tr>
+                <td><code>src/arithmetic.rs</code></td>
+                <td>Phase 3: Floating/fixed ops, scaling, math subroutines</td>
+                <td>Sec. 3-3..3-4, 6, Appendix 1-2</td>
+                <td><code>tests/phase_3_arithmetic_math.rs</code> (<strong>10</strong>)</td>
+                <td><span class="status-pill status-done">Passing</span> in CI (<code>10/10</code> in Debug &amp;
+                  Release, Run <code>#44980132581</code>)</td>
+              </tr>
+              <tr>
+                <td><code>src/control.rs</code></td>
+                <td>Phase 4: Transfers, index registers, address modification</td>
+                <td>Sec. 4-1..4-3, 5-5, 8-1..8-3, 9-1..9-12</td>
+                <td><code>tests/phase_4_control_addressing.rs</code> (<strong>12</strong>)</td>
+                <td><span class="status-pill status-done">Passing</span> in CI (<code>12/12</code> in Debug &amp;
+                  Release, Run <code>#44980132581</code>)</td>
+              </tr>
+              <tr>
+                <td><code>src/io.rs</code></td>
+                <td>Phase 5: Cards, printer, magnetic drum, tape storage</td>
+                <td>Sec. 7-4..7-19</td>
+                <td><code>tests/phase_5_io_storage.rs</code> (<strong>11</strong>)</td>
+                <td>Compiles <code>0</code> warnings; Red-phase <code>todo!()</code></td>
+              </tr>
+              <tr>
+                <td><code>src/diagnostics.rs</code></td>
+                <td>Phase 6: Checking, listing, timing analysis</td>
+                <td>Sec. 10-1..10-4, 11-1..11-2, 12-1..12-5, Appendix 1-2</td>
+                <td><code>tests/phase_6_checking_listing_timing.rs</code> (<strong>11</strong>)</td>
+                <td>Compiles <code>0</code> warnings; Red-phase <code>todo!()</code></td>
+              </tr>
             </tbody>
           </table>
         </div>
 
-        <h3><code>v0.1.0-alpha.4</code> SHA-256 Release Asset Verification &amp; Open Gaps</h3>
+        <h3><code>v0.1.0-alpha.5</code> SHA-256 Release Asset Verification &amp; Open Gaps</h3>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Artifact</th><th class="num">Size (Bytes)</th><th>Verified SHA-256 Digest</th><th>Notes</th></tr></thead>
+            <thead>
+              <tr>
+                <th>Artifact</th>
+                <th class="num">Size (Bytes)</th>
+                <th>Verified SHA-256 Digest</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
             <tbody>
               <tr>
-                <td><code>speedcoding-v0.1.0-alpha.4-x86_64-pc-windows-msvc.zip</code></td>
-                <td class="num"><code>369563</code></td>
-                <td><button type="button" class="sha256-copy" data-copy="12b1ae1606557a52d8812439e13050094b5deef7631a37714df768218af7d64a"><span>12b1ae1606557a52d8812439e13050094b5deef7631a37714df768218af7d64a</span><span class="sha-tag">Copy</span></button></td>
-                <td>Sprint 3 binary archive (excludes PDF)</td>
+                <td><code>speedcoding-v0.1.0-alpha.5-x86_64-pc-windows-msvc.zip</code></td>
+                <td class="num"><code>384447</code></td>
+                <td><button type="button" class="sha256-copy"
+                    data-copy="50d70046689b55507e0e1383bdf062c8d14bdaafca161926161867b1de93fdca"><span>50d70046689b55507e0e1383bdf062c8d14bdaafca161926161867b1de93fdca</span><span
+                      class="sha-tag">Copy</span></button></td>
+                <td>Sprint 4 binary archive (excludes PDF)</td>
               </tr>
               <tr>
                 <td><code>speedcoding.exe</code> <em>(inside zip)</em></td>
                 <td class="num"><code>138240</code></td>
-                <td><button type="button" class="sha256-copy" data-copy="e2a7683d525c334c3722302e1de2b04389a58e1abac206537c41f5ee9a8e2878"><span>e2a7683d525c334c3722302e1de2b04389a58e1abac206537c41f5ee9a8e2878</span><span class="sha-tag">Copy</span></button></td>
-                <td>Sprint 3 Release CLI binary</td>
+                <td><button type="button" class="sha256-copy"
+                    data-copy="6a766e6e95cd74ab66c4f5991243f236ecd3f07f8231578aba6842cbbad27458"><span>6a766e6e95cd74ab66c4f5991243f236ecd3f07f8231578aba6842cbbad27458</span><span
+                      class="sha-tag">Copy</span></button></td>
+                <td>Sprint 4 Release CLI binary</td>
               </tr>
               <tr>
                 <td><code>libspeedcoding.rlib</code> <em>(inside zip)</em></td>
-                <td class="num"><code>834840</code></td>
-                <td><button type="button" class="sha256-copy" data-copy="0e634b17921efa4aad2bd4f10ba07d782e4dc934e250929c1e75bfd50994e9e7"><span>0e634b17921efa4aad2bd4f10ba07d782e4dc934e250929c1e75bfd50994e9e7</span><span class="sha-tag">Copy</span></button></td>
-                <td>Sprint 3 Release library (<code>core_types</code> + <code>parser</code> + <code>arithmetic</code>)</td>
+                <td class="num"><code>870712</code></td>
+                <td><button type="button" class="sha256-copy"
+                    data-copy="000c2695951671a626ac878df87b5ad76c52332fd76178333e22235b663316d2"><span>000c2695951671a626ac878df87b5ad76c52332fd76178333e22235b663316d2</span><span
+                      class="sha-tag">Copy</span></button></td>
+                <td>Sprint 4 Release library (<code>core_types</code> + <code>parser</code> + <code>arithmetic</code> +
+                  <code>control</code>)
+                </td>
               </tr>
-              <tr><td><code>LICENSE-MIT</code> <em>(inside zip)</em></td><td class="num"><code>1102</code></td><td>—</td><td>MIT license notice</td></tr>
-              <tr><td><code>LICENSE-APACHE</code> <em>(inside zip)</em></td><td class="num"><code>10280</code></td><td>—</td><td>Apache-2.0 license notice</td></tr>
-              <tr><td><code>NOTICE</code> <em>(inside zip)</em></td><td class="num"><code>1639</code></td><td>—</td><td>Historical reference carve-out</td></tr>
-              <tr><td><code>SHA256SUMS.txt</code></td><td class="num"><code>288</code></td><td>—</td><td>Release checksum manifest</td></tr>
+              <tr>
+                <td><code>LICENSE-MIT</code> <em>(inside zip)</em></td>
+                <td class="num"><code>1102</code></td>
+                <td>—</td>
+                <td>MIT license notice</td>
+              </tr>
+              <tr>
+                <td><code>LICENSE-APACHE</code> <em>(inside zip)</em></td>
+                <td class="num"><code>10280</code></td>
+                <td>—</td>
+                <td>Apache-2.0 license notice</td>
+              </tr>
+              <tr>
+                <td><code>NOTICE</code> <em>(inside zip)</em></td>
+                <td class="num"><code>1639</code></td>
+                <td>—</td>
+                <td>Historical reference carve-out</td>
+              </tr>
+              <tr>
+                <td><code>SHA256SUMS.txt</code></td>
+                <td class="num"><code>288</code></td>
+                <td>—</td>
+                <td>Release checksum manifest</td>
+              </tr>
             </tbody>
           </table>
         </div>
 
         <div class="table-wrap">
           <table>
-            <thead><tr><th class="num">#</th><th>Open Gap</th><th>Severity</th><th>Planned Remediation / Resolution</th><th>Target</th></tr></thead>
+            <thead>
+              <tr>
+                <th class="num">#</th>
+                <th>Open Gap</th>
+                <th>Severity</th>
+                <th>Planned Remediation / Resolution</th>
+                <th>Target</th>
+              </tr>
+            </thead>
             <tbody>
-              <tr><td class="num">1</td><td>Red-phase <code>todo!()</code> stubs remain for Phases 4–6 (<code>34</code> phase TDD tests)</td><td><span class="status-pill status-planned">Expected (Sprint 3 complete)</span></td><td>Implement Phases 4–6 via TDD Green/Refactor cycles</td><td>Sprints 4–7</td></tr>
-              <tr><td class="num">2</td><td><code>mpc</code> pinned via Git URL (<code>mpc-rs.git</code>)</td><td><span class="status-pill status-skip">Medium (blocks publish)</span></td><td>Publish/pin crates.io release of <code>mpc</code> in <code>Cargo.toml</code></td><td>Pre-<code>v1.0.0</code></td></tr>
-              <tr><td class="num">3</td><td>Local <code>cargo clippy</code> blocked on Windows (<code>os error 4551</code>)</td><td><span class="status-pill status-done">Resolved (Sprint 3)</span></td><td>Added <code>cargo clippy --all-targets -- -D warnings</code> on Linux CI (Run <code>#44948301907</code>)</td><td>Closed (Sprint 3)</td></tr>
+              <tr>
+                <td class="num">1</td>
+                <td>Red-phase <code>todo!()</code> stubs remain for Phases 5–6 (<code>22</code> phase TDD tests)</td>
+                <td><span class="status-pill status-planned">Expected (Sprint 4 complete)</span></td>
+                <td>Implement Phases 5–6 via TDD Green/Refactor cycles</td>
+                <td>Sprints 5–7</td>
+              </tr>
+              <tr>
+                <td class="num">2</td>
+                <td><code>mpc</code> pinned via Git URL (<code>mpc-rs.git</code>)</td>
+                <td><span class="status-pill status-skip">Medium (blocks publish)</span></td>
+                <td>Publish/pin crates.io release of <code>mpc</code> in <code>Cargo.toml</code></td>
+                <td>Pre-<code>v1.0.0</code></td>
+              </tr>
+              <tr>
+                <td class="num">3</td>
+                <td>Local <code>cargo clippy</code> blocked on Windows (<code>os error 4551</code>)</td>
+                <td><span class="status-pill status-done">Resolved (Sprint 3)</span></td>
+                <td>Added <code>cargo clippy --all-targets -- -D warnings</code> on Linux CI (Run
+                  <code>#44980132581</code>)
+                </td>
+                <td>Closed (Sprint 3)</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -894,7 +1798,8 @@ cargo package --list --allow-dirty</code></pre>
   </div>
 
   <footer>
-    <span>speedcoding v0.1.0-alpha.4 · Dual-licensed MIT OR Apache-2.0 · Independent Rust implementation of IBM 701 Speedcoding System (1953)</span>
+    <span>speedcoding v0.1.0-alpha.5 · Dual-licensed MIT OR Apache-2.0 · Independent Rust implementation of IBM 701
+      Speedcoding System (1953)</span>
     <span>
       <a href="./speedcoding/index.html">Rustdoc API</a> &middot;
       <a href="./docs/AGILE-SPRINTS.md">Agile Sprints</a> &middot;
@@ -910,13 +1815,15 @@ cargo package --list --allow-dirty</code></pre>
     <div class="search-dialog" role="dialog" aria-modal="true" aria-labelledby="search-dialog-label">
       <div class="search-head">
         <span id="search-dialog-label" class="badge rust">Jump</span>
-        <input id="search-input" class="search-input" type="search" placeholder="Search sections, opcodes (ADD, 437), stories (US-07), or TDD tests..." />
+        <input id="search-input" class="search-input" type="search"
+          placeholder="Search sections, opcodes (ADD, 437), stories (US-07), or TDD tests..." />
         <kbd>Esc</kbd>
       </div>
       <div id="search-results" class="search-results"></div>
       <div id="search-empty" class="search-empty" hidden>No matching section, opcode, story, or test found.</div>
       <div class="search-foot">
-        <span><kbd>&uarr;</kbd> <kbd>&darr;</kbd> Navigate &middot; <kbd>Enter</kbd> Jump &middot; <kbd>Esc</kbd> Close</span>
+        <span><kbd>&uarr;</kbd> <kbd>&darr;</kbd> Navigate &middot; <kbd>Enter</kbd> Jump &middot; <kbd>Esc</kbd>
+          Close</span>
         <span>Press <kbd>/</kbd> or <kbd>Ctrl K</kbd> anywhere</span>
       </div>
     </div>
@@ -954,4 +1861,5 @@ cargo package --list --allow-dirty</code></pre>
     })();
   </script>
 </body>
+
 </html>
