@@ -503,7 +503,7 @@
       });
       if (traceCount) {
         traceCount.textContent = !q && traceStatus === "all"
-          ? `Showing all ${traceRows.length} targets (71 tests)`
+          ? `Showing all ${traceRows.length} targets (79 tests)`
           : `Showing ${shown} of ${traceRows.length} targets`;
       }
     }

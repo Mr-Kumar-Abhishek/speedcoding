@@ -25,7 +25,7 @@
         <span class="brand-mark">speedcoding</span>
         <span>Reports Portal (Benchmark &amp; Compliance)</span>
         <div class="badges">
-          <span class="badge rust">v0.1.0-beta.1 · Rust 2024</span>
+          <span class="badge rust">v0.1.0 · Rust 2024</span>
           <span class="badge lic">MIT OR Apache-2.0</span>
         </div>
       </div>
@@ -63,8 +63,8 @@
       </button>
       <button class="tab-btn" id="tab-compliance" type="button" role="tab" aria-selected="false"
         aria-controls="panel-compliance">
-        Compliance Report (v0.1.0-beta.1)
-        <span class="tab-pill">71/71 Green · 0 Unsafe</span>
+        Compliance Report (v0.1.0)
+        <span class="tab-pill">79/79 Green · 0 Unsafe</span>
       </button>
     </div>
 
@@ -443,12 +443,12 @@ cargo test --release --test bench_speedcoding --verbose -- --nocapture</code></p
     <!-- Compliance Report Panel -->
     <div id="panel-compliance" class="report-panel" role="tabpanel" aria-labelledby="tab-compliance">
       <section class="doc-section">
-        <h2>Compliance Report — <code>speedcoding</code> (<code>v0.1.0-beta.1</code>)</h2>
+        <h2>Compliance Report — <code>speedcoding</code> (<code>v0.1.0</code> Stable Release)</h2>
         <div class="report-meta-actions">
           <a class="btn" href="./compliance-report.md">Raw Markdown</a>
           <a class="btn" href="../index.html#compliance-report">Main Portal Summary</a>
-          <a class="btn" href="https://github.com/Mr-Kumar-Abhishek/speedcoding/releases/tag/v0.1.0-beta.1"
-            target="_blank" rel="noopener">v0.1.0-beta.1 Pre-release</a>
+          <a class="btn" href="https://github.com/Mr-Kumar-Abhishek/speedcoding/releases/tag/v0.1.0"
+            target="_blank" rel="noopener">v0.1.0 Stable Release</a>
         </div>
 
         <div class="hero-grid">
@@ -462,11 +462,11 @@ cargo test --release --test bench_speedcoding --verbose -- --nocapture</code></p
           </div>
           <div class="stat-card">
             <div class="stat-label">Historical PDF Exclusion</div>
-            <div class="stat-value">Excluded (NOTICE &amp; Cargo.toml)</div>
+            <div class="stat-value">Excluded (NOTICE, Cargo, Docker, CD)</div>
           </div>
           <div class="stat-card">
             <div class="stat-label">Compliance Status</div>
-            <div class="stat-value">Pass (Sprint 6 / All Phases 1–6 Green)</div>
+            <div class="stat-value">Pass (Sprints 0–7 · 79/79 Green)</div>
           </div>
         </div>
 
@@ -482,7 +482,7 @@ cargo test --release --test bench_speedcoding --verbose -- --nocapture</code></p
             <tbody>
               <tr>
                 <td><strong>Crate / Version</strong></td>
-                <td><code>speedcoding</code> <code>v0.1.0-beta.1</code> (Rust <code>edition = "2024"</code>)</td>
+                <td><code>speedcoding</code> <code>v0.1.0</code> (Rust <code>edition = "2024"</code>)</td>
               </tr>
               <tr>
                 <td><strong>Repository</strong></td>
@@ -490,24 +490,27 @@ cargo test --release --test bench_speedcoding --verbose -- --nocapture</code></p
                     rel="noopener">https://github.com/Mr-Kumar-Abhishek/speedcoding</a></td>
               </tr>
               <tr>
-                <td><strong>Sprint 6 Code Commit (<code>phase-6/checking-listing-timing</code>)</strong></td>
-                <td><code>a06e3c02f7bf1d418e26a5e11390403993e9fb9c</code> (<code>a06e3c0</code>, CI Run
-                  <code>#44984107348</code>)
+                <td><strong>Sprint 7 Code &amp; Pipeline Commit (<code>develop</code>)</strong></td>
+                <td><code>c646c2702d9e6cb01c4f00f739113c14c890f9c6</code> (<code>c646c27</code>, CI Run
+                  <a href="https://github.com/Mr-Kumar-Abhishek/speedcoding/actions/runs/44987613774" target="_blank"
+                    rel="noopener"><code>#44987613774</code></a>)
                 </td>
               </tr>
               <tr>
-                <td><strong>Phase Branch Promotion</strong></td>
-                <td><code>phase-6/checking-listing-timing</code> &rarr; <code>develop</code> &rarr; <code>master</code>,
-                  synced to <code>phase-1..5</code></td>
+                <td><strong>Branch Promotion Policy</strong></td>
+                <td>All 8 branches (<code>master</code>, <code>develop</code>, <code>phase-1..6</code>) fast-forward
+                  synced &amp; CI/Pages verified prior to tagging <code>v0.1.0</code></td>
               </tr>
               <tr>
-                <td><strong>Toolchain (Local)</strong></td>
-                <td><code>cargo</code> 1.95.0 / <code>rustc</code> 1.95.0 (<code>x86_64-pc-windows-msvc</code>)</td>
+                <td><strong>Toolchain (Host / CI / Docker)</strong></td>
+                <td>Host <code>rustc</code> 1.95.0; CI <code>ubuntu/windows/macos-latest</code>; Docker
+                  <code>rust:1-bookworm</code> + <code>debian:bookworm-slim</code></td>
               </tr>
               <tr>
                 <td><strong>Compliance Status</strong></td>
-                <td><span class="status-pill status-done">Pass — All Phases 1–6 Complete</span> (Sprint 6 Green:
-                  66/66 TDD + 5/5 bench = 71/71 passing + strict Clippy passing; 0 stubs remain)</td>
+                <td><span class="status-pill status-done">Pass — Sprints 0–7 Complete</span> (<strong>79/79</strong>
+                  passing Debug &amp; Release: 1 lib + 4 CLI + 5 bench + 65 Phase 1–6 + 4 E2E; strict Clippy passing;
+                  0 stubs remain)</td>
               </tr>
             </tbody>
           </table>
@@ -515,7 +518,7 @@ cargo test --release --test bench_speedcoding --verbose -- --nocapture</code></p
 
         <h3>2. License, Dependency &amp; IP Compliance</h3>
         <h4>2.1 Crate &amp; Third-Party Dependency Licensing</h4>
-        <pre><code>speedcoding v0.1.0-beta.1 (D:\big-projects\speedcoding) (MIT OR Apache-2.0)
+        <pre><code>speedcoding v0.1.0 (D:\big-projects\speedcoding) (MIT OR Apache-2.0)
 └── mpc v0.1.0 (https://github.com/Mr-Kumar-Abhishek/mpc-rs.git#011d12ec) (MIT)</code></pre>
         <div class="table-wrap">
           <table>
@@ -531,7 +534,7 @@ cargo test --release --test bench_speedcoding --verbose -- --nocapture</code></p
             <tbody>
               <tr>
                 <td><code>speedcoding</code></td>
-                <td><code>v0.1.0-beta.1</code> (workspace crate)</td>
+                <td><code>v0.1.0</code> (workspace crate)</td>
                 <td><code>MIT OR Apache-2.0</code> (<code>LICENSE-MIT</code>, <code>LICENSE-APACHE</code>)</td>
                 <td>1 direct (<code>mpc</code>)</td>
                 <td><span class="status-pill status-done">Compliant</span></td>
@@ -559,28 +562,26 @@ cargo test --release --test bench_speedcoding --verbose -- --nocapture</code></p
           <li><strong>License Separation (<code>NOTICE</code>):</strong> <code>NOTICE</code> (<code>1639</code> B)
             explicitly carves <code>102632810-05-01-acc.pdf</code> out of the crate's <code>MIT OR Apache-2.0</code>
             grant and documents historical provenance and independent implementation boundaries.</li>
-          <li><strong>Cargo Packaging Exclusion:</strong> <code>Cargo.toml</code> specifies
+          <li><strong>Cargo &amp; Docker Exclusion:</strong> <code>Cargo.toml</code> specifies
             <code>exclude = ["102632810-05-01-acc.pdf"]</code>, verified absent in
-            <code>cargo package --list --allow-dirty</code> (<code>38</code> packaged files; <code>.gitignore</code>
-            ignores <code>102632810-05-01-acc*</code>).
+            <code>cargo package --list --allow-dirty</code> (<code>39</code> packaged files; <code>.gitignore</code>
+            and <code>.dockerignore</code> exclude <code>102632810-05-01-acc*</code>).
           </li>
-          <li><strong>Distribution Exclusions:</strong> Excluded from
-            <code>speedcoding-v0.1.0-beta.1-x86_64-pc-windows-msvc.zip</code> release assets and excluded from GitHub
-            Pages deployment (<code>.github/workflows/gh-pages.yml</code>).
+          <li><strong>Release CD &amp; Pages Exclusions:</strong> Explicitly blocked during <code>.github/workflows/release.yml</code>
+            archive staging (Linux/Windows/macOS) and excluded from GitHub Pages deployment
+            (<code>.github/workflows/gh-pages.yml</code>).
           </li>
         </ul>
 
-        <h3>3. 1953 SpeedCo I Manual Traceability Matrix (71 Tests Total)</h3>
+        <h3>3. Suite-Level 1953 SpeedCo I Manual Traceability Matrix (79 Tests Total)</h3>
         <div class="filter-bar">
           <input id="trace-filter" class="filter-input" type="search"
             placeholder="Filter traceability matrix by module, manual section (Sec. 7), or status..." />
-          <span id="trace-count" class="filter-count">Showing all 9 targets (71 tests)</span>
+          <span id="trace-count" class="filter-count">Showing all 10 targets (79 tests)</span>
         </div>
         <div class="chip-bar" role="group" aria-label="Filter traceability rows by status">
-          <button type="button" class="chip trace-chip active" data-status="all">All Targets</button>
-          <button type="button" class="chip trace-chip" data-status="passing">Passing in CI</button>
-          <button type="button" class="chip trace-chip" data-status="compiles">Binary Compiles</button>
-          <button type="button" class="chip trace-chip" data-status="red">Red-phase Stubs</button>
+          <button type="button" class="chip trace-chip active" data-status="all">All Targets (10)</button>
+          <button type="button" class="chip trace-chip" data-status="passing">Passing in CI &amp; Docker</button>
         </div>
 
         <div class="table-wrap">
@@ -599,243 +600,223 @@ cargo test --release --test bench_speedcoding --verbose -- --nocapture</code></p
                 <td><code>src/lib.rs</code></td>
                 <td>Crate root &amp; parser library check</td>
                 <td>— (<code>mpc</code> integration)</td>
-                <td><code>src/lib.rs</code> (<code>mpc_library_inclusion</code>, <strong>1</strong> test)</td>
-                <td><span class="status-pill status-done">Passing</span> in Linux CI (<code>0.00s</code>, Run
-                  <code>#44984107348</code>)
-                </td>
+                <td><code>src/lib.rs</code> (<strong>1</strong> test)</td>
+                <td><span class="status-pill status-done">Passing</span> Debug &amp; Release (<code>0.00s</code>, Run
+                  <code>#44987613774</code> &amp; Docker)</td>
               </tr>
-              <tr data-status="compiles">
+              <tr data-status="passing">
                 <td><code>src/main.rs</code></td>
-                <td>Thin CLI binary (<code>speedcoding</code>)</td>
-                <td>—</td>
-                <td><code>0</code> binary unit tests</td>
-                <td>Compiles cleanly in Debug &amp; Release</td>
+                <td>CLI binary (<code>info</code>, <code>run</code>, <code>trace</code>, flags)</td>
+                <td>All runtime subsystems</td>
+                <td><code>src/main.rs</code> (<strong>4</strong> tests)</td>
+                <td><span class="status-pill status-done">Passing</span> Debug &amp; Release (<code>0.00s</code>, Run
+                  <code>#44987613774</code> &amp; Docker)</td>
               </tr>
               <tr data-status="passing">
                 <td><code>src/parser.rs</code> (bench target)</td>
-                <td>Speedcoding parser throughput</td>
+                <td>Speedcoding parser throughput &amp; scaling</td>
                 <td>Sec. 5, 7</td>
                 <td><code>tests/bench_speedcoding.rs</code> (<strong>5</strong> tests)</td>
-                <td><span class="status-pill status-done">Passing</span> in Linux CI (<code>5 passed; 0 failed</code>;
-                  Debug <code>0.15s</code>, Release <code>0.03s</code>, Run <code>#44984107348</code>)</td>
+                <td><span class="status-pill status-done">Passing</span> Debug (<code>0.09s</code>) &amp; Release
+                  (<code>0.02s</code>, Run <code>#44987613774</code>)</td>
               </tr>
               <tr data-status="passing">
                 <td><code>src/core_types.rs</code></td>
-                <td>Phase 1: 72-bit word, float/half-word, opcodes, accumulators</td>
+                <td>Phase 1: 72-bit word, float/half-word, opcodes, memory</td>
                 <td>Sec. 1-1, 2-1, 3-1..3-2, 4-2, 4-4, 5-1..5-5, 9-11, 11-2</td>
                 <td><code>tests/phase_1_core_types.rs</code> (<strong>11</strong> tests)</td>
-                <td><span class="status-pill status-done">Passing</span> in Linux CI (<code>11/11</code> in Debug &amp;
-                  Release, Run <code>#44984107348</code>)</td>
+                <td><span class="status-pill status-done">Passing</span> Debug &amp; Release (<code>11/11</code>, Run
+                  <code>#44987613774</code> &amp; Docker)</td>
               </tr>
               <tr data-status="passing">
                 <td><code>src/parser.rs</code></td>
                 <td>Phase 2: Card/assembly text parsing (<code>mpc</code>)</td>
                 <td>Sec. 5, 7-1..7-4, 7-10..7-17, 9-5..9-6, 10-2</td>
                 <td><code>tests/phase_2_parser.rs</code> (<strong>10</strong> tests)</td>
-                <td><span class="status-pill status-done">Passing</span> in Linux CI (<code>10/10</code> in Debug &amp;
-                  Release, Run <code>#44984107348</code>)</td>
+                <td><span class="status-pill status-done">Passing</span> Debug &amp; Release (<code>10/10</code>, Run
+                  <code>#44987613774</code> &amp; Docker)</td>
               </tr>
               <tr data-status="passing">
                 <td><code>src/arithmetic.rs</code></td>
                 <td>Phase 3: Floating/fixed ops, scaling, math subroutines</td>
-                <td>Sec. 3-3..3-4, 6, Appendix 1-2</td>
+                <td>Sec. 3-3..3-4, 6, Appendix 1–2</td>
                 <td><code>tests/phase_3_arithmetic_math.rs</code> (<strong>10</strong> tests)</td>
-                <td><span class="status-pill status-done">Passing</span> in Linux CI (<code>10/10</code> in Debug &amp;
-                  Release, Run <code>#44984107348</code>)</td>
+                <td><span class="status-pill status-done">Passing</span> Debug &amp; Release (<code>10/10</code>, Run
+                  <code>#44987613774</code> &amp; Docker)</td>
               </tr>
               <tr data-status="passing">
                 <td><code>src/control.rs</code></td>
-                <td>Phases 4–6: Transfers, <code>R</code>-quantities, AC, <code>load_deck</code>, I/O
-                  <code>OP1</code>, checking loops &amp; listing
-                </td>
+                <td>Phases 4–6: Transfers, <code>R</code>-quantities, AC, <code>load_deck</code>, checking &amp; listing</td>
                 <td>Sec. 4-1..4-3, 5-5, 7-6..7-19, 8-1..8-3, 9-1..9-12, 10–11</td>
-                <td><code>tests/phase_4_control_addressing.rs</code> (<strong>12</strong> tests) + Phases 5–6</td>
-                <td><span class="status-pill status-done">Passing</span> in Linux CI (<code>12/12</code> in Debug &amp;
-                  Release, Run <code>#44984107348</code>)</td>
+                <td><code>tests/phase_4_control_addressing.rs</code> (<strong>12</strong> tests)</td>
+                <td><span class="status-pill status-done">Passing</span> Debug &amp; Release (<code>12/12</code>, Run
+                  <code>#44987613774</code> &amp; Docker)</td>
               </tr>
               <tr data-status="passing">
                 <td><code>src/io.rs</code></td>
                 <td>Phase 5: Cards, printer, magnetic drum, tape storage</td>
                 <td>Sec. 7-4..7-19</td>
                 <td><code>tests/phase_5_io_storage.rs</code> (<strong>11</strong> tests)</td>
-                <td><span class="status-pill status-done">Passing</span> in Linux CI (<code>11/11</code> in Debug &amp;
-                  Release, Run <code>#44984107348</code>)</td>
+                <td><span class="status-pill status-done">Passing</span> Debug &amp; Release (<code>11/11</code>, Run
+                  <code>#44987613774</code> &amp; Docker)</td>
               </tr>
               <tr data-status="passing">
                 <td><code>src/diagnostics.rs</code></td>
                 <td>Phase 6: Checking loops, selective listing, timing analysis</td>
-                <td>Sec. 10-1..10-4, 11-1..11-2, 12-1..12-5, Appendix 1-2</td>
+                <td>Sec. 10-1..10-4, 11-1..11-2, 12-1..12-5, Appendix 1–2</td>
                 <td><code>tests/phase_6_checking_listing_timing.rs</code> (<strong>11</strong> tests)</td>
-                <td><span class="status-pill status-done">Passing</span> in Linux CI (<code>11/11</code> in Debug &amp;
-                  Release, Run <code>#44984107348</code>)</td>
+                <td><span class="status-pill status-done">Passing</span> Debug &amp; Release (<code>11/11</code>, Run
+                  <code>#44987613774</code> &amp; Docker)</td>
+              </tr>
+              <tr data-status="passing">
+                <td><code>tests/e2e_speedcoding.rs</code></td>
+                <td>Sprint 7 E2E: Page 9-6 matrix, deck+checking, tape/drum, profile</td>
+                <td>Sec. 7, 9-6, 10–12</td>
+                <td><code>tests/e2e_speedcoding.rs</code> (<strong>4</strong> tests)</td>
+                <td><span class="status-pill status-done">Passing</span> Debug &amp; Release (<code>4/4</code>, Run
+                  <code>#44987613774</code> &amp; Docker)</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <h3>4. Rust Safety, Packaging &amp; Pre-Release Integrity (<code>v0.1.0-beta.1</code>)</h3>
-        <ul>
-          <li><strong>Unsafe &amp; Stub Audit:</strong>
-            <code>Select-String -Path "src\*.rs","tests\*.rs" -Pattern "\bunsafe\b|todo!\(|unimplemented!\("</code>
-            returned <code>unsafe_or_todo_hits=0</code> (zero <code>unsafe</code> blocks and zero remaining stubs
-            across all source and test files after Sprint 6).
-          </li>
-          <li><strong>Clippy &amp; Compiler Warnings:</strong> Clean compilation (<code>0</code> warnings) across
-            <code>cargo clippy --all-targets -- -D warnings</code> (Linux CI Run <code>#44984107348</code>),
-            <code>cargo build</code>, <code>cargo test --no-run</code>, <code>cargo build --release</code>,
-            <code>cargo test --release --no-run</code>, and <code>cargo doc --no-deps</code>.
-          </li>
-          <li><strong>Local Windows Application Control Constraint:</strong> Executing locally compiled
-            <code>.exe</code> binaries (<code>cargo test</code> runtime, <code>target\release\speedcoding.exe</code>,
-            and local <code>cargo clippy</code>) is blocked on the Windows development host by Application Control
-            policy (<code>os error 4551</code>). Execution and Clippy verification run in GitHub Actions
-            <code>ubuntu-latest</code>.
-          </li>
-          <li><strong>Annotated Tag / Target:</strong> <code>v0.1.0-beta.1</code>, marked
-            <code>isPrerelease: true</code>.
-          </li>
-        </ul>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Artifact</th>
-                <th class="num">Size (Bytes)</th>
-                <th>Verified SHA-256 Digest</th>
-                <th>Compliance Notes</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><code>speedcoding-v0.1.0-beta.1-x86_64-pc-windows-msvc.zip</code></td>
-                <td class="num"><code>442966</code></td>
-                <td><button type="button" class="sha256-copy"
-                    data-copy="aac0390dbdd24edee267ae6d364acab4069c38855e3555a44f66fe97e369835e"><span>aac0390dbdd24edee267ae6d364acab4069c38855e3555a44f66fe97e369835e</span><span
-                      class="sha-tag">Copy</span></button></td>
-                <td>Sprint 6 binary archive (excludes <code>102632810-05-01-acc.pdf</code>)</td>
-              </tr>
-              <tr>
-                <td><code>speedcoding.exe</code> <em>(inside zip)</em></td>
-                <td class="num"><code>138240</code></td>
-                <td><button type="button" class="sha256-copy"
-                    data-copy="261caa2e9d99b5554daeed8f2bf577a2f446e5a1cc3da30411fd0f7efad41f1e"><span>261caa2e9d99b5554daeed8f2bf577a2f446e5a1cc3da30411fd0f7efad41f1e</span><span
-                      class="sha-tag">Copy</span></button></td>
-                <td>Sprint 6 Release CLI binary</td>
-              </tr>
-              <tr>
-                <td><code>libspeedcoding.rlib</code> <em>(inside zip)</em></td>
-                <td class="num"><code>1015220</code></td>
-                <td><button type="button" class="sha256-copy"
-                    data-copy="50e44d7f658c569d0b2203beb0d04a5a33cc39e9a0f1d055ce41a2e11efc7067"><span>50e44d7f658c569d0b2203beb0d04a5a33cc39e9a0f1d055ce41a2e11efc7067</span><span
-                      class="sha-tag">Copy</span></button></td>
-                <td>Sprint 6 Complete Release Rust library (Phases 1–6)</td>
-              </tr>
-              <tr>
-                <td><code>README.md</code> <em>(inside zip)</em></td>
-                <td class="num"><code>5352</code></td>
-                <td>—</td>
-                <td>Sprint 6 crate overview bundled</td>
-              </tr>
-              <tr>
-                <td><code>CHANGELOG-v0.1.0-beta.1.md</code> <em>(inside zip)</em></td>
-                <td class="num"><code>2621</code></td>
-                <td>—</td>
-                <td>Sprint 6 changelog bundled</td>
-              </tr>
-              <tr>
-                <td><code>LICENSE-MIT</code> <em>(inside zip)</em></td>
-                <td class="num"><code>1102</code></td>
-                <td>—</td>
-                <td>MIT license notice bundled</td>
-              </tr>
-              <tr>
-                <td><code>LICENSE-APACHE</code> <em>(inside zip)</em></td>
-                <td class="num"><code>10280</code></td>
-                <td>—</td>
-                <td>Apache-2.0 license notice bundled</td>
-              </tr>
-              <tr>
-                <td><code>NOTICE</code> <em>(inside zip)</em></td>
-                <td class="num"><code>1639</code></td>
-                <td>—</td>
-                <td>Historical reference carve-out bundled</td>
-              </tr>
-              <tr>
-                <td><code>SHA256SUMS.txt</code></td>
-                <td class="num"><code>290</code></td>
-                <td>—</td>
-                <td>Standalone checksum manifest on release</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <h3>5. Agile Governance, Branch Alignment &amp; CI Verification</h3>
-        <ul>
-          <li><strong>Agile &amp; Architecture Documentation (<code>docs/</code>):</strong> <a
-              href="../docs/README.md"><code>docs/README.md</code></a>, <a
-              href="../index.html"><code>docs/index.html</code></a>, <a
-              href="../docs/AGILE-SPRINTS.md"><code>docs/AGILE-SPRINTS.md</code></a>, <a
-              href="../docs/TIMELINE-AND-BRANCHES.md"><code>docs/TIMELINE-AND-BRANCHES.md</code></a>, <a
-              href="../docs/TDD-TEST-SPECIFICATION.md"><code>docs/TDD-TEST-SPECIFICATION.md</code></a>, and <a
-              href="../docs/ARCHITECTURE-AND-SPEC.md"><code>docs/ARCHITECTURE-AND-SPEC.md</code></a>.</li>
-          <li><strong>GitHub Repository Templates &amp; Workflows:</strong>
-            <code>.github/ISSUE_TEMPLATE/user-story.md</code>, <code>.github/PULL_REQUEST_TEMPLATE.md</code>,
-            <code>.github/workflows/rust.yml</code>, and <code>.github/workflows/gh-pages.yml</code>.
-          </li>
-          <li><strong>Verified Workflow Runs:</strong> <code>Rust Sprint CI</code> Run <code>#44984107348</code>
-            (<code>phase-6/checking-listing-timing</code>, <code>a06e3c0</code>, <code>21s</code>):
-            <code>completed / success</code> (all <code>71/71</code> tests in Debug &amp; Release);
-            <code>Rust Sprint CI</code> Run <code>#44982982667</code> &amp; <code>Deploy GitHub Pages</code> Run
-            <code>#44982982635</code> (<code>master</code>, <code>f6589e3</code>): <code>completed / success</code>;
-            <code>Rust Sprint CI</code> Run <code>#44938969997</code> (<code>develop</code>, <code>239bf34</code>):
-            <code>completed / success</code>.
-          </li>
-        </ul>
-
-        <h3>6. Open Gaps &amp; Remediation Plan</h3>
+        <h3>4. Complete 79-Test-Case Compliance Register (<code>#1</code>–<code>#79</code>)</h3>
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
                 <th class="num">#</th>
-                <th>Open Compliance / Engineering Gap</th>
+                <th>Test Case Name</th>
+                <th>Suite / File</th>
+                <th>Manual Ref / Scope</th>
+                <th>Status (Debug &amp; Release)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="num">1</td><td><code>mpc_library_inclusion</code></td><td><code>src/lib.rs</code></td><td><code>mpc-rs</code> combinator linkage</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">2</td><td><code>cli_parses_help_version_info_run_and_trace_flags</code></td><td><code>src/main.rs</code></td><td>CLI flags &amp; subcommands</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">3</td><td><code>cli_rejects_unknown_command_or_missing_file_arg</code></td><td><code>src/main.rs</code></td><td>CLI invalid args / errors</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">4</td><td><code>cli_execute_source_runs_sum_program_and_prints_output</code></td><td><code>src/main.rs</code></td><td>CLI <code>run</code> sum &amp; printer</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">5</td><td><code>cli_trace_mode_enables_listing_and_computes_timing</code></td><td><code>src/main.rs</code></td><td>CLI <code>trace</code> listing &amp; timing</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">6</td><td><code>bench_parse_714_line_full_memory_program</code></td><td><code>tests/bench_speedcoding.rs</code></td><td>Sec. 5: 714 lines (<code>2.23 ms</code> Release CI)</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">7</td><td><code>bench_parse_2000_line_speedco_program_ast</code></td><td><code>tests/bench_speedcoding.rs</code></td><td>Sec. 5: 2,000 AST lines (<code>14.79 ms</code> Release CI)</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">8</td><td><code>bench_parse_2000_instruction_cards_80col</code></td><td><code>tests/bench_speedcoding.rs</code></td><td>Sec. 7-1: 2,000 instr cards (<code>12.68 ms</code> Release CI)</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">9</td><td><code>bench_parse_2000_data_cards_10000_floats</code></td><td><code>tests/bench_speedcoding.rs</code></td><td>Sec. 7-3: 10,000 floats (<code>10.17 ms</code> Release CI)</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">10</td><td><code>bench_linear_scaling_500_to_2000_lines</code></td><td><code>tests/bench_speedcoding.rs</code></td><td>O(n) scaling ratio <code>3.44x</code> (&lt; 12x)</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">11</td><td><code>word72_bounds_bits_and_six_bit_groups</code></td><td><code>tests/phase_1_core_types.rs</code></td><td>Sec. 1-1, 4-4, 7-5</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">12</td><td><code>address_and_user_storage_bounds</code></td><td><code>tests/phase_1_core_types.rs</code></td><td>Sec. 2-1, 3-2, 4-2, 9-11</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">13</td><td><code>speed_float_72bit_layout_and_normalization</code></td><td><code>tests/phase_1_core_types.rs</code></td><td>Sec. 3-1, 3-2</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">14</td><td><code>speed_float_binary_exponent_bounds</code></td><td><code>tests/phase_1_core_types.rs</code></td><td>Sec. 3-1</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">15</td><td><code>decimal_float_validation_and_roundtrip</code></td><td><code>tests/phase_1_core_types.rs</code></td><td>Sec. 3-1</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">16</td><td><code>r_code_flags_and_bounds</code></td><td><code>tests/phase_1_core_types.rs</code></td><td>Sec. 9-1</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">17</td><td><code>l_code_panel_switches_and_validation</code></td><td><code>tests/phase_1_core_types.rs</code></td><td>Sec. 11-2</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">18</td><td><code>op1_all_49_operations_and_skip_restrictions</code></td><td><code>tests/phase_1_core_types.rs</code></td><td>Sec. 5-1, 5-2, 7-10..7-15</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">19</td><td><code>op2_all_48_operations_and_noop</code></td><td><code>tests/phase_1_core_types.rs</code></td><td>Sec. 5-3..5-5</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">20</td><td><code>instruction_72bit_layout_roundtrip</code></td><td><code>tests/phase_1_core_types.rs</code></td><td>Sec. 4-4</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">21</td><td><code>electrostatic_memory_user_access_and_control_protection</code></td><td><code>tests/phase_1_core_types.rs</code></td><td>Sec. 4-2</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">22</td><td><code>mpc_op1_and_op2_mnemonic_parsers</code></td><td><code>tests/phase_2_parser.rs</code></td><td>Sec. 5 (<code>mpc-rs</code>)</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">23</td><td><code>symbolic_instruction_line_examples</code></td><td><code>tests/phase_2_parser.rs</code></td><td>Sec. 9-5, 9-6</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">24</td><td><code>multi_line_program_parsing_sum_and_check_loops</code></td><td><code>tests/phase_2_parser.rs</code></td><td>Sec. 9-5, 10-2</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">25</td><td><code>instruction_card_80col_fields_and_fixed_zeros</code></td><td><code>tests/phase_2_parser.rs</code></td><td>Sec. 7-1, 7-2</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">26</td><td><code>alpha_only_instruction_card_requires_gang_punch</code></td><td><code>tests/phase_2_parser.rs</code></td><td>Sec. 7-2, 7-3</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">27</td><td><code>numeric_only_instruction_card_loads_directly</code></td><td><code>tests/phase_2_parser.rs</code></td><td>Sec. 7-3</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">28</td><td><code>data_card_80col_five_values_col45_skip_and_overpunch_signs</code></td><td><code>tests/phase_2_parser.rs</code></td><td>Sec. 7-3, 7-4</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">29</td><td><code>data_card_validation_rejects_bad_exponent_and_word_count</code></td><td><code>tests/phase_2_parser.rs</code></td><td>Sec. 7-4</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">30</td><td><code>loading_control_card_tape_and_drum_formats</code></td><td><code>tests/phase_2_parser.rs</code></td><td>Sec. 7-17</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">31</td><td><code>forbids_op2_with_skip_capable_op1</code></td><td><code>tests/phase_2_parser.rs</code></td><td>Sec. 7-10..7-15</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">32</td><td><code>add_sub_six_variants_with_signed_operands</code></td><td><code>tests/phase_3_arithmetic_math.rs</code></td><td>Sec. 3-3</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">33</td><td><code>exact_cancellation_preserves_exponent_without_shifting</code></td><td><code>tests/phase_3_arithmetic_math.rs</code></td><td>Sec. 3-3</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">34</td><td><code>add_sub_exponent_difference_over_76_rejected</code></td><td><code>tests/phase_3_arithmetic_math.rs</code></td><td>Sec. 3-3</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">35</td><td><code>mpy_and_ngmpy_truncation_and_sub_half_doubling</code></td><td><code>tests/phase_3_arithmetic_math.rs</code></td><td>Sec. 3-3, 3-4</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">36</td><td><code>div_and_ngdiv_rounding_and_exponent_adjustment</code></td><td><code>tests/phase_3_arithmetic_math.rs</code></td><td>Sec. 3-4</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">37</td><td><code>div_by_zero_triggers_divide_check_stop</code></td><td><code>tests/phase_3_arithmetic_math.rs</code></td><td>Sec. 3-4</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">38</td><td><code>sqrt_accuracy_and_negative_or_zero_fraction_quirk</code></td><td><code>tests/phase_3_arithmetic_math.rs</code></td><td>Appendix 1</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">39</td><td><code>sine_accuracy_and_large_exponent_zero_quirk</code></td><td><code>tests/phase_3_arithmetic_math.rs</code></td><td>Appendix 1</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">40</td><td><code>artan_principal_value_accuracy</code></td><td><code>tests/phase_3_arithmetic_math.rs</code></td><td>Appendix 1</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">41</td><td><code>exp_and_ln_accuracy_and_ln_quirks</code></td><td><code>tests/phase_3_arithmetic_math.rs</code></td><td>Appendix 2</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">42</td><td><code>initial_pc_is_300_and_op1_precedes_op2</code></td><td><code>tests/phase_4_control_addressing.rs</code></td><td>Sec. 4-1, 4-3</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">43</td><td><code>unconditional_tr_and_conditional_trpl_trmn_trz</code></td><td><code>tests/phase_4_control_addressing.rs</code></td><td>Sec. 8-1, 8-2</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">44</td><td><code>two_instruction_ge_zero_transfer_idiom</code></td><td><code>tests/phase_4_control_addressing.rs</code></td><td>Sec. 8-2, 8-3</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">45</td><td><code>sense_and_transfer_p_q_switches</code></td><td><code>tests/phase_4_control_addressing.rs</code></td><td>Sec. 8-3</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">46</td><td><code>stop_and_transfer_halts_and_restarts_at_d</code></td><td><code>tests/phase_4_control_addressing.rs</code></td><td>Sec. 5-5</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">47</td><td><code>r_code_non_destructive_effective_addresses_page_9_2</code></td><td><code>tests/phase_4_control_addressing.rs</code></td><td>Sec. 9-1, 9-2</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">48</td><td><code>ti_td_setr_skr_and_underflow_stop</code></td><td><code>tests/phase_4_control_addressing.rs</code></td><td>Sec. 9-2..9-4</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">49</td><td><code>worked_example_sum_34_numbers_page_9_5</code></td><td><code>tests/phase_4_control_addressing.rs</code></td><td>Sec. 9-5</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">50</td><td><code>address_counter_modulo_1024_table_page_9_8</code></td><td><code>tests/phase_4_control_addressing.rs</code></td><td>Sec. 9-8</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">51</td><td><code>address_counter_radd_add_sub_st_skip_and_page_9_10_example</code></td><td><code>tests/phase_4_control_addressing.rs</code></td><td>Sec. 9-8..9-10</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">52</td><td><code>combined_ac_and_r_quantities_via_addr_0025_page_9_12</code></td><td><code>tests/phase_4_control_addressing.rs</code></td><td>Sec. 9-11, 9-12</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">53</td><td><code>control_region_transfer_and_effective_address_rejected</code></td><td><code>tests/phase_4_control_addressing.rs</code></td><td>Sec. 4-2, 9-10</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">54</td><td><code>tape_odd_parity_redundancy_channel</code></td><td><code>tests/phase_5_io_storage.rs</code></td><td>Sec. 7-5</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">55</td><td><code>tape_status_transition_matrix_pages_7_13_and_7_14</code></td><td><code>tests/phase_5_io_storage.rs</code></td><td>Sec. 7-13, 7-14</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">56</td><td><code>tape_write_end_file_rewind_and_full_or_partial_read</code></td><td><code>tests/phase_5_io_storage.rs</code></td><td>Sec. 7-6..7-9</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">57</td><td><code>tape_oversized_read_triggers_copy_check_stop</code></td><td><code>tests/phase_5_io_storage.rs</code></td><td>Sec. 7-9</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">58</td><td><code>tape_eof_skip_checksum_skip_and_parity_stop</code></td><td><code>tests/phase_5_io_storage.rs</code></td><td>Sec. 7-9, 7-10</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">59</td><td><code>tape_backward_read_and_skip_worked_example_page_7_12</code></td><td><code>tests/phase_5_io_storage.rs</code></td><td>Sec. 7-10..7-12</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">60</td><td><code>tape_read_backward_error_does_not_final_backspace</code></td><td><code>tests/phase_5_io_storage.rs</code></td><td>Sec. 7-11</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">61</td><td><code>drum_write_read_worked_example_pages_7_15_and_7_16</code></td><td><code>tests/phase_5_io_storage.rs</code></td><td>Sec. 7-15, 7-16</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">62</td><td><code>drum_single_word_verify_error_skip_and_bounds_no_wrap</code></td><td><code>tests/phase_5_io_storage.rs</code></td><td>Sec. 7-15, 7-16</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">63</td><td><code>line_printer_page_7_19_worked_example_and_exponent_limit</code></td><td><code>tests/phase_5_io_storage.rs</code></td><td>Sec. 7-18, 7-19</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">64</td><td><code>card_reader_load_deck_rewinds_tapes_and_offloads_blocks</code></td><td><code>tests/phase_5_io_storage.rs</code></td><td>Sec. 7-17, 7-18</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">65</td><td><code>checking_protocol_state_machine_rules_page_10_4</code></td><td><code>tests/phase_6_checking_listing_timing.rs</code></td><td>Sec. 10-4</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">66</td><td><code>checking_loop_pass_1_and_pass_2_worked_example_page_10_2</code></td><td><code>tests/phase_6_checking_listing_timing.rs</code></td><td>Sec. 10-2</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">67</td><td><code>checking_loop_discrepancy_does_not_skip_and_print_suppressed_on_pass2</code></td><td><code>tests/phase_6_checking_listing_timing.rs</code></td><td>Sec. 10-2</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">68</td><td><code>checking_loop_inter_pass_initialization_not_summed_page_10_3</code></td><td><code>tests/phase_6_checking_listing_timing.rs</code></td><td>Sec. 10-3, 10-4</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">69</td><td><code>selective_listing_switches_10_line_drum_flush_and_pass2_suppression</code></td><td><code>tests/phase_6_checking_listing_timing.rs</code></td><td>Sec. 11-1, 11-2</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">70</td><td><code>listing_operand_sign_exceptions_and_exponent_overflow_page_11_2</code></td><td><code>tests/phase_6_checking_listing_timing.rs</code></td><td>Sec. 11-1, 11-2</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">71</td><td><code>listing_captures_state_after_op1_before_op2</code></td><td><code>tests/phase_6_checking_listing_timing.rs</code></td><td>Sec. 11-1</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">72</td><td><code>timing_op1_arithmetic_math_io_and_print_pass2</code></td><td><code>tests/phase_6_checking_listing_timing.rs</code></td><td>Sec. 12-1, 12-2, App. 1–2</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">73</td><td><code>timing_op2_and_additive_instruction_time</code></td><td><code>tests/phase_6_checking_listing_timing.rs</code></td><td>Sec. 12-1, 12-3, 12-4</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">74</td><td><code>timing_tape_length_rewind_worked_example_eof_and_skip_delay</code></td><td><code>tests/phase_6_checking_listing_timing.rs</code></td><td>Sec. 12-2, 12-3</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">75</td><td><code>timing_listing_constants_and_card_loading_formula_page_12_5</code></td><td><code>tests/phase_6_checking_listing_timing.rs</code></td><td>Sec. 12-4, 12-5</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">76</td><td><code>e2e_page_9_6_matrix_multiplication_worked_example</code></td><td><code>tests/e2e_speedcoding.rs</code></td><td>Sec. 9-6: 2&times;3 &times; 3&times;2 matrix product</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">77</td><td><code>e2e_punched_card_deck_checking_loop_and_line_printer</code></td><td><code>tests/e2e_speedcoding.rs</code></td><td>Sec. 7, 10-2: Deck + Drum P + Checking + Printer</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">78</td><td><code>e2e_tape_and_drum_machine_instructions_roundtrip</code></td><td><code>tests/e2e_speedcoding.rs</code></td><td>Sec. 7: Tape J &amp; Drum Q machine ops</td><td><span class="status-pill status-done">Pass</span></td></tr>
+              <tr><td class="num">79</td><td><code>e2e_timing_and_selective_listing_full_diagnostic_profile</code></td><td><code>tests/e2e_speedcoding.rs</code></td><td>Sec. 11–12: 10-line drum listing &amp; timing</td><td><span class="status-pill status-done">Pass</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>5. Rust Safety, Local Docker Containers &amp; CI/CD Release Pipeline</h3>
+        <ul>
+          <li><strong>Unsafe &amp; Stub Audit:</strong> Zero <code>unsafe</code> blocks and zero <code>todo!()</code>/<code>unimplemented!()</code> stubs in <code>src/*.rs</code> (enforced automatically in CI and Release CD).</li>
+          <li><strong>Local Docker Verification (over WSL):</strong> Chosen for reproducible Linux builds on Windows hosts blocked by Application Control (<code>os error 4551</code>). Verified images: <code>speedcoding-verify:0.1.0</code> (<code>1.78 GB</code>: Clippy + <strong>79/79</strong> Debug/Release tests + CLI smoke + doc + PDF exclusion), <code>speedcoding-dev:0.1.0</code> (<code>1.60 GB</code>), and <code>speedcoding:0.1.0</code> (<code>75.6 MB</code> minimal <code>debian:bookworm-slim</code> runtime CLI container).</li>
+          <li><strong>GitHub Actions CI &amp; Pages:</strong> <code>Rust Sprint CI</code> Run <a href="https://github.com/Mr-Kumar-Abhishek/speedcoding/actions/runs/44987613774" target="_blank" rel="noopener"><code>#44987613774</code></a> passed both <code>Build, Compile Phase Suites, Release &amp; Docs</code> (<code>32s</code>) and <code>Docker Container Build &amp; Smoke Test</code> (<code>29s</code>).</li>
+          <li><strong>Automated Release CD (<code>.github/workflows/release.yml</code>):</strong> Pushing tag <code>v0.1.0</code> (after all 8 branches pass CI/Pages) triggers 3-OS release matrix builds (Linux <code>.tar.gz</code>, Windows <code>.zip</code>, macOS ARM64 <code>.tar.gz</code>), <code>speedcoding-v0.1.0-compliance-report.md</code>, and <code>SHA256SUMS.txt</code> publication via <code>gh release create</code>.</li>
+        </ul>
+
+        <h3>6. Open Items &amp; Remediation Plan</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th class="num">#</th>
+                <th>Open Compliance / Engineering Item</th>
                 <th>Severity</th>
-                <th>Planned Remediation / Resolution</th>
+                <th>Status / Planned Resolution</th>
                 <th>Target Milestone</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td class="num">1</td>
-                <td><strong>Red-phase <code>todo!()</code> stubs across Phases 1–6 (<code>66</code> TDD tests)</strong>
-                </td>
+                <td><strong>Red-phase <code>todo!()</code> stubs across Phases 1–6 (<code>66</code> TDD tests)</strong></td>
                 <td><span class="status-pill status-done">Resolved (Sprint 6)</span></td>
-                <td>Implemented all 6 modules (<code>core_types</code>..<code>diagnostics</code>); <code>0</code>
-                  <code>todo!()</code> stubs remain and <code>71/71</code> tests pass in Debug &amp; Release (Run
-                  <code>#44984107348</code>)
-                </td>
-                <td>Closed in Sprint 6 (<code>v0.1.0-beta.1</code>)</td>
+                <td>Implemented all 6 modules (<code>core_types</code>..<code>diagnostics</code>); <code>0</code> stubs remain and <code>79/79</code> tests pass</td>
+                <td>Closed (Sprint 6)</td>
               </tr>
               <tr>
                 <td class="num">2</td>
-                <td><strong><code>mpc</code> dependency pinned via Git URL (<code>mpc-rs.git</code>) rather than
-                    crates.io version</strong></td>
-                <td><span class="status-pill status-skip">Medium (blocks cargo publish)</span></td>
-                <td>Publish or vendor/pin a crates.io release of <code>mpc</code> in <code>Cargo.toml</code> before
-                  cutting the first crates.io release</td>
-                <td>Sprint 7 / pre-<code>v1.0.0</code></td>
+                <td><strong><code>mpc</code> pinned via Git URL (<code>mpc-rs.git#011d12ec</code>) rather than crates.io version</strong></td>
+                <td><span class="status-pill status-skip">Low–Medium (crates.io only)</span></td>
+                <td>Publish <code>mpc</code> to crates.io and switch <code>Cargo.toml</code> from git URL to semver before publishing to crates.io (non-blocking for GitHub <code>v0.1.0</code> release)</td>
+                <td>Post-<code>v0.1.0</code> (<code>v0.2.0</code>)</td>
               </tr>
               <tr>
                 <td class="num">3</td>
-                <td><strong>Local <code>cargo clippy --all-targets</code> blocked by Windows Application Control
-                    (<code>os error 4551</code>)</strong></td>
-                <td><span class="status-pill status-done">Resolved (Sprint 3)</span></td>
-                <td>Added <code>cargo clippy --all-targets -- -D warnings</code> to
-                  <code>.github/workflows/rust.yml</code> on <code>ubuntu-latest</code>; passes with 0 warnings (Run
-                  <code>#44984107348</code>)
-                </td>
-                <td>Closed in Sprint 3 (verified Sprint 6)</td>
+                <td><strong>Local Windows <code>.exe</code> / Clippy block (<code>os error 4551</code>)</strong></td>
+                <td><span class="status-pill status-done">Resolved (Sprint 7)</span></td>
+                <td>Multi-stage Docker containers (<code>verify</code>/<code>dev</code>/<code>runtime</code>) + multi-OS GitHub Actions CI/CD</td>
+                <td>Closed (Sprint 7 / <code>v0.1.0</code>)</td>
               </tr>
             </tbody>
           </table>
@@ -845,7 +826,7 @@ cargo test --release --test bench_speedcoding --verbose -- --nocapture</code></p
   </main>
 
   <footer>
-    <span>speedcoding v0.1.0-beta.1 · Dual-licensed MIT OR Apache-2.0 · Independent Rust implementation of IBM 701
+    <span>speedcoding v0.1.0 · Dual-licensed MIT OR Apache-2.0 · Independent Rust implementation of IBM 701
       Speedcoding System (1953)</span>
     <span>
       <a href="../index.html">Main Docs Portal</a> &middot;
