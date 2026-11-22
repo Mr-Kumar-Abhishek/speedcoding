@@ -53,6 +53,9 @@ jobs:
       - name: Run Phase 4 control_addressing TDD suite (debug)
         run: cargo test --test phase_4_control_addressing --verbose
 
+      - name: Run Phase 5 io_storage TDD suite (debug)
+        run: cargo test --test phase_5_io_storage --verbose
+
       - name: Compile all phase TDD integration suites
         # As each Sprint turns Green on its phase-N/* branch, enable execution for completed phases
         # (e.g., `cargo test --test phase_1_core_types --verbose`) and full `cargo test --release` at Sprint 6+.
@@ -75,6 +78,9 @@ jobs:
 
       - name: Run Phase 4 control_addressing TDD suite (release)
         run: cargo test --release --test phase_4_control_addressing --verbose
+
+      - name: Run Phase 5 io_storage TDD suite (release)
+        run: cargo test --release --test phase_5_io_storage --verbose
 
       - name: Build documentation
         run: cargo doc --no-deps

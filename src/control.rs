@@ -4,11 +4,14 @@
 use crate::arithmetic::{ArithmeticOutcome, execute_op1_arithmetic, execute_op1_math};
 use crate::core_types::{
     Address, ElectrostaticMemory, INITIAL_PC, MachineStop, Op1, Op2, RCode, SPECIAL_R_CONTROL_ADDR,
-    SpeedError,
+    SpeedError, Word72,
 };
 use crate::diagnostics::{CheckingState, ListingBuffer, ListingSwitches};
-use crate::io::{DrumId, DrumUnit, LinePrinter, TapeId, TapeUnit};
-use crate::parser::PunchedCard;
+use crate::io::{
+    DrumId, DrumUnit, DrumWriteOutcome, LinePrinter, TapeId, TapeReadOutcome, TapeSkipOutcome,
+    TapeUnit,
+};
+use crate::parser::{PunchedCard, StorageUnit};
 
 pub const AC_MIN: i32 = -131_071;
 pub const AC_MAX: i32 = 131_071;
@@ -194,6 +197,63 @@ fn td_flags(op2: Op2) -> Option<(bool, bool, bool)> {
     }
 }
 
+fn tape_index(id: TapeId) -> usize {
+    match id {
+        TapeId::J => 0,
+        TapeId::K => 1,
+        TapeId::L => 2,
+        TapeId::M => 3,
+    }
+}
+
+fn drum_index(id: DrumId) -> usize {
+    match id {
+        DrumId::P => 0,
+        DrumId::Q => 1,
+    }
+}
+
+fn tape_id_for_op1(op1: Op1) -> TapeId {
+    match op1 {
+        Op1::WrTpJ
+        | Op1::RfTpJ
+        | Op1::RbTpJ
+        | Op1::SfTpJ
+        | Op1::SbTpJ
+        | Op1::RwTpJ
+        | Op1::EfTpJ => TapeId::J,
+        Op1::WrTpK
+        | Op1::RfTpK
+        | Op1::RbTpK
+        | Op1::SfTpK
+        | Op1::SbTpK
+        | Op1::RwTpK
+        | Op1::EfTpK => TapeId::K,
+        Op1::WrTpL
+        | Op1::RfTpL
+        | Op1::RbTpL
+        | Op1::SfTpL
+        | Op1::SbTpL
+        | Op1::RwTpL
+        | Op1::EfTpL => TapeId::L,
+        Op1::WrTpM
+        | Op1::RfTpM
+        | Op1::RbTpM
+        | Op1::SfTpM
+        | Op1::SbTpM
+        | Op1::RwTpM
+        | Op1::EfTpM => TapeId::M,
+        other => unreachable!("not a tape OP1 operation: {other:?}"),
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum Op1Outcome {
+    Normal,
+    SkipInstructions(u16),
+    Stop(MachineStop),
+}
+
 /// Complete simulated IBM 701 Speedcoding System (SpeedCo I) machine.
 #[derive(Debug, Clone)]
 pub struct SpeedCoMachine {
@@ -202,6 +262,8 @@ pub struct SpeedCoMachine {
     r_quantities: RQuantities,
     address_counter: AddressCounter,
     switches: SenseSwitches,
+    tapes: [TapeUnit; 4],
+    drums: [DrumUnit; 2],
     printer: LinePrinter,
     checking: CheckingState,
     listing: ListingBuffer,
@@ -223,6 +285,13 @@ impl SpeedCoMachine {
             r_quantities: RQuantities::default(),
             address_counter: AddressCounter::default(),
             switches: SenseSwitches::default(),
+            tapes: [
+                TapeUnit::new(TapeId::J),
+                TapeUnit::new(TapeId::K),
+                TapeUnit::new(TapeId::L),
+                TapeUnit::new(TapeId::M),
+            ],
+            drums: [DrumUnit::new(DrumId::P), DrumUnit::new(DrumId::Q)],
             printer: LinePrinter::default(),
             checking: CheckingState::default(),
             listing: ListingBuffer::default(),
@@ -278,23 +347,23 @@ impl SpeedCoMachine {
     }
 
     /// Returns a shared reference to tape unit `J`, `K`, `L`, or `M`.
-    pub fn tape(&self, _id: TapeId) -> &TapeUnit {
-        todo!()
+    pub fn tape(&self, id: TapeId) -> &TapeUnit {
+        &self.tapes[tape_index(id)]
     }
 
     /// Returns a mutable reference to tape unit `J`, `K`, `L`, or `M`.
-    pub fn tape_mut(&mut self, _id: TapeId) -> &mut TapeUnit {
-        todo!()
+    pub fn tape_mut(&mut self, id: TapeId) -> &mut TapeUnit {
+        &mut self.tapes[tape_index(id)]
     }
 
     /// Returns a shared reference to magnetic drum `P` or `Q`.
-    pub fn drum(&self, _id: DrumId) -> &DrumUnit {
-        todo!()
+    pub fn drum(&self, id: DrumId) -> &DrumUnit {
+        &self.drums[drum_index(id)]
     }
 
     /// Returns a mutable reference to magnetic drum `P` or `Q`.
-    pub fn drum_mut(&mut self, _id: DrumId) -> &mut DrumUnit {
-        todo!()
+    pub fn drum_mut(&mut self, id: DrumId) -> &mut DrumUnit {
+        &mut self.drums[drum_index(id)]
     }
 
     /// Returns a shared reference to the line printer output.
@@ -312,9 +381,98 @@ impl SpeedCoMachine {
         &self.listing
     }
 
+    fn block_word_count(start: Address, end: Address) -> Result<usize, SpeedError> {
+        if start.raw() > end.raw() {
+            return Err(SpeedError::InvalidCardFormat(format!(
+                "invalid memory block range {}..={}",
+                start.raw(),
+                end.raw()
+            )));
+        }
+        Address::user(start.raw())?;
+        Address::user(end.raw())?;
+        Ok(usize::from(end.raw() - start.raw()) + 1)
+    }
+
+    fn read_memory_block(&self, start: Address, end: Address) -> Result<Vec<Word72>, SpeedError> {
+        let count = Self::block_word_count(start, end)?;
+        let mut out = Vec::with_capacity(count);
+        for raw in start.raw()..=end.raw() {
+            out.push(self.memory.read(Address::user(raw)?)?);
+        }
+        Ok(out)
+    }
+
+    fn write_memory_block(&mut self, start: Address, words: &[Word72]) -> Result<(), SpeedError> {
+        for (offset, &word) in words.iter().enumerate() {
+            let off = u16::try_from(offset)
+                .map_err(|_| SpeedError::AddressOutOfBounds(u16::MAX))?;
+            let raw = start
+                .raw()
+                .checked_add(off)
+                .ok_or(SpeedError::AddressOutOfBounds(u16::MAX))?;
+            self.memory.write(Address::user(raw)?, word)?;
+        }
+        Ok(())
+    }
+
+    fn load_tape_record(&mut self, id: TapeId, block: &[Word72]) -> Result<(), SpeedError> {
+        if let Some(stop) = self.tape_mut(id).write_record(block)? {
+            return Err(SpeedError::InvalidCardFormat(format!(
+                "loading control tape write stopped: {stop:?}"
+            )));
+        }
+        Ok(())
+    }
+
     /// Rewinds all 4 tapes, processes instruction/data/loading-control cards, and sets `PC = 300`.
-    pub fn load_deck(&mut self, _cards: &[PunchedCard]) -> Result<(), SpeedError> {
-        todo!()
+    pub fn load_deck(&mut self, cards: &[PunchedCard]) -> Result<(), SpeedError> {
+        for tape in &mut self.tapes {
+            tape.rewind();
+        }
+        for card in cards {
+            match card {
+                PunchedCard::Instruction(instr_card) => {
+                    let instr = instr_card.to_machine_instruction()?;
+                    self.memory.write_instruction(instr_card.location, instr)?;
+                }
+                PunchedCard::Data(data_card) => {
+                    for (offset, dec) in data_card.values.iter().enumerate() {
+                        let off = u16::try_from(offset)
+                            .map_err(|_| SpeedError::AddressOutOfBounds(u16::MAX))?;
+                        let raw = data_card
+                            .first_location
+                            .raw()
+                            .checked_add(off)
+                            .ok_or(SpeedError::AddressOutOfBounds(u16::MAX))?;
+                        let target = Address::user(raw)?;
+                        self.memory.write_float(target, dec.to_speed_float()?)?;
+                    }
+                }
+                PunchedCard::LoadingControl(ctrl) => {
+                    let block = self.read_memory_block(ctrl.first_addr, ctrl.last_addr)?;
+                    match ctrl.unit {
+                        StorageUnit::TapeJ => self.load_tape_record(TapeId::J, &block)?,
+                        StorageUnit::TapeK => self.load_tape_record(TapeId::K, &block)?,
+                        StorageUnit::TapeL => self.load_tape_record(TapeId::L, &block)?,
+                        StorageUnit::TapeM => self.load_tape_record(TapeId::M, &block)?,
+                        StorageUnit::DrumP => {
+                            let _ = self
+                                .drum_mut(DrumId::P)
+                                .write_block(ctrl.drum_addr, &block)?;
+                        }
+                        StorageUnit::DrumQ => {
+                            let _ = self
+                                .drum_mut(DrumId::Q)
+                                .write_block(ctrl.drum_addr, &block)?;
+                        }
+                    }
+                }
+            }
+        }
+        self.pc = Address::user(INITIAL_PC).expect("INITIAL_PC is valid user storage");
+        self.pending_restart_addr = None;
+        Ok(())
     }
 
     fn advance_pc(&self, delta: u16) -> Result<Address, SpeedError> {
@@ -364,13 +522,90 @@ impl SpeedCoMachine {
         self.memory.write_instruction(target, instr)
     }
 
+    fn write_tape_op(
+        &mut self,
+        id: TapeId,
+        eff_a: Address,
+        eff_b: Address,
+    ) -> Result<Op1Outcome, SpeedError> {
+        let block = self.read_memory_block(eff_a, eff_b)?;
+        match self.tape_mut(id).write_record(&block)? {
+            Some(stop) => Ok(Op1Outcome::Stop(stop)),
+            None => Ok(Op1Outcome::Normal),
+        }
+    }
+
+    fn read_tape_op(
+        &mut self,
+        id: TapeId,
+        backward: bool,
+        eff_a: Address,
+        eff_b: Address,
+    ) -> Result<Op1Outcome, SpeedError> {
+        let count = Self::block_word_count(eff_a, eff_b)?;
+        let outcome = if backward {
+            self.tape_mut(id).read_backward(count)?
+        } else {
+            self.tape_mut(id).read_forward(count)?
+        };
+        match outcome {
+            TapeReadOutcome::Ok(words) => {
+                self.write_memory_block(eff_a, &words)?;
+                Ok(Op1Outcome::Normal)
+            }
+            TapeReadOutcome::EndOfFileSkip => Ok(Op1Outcome::SkipInstructions(1)),
+            TapeReadOutcome::ChecksumMismatchSkip => Ok(Op1Outcome::SkipInstructions(2)),
+            TapeReadOutcome::Stop(stop) => Ok(Op1Outcome::Stop(stop)),
+        }
+    }
+
+    fn skip_tape_op(&mut self, id: TapeId, backward: bool) -> Result<Op1Outcome, SpeedError> {
+        let outcome = if backward {
+            self.tape_mut(id).skip_backward()?
+        } else {
+            self.tape_mut(id).skip_forward()?
+        };
+        Ok(match outcome {
+            TapeSkipOutcome::Ok => Op1Outcome::Normal,
+            TapeSkipOutcome::EndOfFileSkip => Op1Outcome::SkipInstructions(1),
+            TapeSkipOutcome::Stop(stop) => Op1Outcome::Stop(stop),
+        })
+    }
+
+    fn write_drum_op(
+        &mut self,
+        id: DrumId,
+        eff_a: Address,
+        eff_b: Address,
+        eff_c: Address,
+    ) -> Result<Op1Outcome, SpeedError> {
+        let block = self.read_memory_block(eff_a, eff_b)?;
+        Ok(match self.drum_mut(id).write_block(eff_c, &block)? {
+            DrumWriteOutcome::Ok => Op1Outcome::Normal,
+            DrumWriteOutcome::VerifyDiscrepancySkip => Op1Outcome::SkipInstructions(1),
+        })
+    }
+
+    fn read_drum_op(
+        &mut self,
+        id: DrumId,
+        eff_a: Address,
+        eff_b: Address,
+        eff_c: Address,
+    ) -> Result<Op1Outcome, SpeedError> {
+        let count = Self::block_word_count(eff_a, eff_b)?;
+        let words = self.drum(id).read_block(eff_c, count)?;
+        self.write_memory_block(eff_a, &words)?;
+        Ok(Op1Outcome::Normal)
+    }
+
     fn execute_op1(
         &mut self,
         op1: Op1,
         eff_a: Address,
         eff_b: Address,
         eff_c: Address,
-    ) -> Result<Option<MachineStop>, SpeedError> {
+    ) -> Result<Op1Outcome, SpeedError> {
         match op1 {
             Op1::Add
             | Op1::Sub
@@ -385,19 +620,57 @@ impl SpeedCoMachine {
                 let qa = self.memory.read_float(eff_a)?;
                 let qb = self.memory.read_float(eff_b)?;
                 match execute_op1_arithmetic(op1, qa, qb)? {
-                    ArithmeticOutcome::Value(val) => self.memory.write_float(eff_c, val)?,
-                    ArithmeticOutcome::Stop(stop) => return Ok(Some(stop)),
+                    ArithmeticOutcome::Value(val) => {
+                        self.memory.write_float(eff_c, val)?;
+                        Ok(Op1Outcome::Normal)
+                    }
+                    ArithmeticOutcome::Stop(stop) => Ok(Op1Outcome::Stop(stop)),
                 }
             }
             Op1::Sqrt | Op1::Sine | Op1::Artan | Op1::Exp | Op1::Ln => {
                 let qa = self.memory.read_float(eff_a)?;
                 let res = execute_op1_math(op1, qa)?;
                 self.memory.write_float(eff_c, res)?;
+                Ok(Op1Outcome::Normal)
             }
-            Op1::NoOp => {}
-            _ => todo!("I/O OP1 operations implemented in Sprint 5"),
+            Op1::WrTpJ | Op1::WrTpK | Op1::WrTpL | Op1::WrTpM => {
+                self.write_tape_op(tape_id_for_op1(op1), eff_a, eff_b)
+            }
+            Op1::RfTpJ | Op1::RfTpK | Op1::RfTpL | Op1::RfTpM => {
+                self.read_tape_op(tape_id_for_op1(op1), false, eff_a, eff_b)
+            }
+            Op1::RbTpJ | Op1::RbTpK | Op1::RbTpL | Op1::RbTpM => {
+                self.read_tape_op(tape_id_for_op1(op1), true, eff_a, eff_b)
+            }
+            Op1::SfTpJ | Op1::SfTpK | Op1::SfTpL | Op1::SfTpM => {
+                self.skip_tape_op(tape_id_for_op1(op1), false)
+            }
+            Op1::SbTpJ | Op1::SbTpK | Op1::SbTpL | Op1::SbTpM => {
+                self.skip_tape_op(tape_id_for_op1(op1), true)
+            }
+            Op1::RwTpJ | Op1::RwTpK | Op1::RwTpL | Op1::RwTpM => {
+                self.tape_mut(tape_id_for_op1(op1)).rewind();
+                Ok(Op1Outcome::Normal)
+            }
+            Op1::EfTpJ | Op1::EfTpK | Op1::EfTpL | Op1::EfTpM => {
+                self.tape_mut(tape_id_for_op1(op1)).end_file()?;
+                Ok(Op1Outcome::Normal)
+            }
+            Op1::WrDrP => self.write_drum_op(DrumId::P, eff_a, eff_b, eff_c),
+            Op1::WrDrQ => self.write_drum_op(DrumId::Q, eff_a, eff_b, eff_c),
+            Op1::RfDrP => self.read_drum_op(DrumId::P, eff_a, eff_b, eff_c),
+            Op1::RfDrQ => self.read_drum_op(DrumId::Q, eff_a, eff_b, eff_c),
+            Op1::Print => {
+                let count = Self::block_word_count(eff_a, eff_b)?;
+                let mut vals = Vec::with_capacity(count);
+                for raw in eff_a.raw()..=eff_b.raw() {
+                    vals.push(self.memory.read_float(Address::user(raw)?)?);
+                }
+                let _ = self.printer.print_block(&vals, eff_c.raw())?;
+                Ok(Op1Outcome::Normal)
+            }
+            Op1::NoOp => Ok(Op1Outcome::Normal),
         }
-        Ok(None)
     }
 
     /// Fetches, interprets (`R`-code), executes `OP1` then `OP2`, logs listing if enabled, and advances `PC`.
@@ -407,8 +680,14 @@ impl SpeedCoMachine {
             self.r_quantities
                 .effective_addresses(instr.r_code, instr.a, instr.b, instr.c)?;
 
-        if let Some(stop) = self.execute_op1(instr.op1, eff_a, eff_b, eff_c)? {
-            return Ok(StepOutcome::Stopped(stop));
+        match self.execute_op1(instr.op1, eff_a, eff_b, eff_c)? {
+            Op1Outcome::Normal => {}
+            Op1Outcome::SkipInstructions(skip) => {
+                let next_pc = self.advance_pc(1 + skip)?;
+                self.pc = next_pc;
+                return Ok(StepOutcome::Continued { next_pc });
+            }
+            Op1Outcome::Stop(stop) => return Ok(StepOutcome::Stopped(stop)),
         }
 
         if let Some((ia, ib, ic)) = ti_flags(instr.op2) {

@@ -240,13 +240,13 @@ fn card_reader_load_deck_rewinds_tapes_and_offloads_blocks() {
     let mut ctrl_card = vec![' '; 80];
     ctrl_card[7] = '0';
     ctrl_card[8] = '9';
-    for (i, ch) in "00350003500000000000J".chars().enumerate() {
+    for (i, ch) in "0035000350000000000J".chars().enumerate() {
         ctrl_card[9 + i] = ch;
     }
     let ctrl_str: String = ctrl_card.into_iter().collect();
 
     let mut instr_card = vec![' '; 80];
-    for (i, ch) in "003000NOOP 000000000000000STOP 0300007511230000".chars().enumerate() {
+    for (i, ch) in "0 03000NOOP 000000000000000STOP 0300007511230000".chars().enumerate() {
         instr_card[7 + i] = ch;
     }
     let instr_str: String = instr_card.into_iter().collect();
