@@ -59,6 +59,9 @@ jobs:
       - name: Run Phase 6 checking_listing_timing TDD suite (debug)
         run: cargo test --test phase_6_checking_listing_timing --verbose
 
+      - name: Run Sprint 7 E2E sample integration suite (debug)
+        run: cargo test --test e2e_speedcoding --verbose
+
       - name: Compile all phase TDD integration suites
         # All Phases 1-6 TDD suites and benchmarks are executed individually in Debug & Release.
         run: cargo test --tests --no-run --verbose
@@ -86,6 +89,9 @@ jobs:
 
       - name: Run Phase 6 checking_listing_timing TDD suite (release)
         run: cargo test --release --test phase_6_checking_listing_timing --verbose
+
+      - name: Run Sprint 7 E2E sample integration suite (release)
+        run: cargo test --release --test e2e_speedcoding --verbose
 
       - name: Build documentation
         run: cargo doc --no-deps
