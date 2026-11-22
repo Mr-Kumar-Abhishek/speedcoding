@@ -56,9 +56,11 @@ jobs:
       - name: Run Phase 5 io_storage TDD suite (debug)
         run: cargo test --test phase_5_io_storage --verbose
 
+      - name: Run Phase 6 checking_listing_timing TDD suite (debug)
+        run: cargo test --test phase_6_checking_listing_timing --verbose
+
       - name: Compile all phase TDD integration suites
-        # As each Sprint turns Green on its phase-N/* branch, enable execution for completed phases
-        # (e.g., `cargo test --test phase_1_core_types --verbose`) and full `cargo test --release` at Sprint 6+.
+        # All Phases 1-6 TDD suites and benchmarks are executed individually in Debug & Release.
         run: cargo test --tests --no-run --verbose
 
       - name: Release build
@@ -81,6 +83,9 @@ jobs:
 
       - name: Run Phase 5 io_storage TDD suite (release)
         run: cargo test --release --test phase_5_io_storage --verbose
+
+      - name: Run Phase 6 checking_listing_timing TDD suite (release)
+        run: cargo test --release --test phase_6_checking_listing_timing --verbose
 
       - name: Build documentation
         run: cargo doc --no-deps

@@ -1,6 +1,6 @@
 [package]
 name = "speedcoding"
-version = "0.1.0-alpha.6"
+version = "0.1.0-beta.1"
 edition = "2024"
 description = "Rust implementation of the 1953 IBM 701 Speedcoding System (SpeedCo I)"
 repository = "https://github.com/Mr-Kumar-Abhishek/speedcoding"

@@ -9,7 +9,7 @@ source = "git+https://github.com/Mr-Kumar-Abhishek/mpc-rs.git#011d12ecf5f6f62622
 
 [[package]]
 name = "speedcoding"
-version = "0.1.0-alpha.6"
+version = "0.1.0-beta.1"
 dependencies = [
  "mpc",
 ]

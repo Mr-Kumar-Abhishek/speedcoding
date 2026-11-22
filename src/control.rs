@@ -4,9 +4,11 @@
 use crate::arithmetic::{ArithmeticOutcome, execute_op1_arithmetic, execute_op1_math};
 use crate::core_types::{
     Address, ElectrostaticMemory, INITIAL_PC, MachineStop, Op1, Op2, RCode, SPECIAL_R_CONTROL_ADDR,
-    SpeedError, Word72,
+    SpeedError, SpeedFloat, Word72,
 };
-use crate::diagnostics::{CheckingState, ListingBuffer, ListingSwitches};
+use crate::diagnostics::{
+    CheckingState, EchTrOutcome, ListingBuffer, ListingEntry, ListingSwitches,
+};
 use crate::io::{
     DrumId, DrumUnit, DrumWriteOutcome, LinePrinter, TapeId, TapeReadOutcome, TapeSkipOutcome,
     TapeUnit,
@@ -252,6 +254,25 @@ enum Op1Outcome {
     Normal,
     SkipInstructions(u16),
     Stop(MachineStop),
+}
+
+#[derive(Debug, Clone, Copy)]
+struct Op1ExecResult {
+    outcome: Op1Outcome,
+    qa: Option<SpeedFloat>,
+    qb: Option<SpeedFloat>,
+    qc: Option<SpeedFloat>,
+}
+
+impl Op1ExecResult {
+    fn from_outcome(outcome: Op1Outcome) -> Self {
+        Self {
+            outcome,
+            qa: None,
+            qb: None,
+            qc: None,
+        }
+    }
 }
 
 /// Complete simulated IBM 701 Speedcoding System (SpeedCo I) machine.
@@ -605,7 +626,8 @@ impl SpeedCoMachine {
         eff_a: Address,
         eff_b: Address,
         eff_c: Address,
-    ) -> Result<Op1Outcome, SpeedError> {
+        suppress_print: bool,
+    ) -> Result<Op1ExecResult, SpeedError> {
         match op1 {
             Op1::Add
             | Op1::Sub
@@ -622,54 +644,76 @@ impl SpeedCoMachine {
                 match execute_op1_arithmetic(op1, qa, qb)? {
                     ArithmeticOutcome::Value(val) => {
                         self.memory.write_float(eff_c, val)?;
-                        Ok(Op1Outcome::Normal)
+                        Ok(Op1ExecResult {
+                            outcome: Op1Outcome::Normal,
+                            qa: Some(qa),
+                            qb: Some(qb),
+                            qc: Some(val),
+                        })
                     }
-                    ArithmeticOutcome::Stop(stop) => Ok(Op1Outcome::Stop(stop)),
+                    ArithmeticOutcome::Stop(stop) => {
+                        Ok(Op1ExecResult::from_outcome(Op1Outcome::Stop(stop)))
+                    }
                 }
             }
             Op1::Sqrt | Op1::Sine | Op1::Artan | Op1::Exp | Op1::Ln => {
                 let qa = self.memory.read_float(eff_a)?;
                 let res = execute_op1_math(op1, qa)?;
                 self.memory.write_float(eff_c, res)?;
-                Ok(Op1Outcome::Normal)
+                Ok(Op1ExecResult {
+                    outcome: Op1Outcome::Normal,
+                    qa: Some(qa),
+                    qb: None,
+                    qc: Some(res),
+                })
             }
-            Op1::WrTpJ | Op1::WrTpK | Op1::WrTpL | Op1::WrTpM => {
-                self.write_tape_op(tape_id_for_op1(op1), eff_a, eff_b)
-            }
-            Op1::RfTpJ | Op1::RfTpK | Op1::RfTpL | Op1::RfTpM => {
-                self.read_tape_op(tape_id_for_op1(op1), false, eff_a, eff_b)
-            }
-            Op1::RbTpJ | Op1::RbTpK | Op1::RbTpL | Op1::RbTpM => {
-                self.read_tape_op(tape_id_for_op1(op1), true, eff_a, eff_b)
-            }
-            Op1::SfTpJ | Op1::SfTpK | Op1::SfTpL | Op1::SfTpM => {
-                self.skip_tape_op(tape_id_for_op1(op1), false)
-            }
-            Op1::SbTpJ | Op1::SbTpK | Op1::SbTpL | Op1::SbTpM => {
-                self.skip_tape_op(tape_id_for_op1(op1), true)
-            }
+            Op1::WrTpJ | Op1::WrTpK | Op1::WrTpL | Op1::WrTpM => self
+                .write_tape_op(tape_id_for_op1(op1), eff_a, eff_b)
+                .map(Op1ExecResult::from_outcome),
+            Op1::RfTpJ | Op1::RfTpK | Op1::RfTpL | Op1::RfTpM => self
+                .read_tape_op(tape_id_for_op1(op1), false, eff_a, eff_b)
+                .map(Op1ExecResult::from_outcome),
+            Op1::RbTpJ | Op1::RbTpK | Op1::RbTpL | Op1::RbTpM => self
+                .read_tape_op(tape_id_for_op1(op1), true, eff_a, eff_b)
+                .map(Op1ExecResult::from_outcome),
+            Op1::SfTpJ | Op1::SfTpK | Op1::SfTpL | Op1::SfTpM => self
+                .skip_tape_op(tape_id_for_op1(op1), false)
+                .map(Op1ExecResult::from_outcome),
+            Op1::SbTpJ | Op1::SbTpK | Op1::SbTpL | Op1::SbTpM => self
+                .skip_tape_op(tape_id_for_op1(op1), true)
+                .map(Op1ExecResult::from_outcome),
             Op1::RwTpJ | Op1::RwTpK | Op1::RwTpL | Op1::RwTpM => {
                 self.tape_mut(tape_id_for_op1(op1)).rewind();
-                Ok(Op1Outcome::Normal)
+                Ok(Op1ExecResult::from_outcome(Op1Outcome::Normal))
             }
             Op1::EfTpJ | Op1::EfTpK | Op1::EfTpL | Op1::EfTpM => {
                 self.tape_mut(tape_id_for_op1(op1)).end_file()?;
-                Ok(Op1Outcome::Normal)
+                Ok(Op1ExecResult::from_outcome(Op1Outcome::Normal))
             }
-            Op1::WrDrP => self.write_drum_op(DrumId::P, eff_a, eff_b, eff_c),
-            Op1::WrDrQ => self.write_drum_op(DrumId::Q, eff_a, eff_b, eff_c),
-            Op1::RfDrP => self.read_drum_op(DrumId::P, eff_a, eff_b, eff_c),
-            Op1::RfDrQ => self.read_drum_op(DrumId::Q, eff_a, eff_b, eff_c),
+            Op1::WrDrP => self
+                .write_drum_op(DrumId::P, eff_a, eff_b, eff_c)
+                .map(Op1ExecResult::from_outcome),
+            Op1::WrDrQ => self
+                .write_drum_op(DrumId::Q, eff_a, eff_b, eff_c)
+                .map(Op1ExecResult::from_outcome),
+            Op1::RfDrP => self
+                .read_drum_op(DrumId::P, eff_a, eff_b, eff_c)
+                .map(Op1ExecResult::from_outcome),
+            Op1::RfDrQ => self
+                .read_drum_op(DrumId::Q, eff_a, eff_b, eff_c)
+                .map(Op1ExecResult::from_outcome),
             Op1::Print => {
                 let count = Self::block_word_count(eff_a, eff_b)?;
-                let mut vals = Vec::with_capacity(count);
-                for raw in eff_a.raw()..=eff_b.raw() {
-                    vals.push(self.memory.read_float(Address::user(raw)?)?);
+                if !suppress_print {
+                    let mut vals = Vec::with_capacity(count);
+                    for raw in eff_a.raw()..=eff_b.raw() {
+                        vals.push(self.memory.read_float(Address::user(raw)?)?);
+                    }
+                    let _ = self.printer.print_block(&vals, eff_c.raw())?;
                 }
-                let _ = self.printer.print_block(&vals, eff_c.raw())?;
-                Ok(Op1Outcome::Normal)
+                Ok(Op1ExecResult::from_outcome(Op1Outcome::Normal))
             }
-            Op1::NoOp => Ok(Op1Outcome::Normal),
+            Op1::NoOp => Ok(Op1ExecResult::from_outcome(Op1Outcome::Normal)),
         }
     }
 
@@ -680,14 +724,50 @@ impl SpeedCoMachine {
             self.r_quantities
                 .effective_addresses(instr.r_code, instr.a, instr.b, instr.c)?;
 
-        match self.execute_op1(instr.op1, eff_a, eff_b, eff_c)? {
-            Op1Outcome::Normal => {}
-            Op1Outcome::SkipInstructions(skip) => {
-                let next_pc = self.advance_pc(1 + skip)?;
-                self.pc = next_pc;
-                return Ok(StepOutcome::Continued { next_pc });
-            }
-            Op1Outcome::Stop(stop) => return Ok(StepOutcome::Stopped(stop)),
+        let is_pass2_effective = self.checking.is_second_pass()
+            || (instr.op2 == Op2::StCh && self.checking.is_awaiting_second_pass());
+        let op1_res = self.execute_op1(instr.op1, eff_a, eff_b, eff_c, is_pass2_effective)?;
+
+        if let Op1Outcome::Stop(stop) = op1_res.outcome {
+            return Ok(StepOutcome::Stopped(stop));
+        }
+
+        // Capture post-OP1 / pre-OP2 state for selective listing before any OP2 mutation or STOP.
+        let (a_val, b_val, c_val) =
+            ListingBuffer::format_listed_operands(instr.op1, op1_res.qa, op1_res.qb, op1_res.qc);
+        let entry = ListingEntry {
+            location: self.pc,
+            op1: instr.op1,
+            r_code: instr.r_code,
+            a: eff_a,
+            b: eff_b,
+            c: eff_c,
+            op2: instr.op2,
+            d: instr.d,
+            l_code: instr.l_code,
+            address_counter: self.address_counter.value(),
+            r_a: self.r_quantities.r_a,
+            r_b: self.r_quantities.r_b,
+            r_c: self.r_quantities.r_c,
+            a_val,
+            b_val,
+            c_val,
+        };
+        let _ = self
+            .listing
+            .record(entry, self.switches.listing, is_pass2_effective);
+
+        let computed_word = op1_res.qc.map(SpeedFloat::to_word);
+        if !matches!(instr.op2, Op2::PrCh | Op2::StCh | Op2::EchTr)
+            && let Some(word) = computed_word
+        {
+            self.checking.record_computed_result(word);
+        }
+
+        if let Op1Outcome::SkipInstructions(skip) = op1_res.outcome {
+            let next_pc = self.advance_pc(1 + skip)?;
+            self.pc = next_pc;
+            return Ok(StepOutcome::Continued { next_pc });
         }
 
         if let Some((ia, ib, ic)) = ti_flags(instr.op2) {
@@ -842,9 +922,23 @@ impl SpeedCoMachine {
                     restart_addr: instr.d,
                 }));
             }
-            Op2::PrCh | Op2::StCh | Op2::EchTr => {
-                todo!("Checking OP2 operations implemented in Sprint 6")
+            Op2::PrCh => {
+                self.checking.prepare_check();
+                self.advance_pc(1)?
             }
+            Op2::StCh => {
+                self.checking
+                    .start_check(computed_word.unwrap_or_default())?;
+                self.advance_pc(1)?
+            }
+            Op2::EchTr => match self
+                .checking
+                .end_check_and_transfer(computed_word.unwrap_or_default(), instr.d)?
+            {
+                EchTrOutcome::RepeatAt(target) => Address::user(target.raw())?,
+                EchTrOutcome::VerifiedSkipNext => self.advance_pc(2)?,
+                EchTrOutcome::DiscrepancyContinue => self.advance_pc(1)?,
+            },
             other => unreachable!("TI/TD handled above: {other:?}"),
         };
 
