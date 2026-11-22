@@ -35,14 +35,14 @@ flowchart LR
 
 | Branch | Role | Current Status |
 |---|---|---|
-| `master` | Completed phases and verified releases; updated from `develop` after each phase passes CI | Synced with Sprint 4 (`v0.1.0-alpha.5`, 44/66 TDD + 5/5 bench passing) |
-| `develop` | Primary integration branch hosting shared API stubs, CLI, docs, CI, benchmarks, and all phase test suites | Sprint 4 integrated (`44/66` TDD + `5/5` bench passing; `22` Phase 5–6 tests compiled) |
+| `master` | Completed phases and verified releases; updated from `develop` after each phase passes CI | Synced with Sprint 5 (`v0.1.0-alpha.6`, 55/66 TDD + 5/5 bench passing) |
+| `develop` | Primary integration branch hosting shared API stubs, CLI, docs, CI, benchmarks, and all phase test suites | Sprint 5 integrated (`55/66` TDD + `5/5` bench passing; `11` Phase 6 tests compiled) |
 | `phase-1/core-types` | Sprint 1 implementation branch | **Done** — synced (`src/core_types.rs`, `11/11` passing in Debug & Release) |
 | `phase-2/parser` | Sprint 2 implementation branch | **Done** — synced (`src/parser.rs`, `10/10` passing in Debug & Release) |
 | `phase-3/arithmetic-math` | Sprint 3 implementation branch | **Done** — synced (`src/arithmetic.rs`, `10/10` passing in Debug & Release) |
-| `phase-4/control-addressing` | Sprint 4 implementation branch | **Done** — `src/control.rs` implemented (`12/12` passing in Debug & Release, CI Run `#44980132581`) |
-| `phase-5/io-storage` | Sprint 5 implementation branch | Synced to `develop` (`v0.1.0-alpha.5` / Phase 4 control & addressing baseline) |
-| `phase-6/checking-listing-timing` | Sprint 6 implementation branch | Synced to `develop` (`v0.1.0-alpha.5` / Phase 4 control & addressing baseline) |
+| `phase-4/control-addressing` | Sprint 4 implementation branch | **Done** — synced (`src/control.rs`, `12/12` passing in Debug & Release) |
+| `phase-5/io-storage` | Sprint 5 implementation branch | **Done** — `src/io.rs` + `load_deck` implemented (`11/11` passing in Debug & Release, CI Run `#44981945061`) |
+| `phase-6/checking-listing-timing` | Sprint 6 implementation branch | Synced to `develop` (`v0.1.0-alpha.6` / Phase 5 I/O & storage baseline) |
 
 ---
 
@@ -55,7 +55,7 @@ flowchart LR
 | **Sprint 2** | Phase 2 (`phase-2/parser` -> `develop` -> `master`) | `v0.1.0-alpha.3` *(Done)* | [`src/parser.rs`](../src/parser.rs) | [`tests/phase_2_parser.rs`](../tests/phase_2_parser.rs) | 10 *(10/10 Green)* | Sec. 4-2..4-3, Sec. 7-1..7-4 (Instruction & Data Cards), Sec. 7-17 (Loading Control Cards), Skip-`OP1` constraints |
 | **Sprint 3** | Phase 3 (`phase-3/arithmetic-math` -> `develop` -> `master`) | `v0.1.0-alpha.4` *(Done)* | [`src/arithmetic.rs`](../src/arithmetic.rs) | [`tests/phase_3_arithmetic_math.rs`](../tests/phase_3_arithmetic_math.rs) | 10 *(10/10 Green)* | Sec. 3-1..3-4 (Add/Sub/Mpy/Div), Sec. 6, Appendices 1–2 (Set 1 `SQRT`, `SINE`, `ARTAN`, `EXP`, `LN`) |
 | **Sprint 4** | Phase 4 (`phase-4/control-addressing` -> `develop` -> `master`) | `v0.1.0-alpha.5` *(Done)* | [`src/control.rs`](../src/control.rs) | [`tests/phase_4_control_addressing.rs`](../tests/phase_4_control_addressing.rs) | 12 *(12/12 Green)* | Sec. 4-1 (`PC = 300`), Sec. 8 (Transfers & Sense Switches), Sec. 9 (`R`-quantities, Address Counter, `0025`, Worked Examples) |
-| **Sprint 5** | Phase 5 (`phase-5/io-storage` -> `develop` -> `master`) | `v0.1.0-alpha.6` | [`src/io.rs`](../src/io.rs) + `load_deck` | [`tests/phase_5_io_storage.rs`](../tests/phase_5_io_storage.rs) | 11 | Sec. 7-4..7-19 (7-ch Tape Parity, Status Matrix, `RFTP`/`RBTP`/`SFTP`/`SBTP`, Drums `P`/`Q`, Line Printer, Card Reader) |
+| **Sprint 5** | Phase 5 (`phase-5/io-storage` -> `develop` -> `master`) | `v0.1.0-alpha.6` *(Done)* | [`src/io.rs`](../src/io.rs) + [`src/control.rs`](../src/control.rs) (`load_deck` & I/O `OP1`) | [`tests/phase_5_io_storage.rs`](../tests/phase_5_io_storage.rs) | 11 *(11/11 Green)* | Sec. 7-4..7-19 (7-ch Tape Parity, Status Matrix, `RFTP`/`RBTP`/`SFTP`/`SBTP`, Drums `P`/`Q`, Line Printer, Card Reader) |
 | **Sprint 6** | Phase 6 (`phase-6/checking-listing-timing` -> `develop` -> `master`) | `v0.1.0-beta.1` | [`src/diagnostics.rs`](../src/diagnostics.rs) | [`tests/phase_6_checking_listing_timing.rs`](../tests/phase_6_checking_listing_timing.rs) | 11 | Sec. 10 (`PRCH`/`STCH`/`ECHTR`), Sec. 11 (Selective Listing & 10-line Drum Buffer), Sec. 12 & Appendices (Execution/Tape/Load Timing) |
 | **Sprint 7** | Release (`develop` -> `master`) | `v0.1.0` | End-to-end CLI & Matrix Example | All 66 tests + 5 benchmarks + E2E sample tests | 71+ | Page 9-6 matrix multiplication E2E validation, stable release artifacts |
 

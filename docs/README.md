@@ -5,7 +5,7 @@ Rust library and CLI implementation of the **1953 IBM 701 Speedcoding System (Sp
 - **Repository:** <https://github.com/Mr-Kumar-Abhishek/speedcoding>
 - **GitHub Pages Portal & Rustdoc:** <https://mr-kumar-abhishek.github.io/speedcoding/>
 - **GitHub Pages Reports Portal:** <https://mr-kumar-abhishek.github.io/speedcoding/report/>
-- **Crate Version:** `0.1.0-alpha.5` (`edition = "2024"`, Sprint 4 pre-release tag [`v0.1.0-alpha.5`](https://github.com/Mr-Kumar-Abhishek/speedcoding/releases/tag/v0.1.0-alpha.5))
+- **Crate Version:** `0.1.0-alpha.6` (`edition = "2024"`, Sprint 5 pre-release tag [`v0.1.0-alpha.6`](https://github.com/Mr-Kumar-Abhishek/speedcoding/releases/tag/v0.1.0-alpha.6))
 - **Primary Reference Manual:** *IBM 701 Speedcoding System* (IBM Scientific Computing Service, 1953), archived in `102632810-05-01-acc.pdf` (Computer History Museum Catalog ID `102632810`).
 
 ---
@@ -47,7 +47,7 @@ flowchart TD
 | `core_types` | [`src/core_types.rs`](../src/core_types.rs) | Sprint 1 / Phase 1 | `Word72`, `Address`, `SpeedFloat`, `DecimalFloat`, `RCode`, `LCode`, 49 `Op1` + 48 `Op2` opcodes, `Instruction`, `ElectrostaticMemory` |
 | `parser` | [`src/parser.rs`](../src/parser.rs) | Sprint 2 / Phase 2 | `mpc`-backed mnemonic/line/program parsers and 80-column instruction, data, and loading-control card parsers |
 | `arithmetic` | [`src/arithmetic.rs`](../src/arithmetic.rs) | Sprint 3 / Phase 3 | Floating-binary `OP1` arithmetic (`ADD`..`NGDIV`) and Set 1 elementary functions (`SQRT`, `SINE`, `ARTAN`, `EXP`, `LN`) |
-| `control` | [`src/control.rs`](../src/control.rs) | Sprint 4 / Phase 4 | `SpeedCoMachine`, `PC` execution loop, `OP2` transfers, `RQuantities`, `AddressCounter`, location `0025` control tricks |
+| `control` | [`src/control.rs`](../src/control.rs) | Sprint 4–5 / Phases 4–5 | `SpeedCoMachine`, `PC` execution loop, `OP2` transfers, `RQuantities`, `AddressCounter`, location `0025` control tricks, `load_deck` & I/O `OP1` dispatch |
 | `io` | [`src/io.rs`](../src/io.rs) | Sprint 5 / Phase 5 | `TapeUnit` (`J..M`) with parity/checksum/status, `DrumUnit` (`P..Q`), `LinePrinter` |
 | `diagnostics` | [`src/diagnostics.rs`](../src/diagnostics.rs) | Sprint 6 / Phase 6 | `CheckingState` (`PRCH`/`STCH`/`ECHTR`), selective 10-line `ListingBuffer`, and Section 12 `TimingCalculator` |
 | `speedcoding` CLI | [`src/main.rs`](../src/main.rs) | Sprint 0 & 7 | Thin CLI entrypoint (`--help`, `--version`, `info`) |
