@@ -1,0 +1,30 @@
+services:
+  verify:
+    build:
+      context: .
+      target: verify
+    image: speedcoding-verify:0.1.0
+
+  dev:
+    build:
+      context: .
+      target: dev
+    image: speedcoding-dev:0.1.0
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
+      - cargo-registry:/usr/local/cargo/registry
+      - cargo-git:/usr/local/cargo/git
+      - target-cache:/workspace/target
+    command: cargo test --lib --bins --tests
+
+  speedcoding:
+    build:
+      context: .
+      target: runtime
+    image: speedcoding:0.1.0
+
+volumes:
+  cargo-registry:
+  cargo-git:
+  target-cache:

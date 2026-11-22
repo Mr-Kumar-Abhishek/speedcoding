@@ -1,0 +1,223 @@
+name: Release CD
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing Git tag to build and publish (e.g. v0.1.0)"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  verify:
+    name: Verify Release Gate (Clippy, 79 Tests, Docs, Compliance)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout tagged ref
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}
+
+      - name: Install stable Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+
+      - name: Verify tag matches Cargo.toml version
+        run: |
+          TAG="${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}"
+          TAG_VER="${TAG#v}"
+          TAG_BASE="${TAG_VER%%-*}"
+          PKG_VER=$(grep -m1 '^version =' Cargo.toml | sed -E 's/^version = "(.*)"/\1/')
+          echo "Release tag: $TAG (base $TAG_BASE), Cargo.toml version: $PKG_VER"
+          if [ "$TAG_VER" = "$TAG_BASE" ]; then
+            test "$PKG_VER" = "$TAG_VER"
+          else
+            test "$PKG_VER" = "$TAG_VER" || test "$PKG_VER" = "$TAG_BASE"
+          fi
+
+      - name: Run Clippy lints
+        run: cargo clippy --all-targets -- -D warnings
+
+      - name: Run all tests in debug
+        run: cargo test --lib --bins --tests --verbose
+
+      - name: Run all tests in release
+        run: cargo test --release --lib --bins --tests --verbose
+
+      - name: Build documentation
+        run: cargo doc --no-deps
+
+      - name: Compliance guard checks
+        run: |
+          if grep -rnE '\bunsafe\b|todo!\(|unimplemented!\(' src/; then
+            echo "Forbidden unsafe or stub macro found in src/" >&2
+            exit 1
+          fi
+          cargo package --list --allow-dirty | tee /tmp/pkg.list
+          if grep -q '102632810-05-01-acc.pdf' /tmp/pkg.list; then
+            echo "Reference PDF leaked into cargo package list" >&2
+            exit 1
+          fi
+          rm -f /tmp/pkg.list
+
+  build-artifacts:
+    name: Build Archive (${{ matrix.target }})
+    needs: verify
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            archive: tar.gz
+            bin: speedcoding
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            archive: zip
+            bin: speedcoding.exe
+          - os: macos-latest
+            target: aarch64-apple-darwin
+            archive: tar.gz
+            bin: speedcoding
+
+    steps:
+      - name: Checkout tagged ref
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}
+
+      - name: Install stable Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Build release binary
+        run: cargo build --release --verbose
+
+      - name: Smoke test binary (Unix)
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          ./target/release/${{ matrix.bin }} --version
+          ./target/release/${{ matrix.bin }} info
+
+      - name: Smoke test binary (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          & ".\target\release\${{ matrix.bin }}" --version
+          & ".\target\release\${{ matrix.bin }}" info
+
+      - name: Package release archive (Unix)
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          TAG="${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}"
+          STAGE="speedcoding-${TAG}-${{ matrix.target }}"
+          mkdir -p "dist/$STAGE"
+          cp "target/release/${{ matrix.bin }}" "dist/$STAGE/"
+          cp LICENSE-MIT LICENSE-APACHE NOTICE "dist/$STAGE/"
+          cp docs/README.md "dist/$STAGE/README.md"
+          cp report/compliance-report.md "dist/$STAGE/compliance-report.md"
+          if [ -e "dist/$STAGE/102632810-05-01-acc.pdf" ]; then
+            echo "Reference PDF must not be staged in release archives" >&2
+            exit 1
+          fi
+          tar -C dist -czf "dist/${STAGE}.tar.gz" "$STAGE"
+          rm -rf "dist/$STAGE"
+
+      - name: Package release archive (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        env:
+          RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+          MATRIX_TARGET: ${{ matrix.target }}
+          MATRIX_BIN: ${{ matrix.bin }}
+        run: |
+          $stage = "speedcoding-$env:RELEASE_TAG-$env:MATRIX_TARGET"
+          New-Item -ItemType Directory -Force -Path "dist/$stage" | Out-Null
+          Copy-Item "target/release/$env:MATRIX_BIN" "dist/$stage/"
+          Copy-Item "LICENSE-MIT", "LICENSE-APACHE", "NOTICE" "dist/$stage/"
+          Copy-Item "docs/README.md" "dist/$stage/README.md"
+          Copy-Item "report/compliance-report.md" "dist/$stage/compliance-report.md"
+          if (Test-Path "dist/$stage/102632810-05-01-acc.pdf") {
+            throw "Reference PDF must not be staged in release archives"
+          }
+          Compress-Archive -Path "dist/$stage" -DestinationPath "dist/$stage.zip" -Force
+          Remove-Item -Recurse -Force "dist/$stage"
+
+      - name: Upload platform release archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-${{ matrix.target }}
+          path: dist/speedcoding-*.${{ matrix.archive }}
+          if-no-files-found: error
+
+  publish-release:
+    name: Publish GitHub Release
+    needs: build-artifacts
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout tagged ref
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Stage compliance report and SHA-256 checksums
+        run: |
+          TAG="${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}"
+          cp report/compliance-report.md "dist/speedcoding-${TAG}-compliance-report.md"
+          (cd dist && sha256sum speedcoding-*.tar.gz speedcoding-*.zip "speedcoding-${TAG}-compliance-report.md" > SHA256SUMS.txt)
+          ls -lh dist/
+          cat dist/SHA256SUMS.txt
+
+      - name: Create or update GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}"
+          NOTES_FILE="/tmp/release-notes.md"
+          {
+            echo "## IBM 701 Speedcoding System (SpeedCo I) — ${TAG}"
+            echo ""
+            echo "Automated cross-platform release built by GitHub Actions Release CD."
+            echo ""
+            echo "### Highlights & Verification"
+            echo "- Complete Phases 1-7 SpeedCo I implementation (\`core_types\`, \`parser\`, \`arithmetic\`, \`control\`, \`io\`, \`diagnostics\`, CLI \`info\`/\`run\`/\`trace\`)."
+            echo "- Verified **79/79** tests in Debug and Release (\`1\` lib unit + \`4\` CLI unit + \`5\` benchmarks + \`65\` Phase 1-6 TDD + \`4\` E2E integration tests) with \`0\` Clippy warnings, \`0\` \`unsafe\`, and \`0\` \`todo!()\` stubs."
+            echo "- Multi-stage Docker containers (\`verify\`, \`dev\`, \`runtime\` / \`speedcoding\`) verified alongside Linux/Windows/macOS CI/CD builds."
+            echo ""
+            echo "### Documentation & Compliance Portal"
+            echo "- Project Portal: https://mr-kumar-abhishek.github.io/speedcoding/"
+            echo "- Compliance Report: https://mr-kumar-abhishek.github.io/speedcoding/report/"
+            echo "- SHA-256 checksums included in \`SHA256SUMS.txt\`; third-party reference PDF \`102632810-05-01-acc.pdf\` excluded per \`NOTICE\`."
+          } > "$NOTES_FILE"
+
+          PRERELEASE_FLAG=""
+          if [[ "$TAG" == *-* ]]; then
+            PRERELEASE_FLAG="--prerelease"
+          fi
+
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" dist/* --clobber
+            gh release edit "$TAG" --title "SpeedCo I ${TAG}" --notes-file "$NOTES_FILE" $PRERELEASE_FLAG
+          else
+            gh release create "$TAG" dist/* --title "SpeedCo I ${TAG}" --notes-file "$NOTES_FILE" $PRERELEASE_FLAG
+          fi

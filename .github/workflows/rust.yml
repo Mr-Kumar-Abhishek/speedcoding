@@ -63,11 +63,14 @@ jobs:
         run: cargo test --test e2e_speedcoding --verbose
 
       - name: Compile all phase TDD integration suites
-        # All Phases 1-6 TDD suites and benchmarks are executed individually in Debug & Release.
+        # All Phases 1-7 suites and benchmarks are executed individually in Debug & Release.
         run: cargo test --tests --no-run --verbose
 
       - name: Release build
         run: cargo build --release --verbose
+
+      - name: Run library & binary unit tests (release)
+        run: cargo test --release --lib --bins --verbose
 
       - name: Run SpeedCo I benchmark suite (release)
         run: cargo test --release --test bench_speedcoding --verbose -- --nocapture
@@ -93,8 +96,57 @@ jobs:
       - name: Run Sprint 7 E2E sample integration suite (release)
         run: cargo test --release --test e2e_speedcoding --verbose
 
+      - name: Run CLI smoke test (release)
+        run: |
+          ./target/release/speedcoding --version
+          ./target/release/speedcoding info
+          printf '0300 ADD 0 0500 0501 0502 - 0000\n0301 PRINT 0 0502 0502 0101 STOP 0301\n' > /tmp/smoke.sco
+          run_out=$(./target/release/speedcoding run /tmp/smoke.sco --data 500=12.5 --data 501=29.5)
+          echo "$run_out"
+          echo "$run_out" | grep -q 'ProgramStop'
+          echo "$run_out" | grep -q '+0.4200000000e+2'
+          trace_out=$(./target/release/speedcoding trace /tmp/smoke.sco --data 500=12.5 --data 501=29.5)
+          echo "$trace_out"
+          echo "$trace_out" | grep -q 'Listing lines:'
+          rm -f /tmp/smoke.sco
+
+      - name: Compliance guard checks
+        run: |
+          if grep -rnE '\bunsafe\b|todo!\(|unimplemented!\(' src/; then
+            echo "Forbidden unsafe or stub macro found in src/" >&2
+            exit 1
+          fi
+          cargo package --list --allow-dirty | tee /tmp/pkg.list
+          if grep -q '102632810-05-01-acc.pdf' /tmp/pkg.list; then
+            echo "Reference PDF leaked into cargo package list" >&2
+            exit 1
+          fi
+          rm -f /tmp/pkg.list
+
       - name: Build documentation
         run: cargo doc --no-deps
 
-      - name: Verify Cargo package manifest
-        run: cargo package --list --allow-dirty
+      - name: Upload Linux release binary artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: speedcoding-linux-x86_64
+          path: target/release/speedcoding
+          retention-days: 14
+          if-no-files-found: error
+
+  docker-build:
+    name: Docker Container Build & Smoke Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Docker runtime image
+        run: docker build --target runtime -t speedcoding:ci .
+
+      - name: Verify Docker container CLI
+        run: |
+          docker run --rm speedcoding:ci --version
+          docker run --rm speedcoding:ci info
+          docker run --rm speedcoding:ci --help

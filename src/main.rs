@@ -194,11 +194,10 @@ fn execute_source(
         switches.listing.switch_3_l6 = true;
     }
 
-    let mut steps = 0usize;
     let mut total_avg_ms = 0.0_f64;
     let mut total_max_ms = 0.0_f64;
 
-    for _ in 0..max_steps {
+    for steps in 1..=max_steps {
         let pc = machine.pc();
         let instr = machine
             .memory()
@@ -207,7 +206,6 @@ fn execute_source(
         let outcome = machine
             .step()
             .map_err(|err| format!("execution error at {}: {err:?}", pc.raw()))?;
-        steps += 1;
 
         let TimingRange { avg_ms, max_ms } =
             TimingCalculator::instruction_time_ms(instr.op1, instr.op2, TimingContext::default());
