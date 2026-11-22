@@ -34,8 +34,8 @@
             K</kbd></button>
         <a class="btn" href="./report/index.html">Reports</a>
         <a class="btn primary" href="./speedcoding/index.html">Rustdoc API</a>
-        <a class="btn" href="https://github.com/Mr-Kumar-Abhishek/speedcoding/releases/tag/v0.1.0"
-          target="_blank" rel="noopener">v0.1.0 Release</a>
+        <a class="btn" href="https://github.com/Mr-Kumar-Abhishek/speedcoding/releases/tag/v0.1.0" target="_blank"
+          rel="noopener">v0.1.0 Release</a>
         <a class="btn" href="https://github.com/Mr-Kumar-Abhishek/speedcoding" target="_blank" rel="noopener">GitHub
           Repo</a>
         <button class="btn" id="theme-toggle" type="button" aria-label="Toggle theme">Light Mode</button>
@@ -211,19 +211,23 @@
                 <td><code>src/main.rs</code></td>
                 <td>Sprint 0 &amp; 7</td>
                 <td>CLI entrypoint (<code>--help</code>, <code>--version</code>, <code>info</code>, <code>run</code>,
-                  <code>trace</code>, <code>--data</code>, <code>--max-steps</code>; 4 unit tests)</td>
+                  <code>trace</code>, <code>--data</code>, <code>--max-steps</code>; 4 unit tests)
+                </td>
               </tr>
               <tr>
                 <td>Docker Containers</td>
                 <td><code>Dockerfile</code>, <code>compose.yaml</code></td>
                 <td>Sprint 7</td>
-                <td>Multi-stage <code>verify</code>, <code>dev</code>, and <code>runtime</code> (<code>debian:bookworm-slim</code>, 75.6 MB)</td>
+                <td>Multi-stage <code>verify</code>, <code>dev</code>, and <code>runtime</code>
+                  (<code>debian:bookworm-slim</code>, 75.6 MB)</td>
               </tr>
               <tr>
                 <td>CI/CD &amp; Pages</td>
                 <td><code>.github/workflows/</code></td>
                 <td>Sprint 0 &amp; 7</td>
-                <td><code>rust.yml</code> (Sprint CI + Docker), <code>release.yml</code> (3-OS CD), <code>gh-pages.yml</code> (Pages deploy), templates</td>
+                <td><code>rust.yml</code> (Sprint CI + Docker), <code>release.yml</code> (3-OS CD),
+                  <code>gh-pages.yml</code> (Pages deploy), templates
+                </td>
               </tr>
             </tbody>
           </table>
@@ -1263,14 +1267,17 @@ speedcoding trace prog.sco --data 500=12.5   # Selective listing + timing</code>
           <ul>
             <li><code>cli_parses_help_version_info_run_and_trace_flags</code> — Parses <code>--help</code>,
               <code>-V</code>, <code>info</code>, <code>run</code>, <code>trace</code>, <code>--data</code>, and
-              <code>--max-steps</code>.</li>
+              <code>--max-steps</code>.
+            </li>
             <li><code>cli_rejects_unknown_command_or_missing_file_arg</code> — Rejects unknown subcommands, missing
               program path, extra <code>info</code> args, and bad <code>--data</code> bindings.</li>
             <li><code>cli_execute_source_runs_sum_program_and_prints_output</code> — Runs <code>ADD</code> +
               <code>PRINT</code> + <code>STOP</code> from <code>--data</code>, verifying cell <code>0502 = 42.0</code>
-              and printer output.</li>
+              and printer output.
+            </li>
             <li><code>cli_trace_mode_enables_listing_and_computes_timing</code> — Enables all 3 listing switches in
-              <code>trace</code> mode, flushes 10-line drum block, and computes Section 12 timing.</li>
+              <code>trace</code> mode, flushes 10-line drum block, and computes Section 12 timing.
+            </li>
           </ul>
         </details>
 
@@ -1282,8 +1289,10 @@ speedcoding trace prog.sco --data 500=12.5   # Selective listing + timing</code>
               matrix product combining <code>R</code>-code indexing and AC address modification.</li>
             <li><code>e2e_punched_card_deck_checking_loop_and_line_printer</code> — Sec. 7 &amp; 10-2: 80-col deck
               load + Drum P offload + checking loop + line printer + restart.</li>
-            <li><code>e2e_tape_and_drum_machine_instructions_roundtrip</code> — Sec. 7: <code>WRTPJ</code>/<code>EFTPJ</code>/<code>RWTPJ</code>/<code>RFTPJ</code>
-              (EOF skip) + <code>WRDRQ</code>/<code>RFDRQ</code> roundtrip.</li>
+            <li><code>e2e_tape_and_drum_machine_instructions_roundtrip</code> — Sec. 7:
+              <code>WRTPJ</code>/<code>EFTPJ</code>/<code>RWTPJ</code>/<code>RFTPJ</code>
+              (EOF skip) + <code>WRDRQ</code>/<code>RFDRQ</code> roundtrip.
+            </li>
             <li><code>e2e_timing_and_selective_listing_full_diagnostic_profile</code> — Sec. 11–12: 10-line drum
               listing flush + <code>ADD</code>/<code>SQRT</code>/loading timing profile.</li>
           </ul>
@@ -1594,8 +1603,8 @@ docker compose run --rm dev</code></pre>
         <div class="actions">
           <a class="btn primary" href="./report/index.html#compliance">Full 79-Test Compliance Register</a>
           <a class="btn" href="./report/compliance-report.md">Raw Markdown</a>
-          <a class="btn" href="https://github.com/Mr-Kumar-Abhishek/speedcoding/releases/tag/v0.1.0"
-            target="_blank" rel="noopener">v0.1.0 Stable Release</a>
+          <a class="btn" href="https://github.com/Mr-Kumar-Abhishek/speedcoding/releases/tag/v0.1.0" target="_blank"
+            rel="noopener">v0.1.0 Stable Release</a>
         </div>
 
         <div class="hero-grid">
@@ -1656,7 +1665,8 @@ docker compose run --rm dev</code></pre>
               <li><strong>Separation:</strong> Excluded from crate license grant via <code>NOTICE</code>
                 (<code>1639</code> B), excluded from Cargo crates via <code>Cargo.toml</code>
                 (<code>exclude = ["102632810-05-01-acc.pdf"]</code>), excluded via <code>.gitignore</code> &amp;
-                <code>.dockerignore</code>, blocked in Release CD archives, and excluded from GitHub Pages.</li>
+                <code>.dockerignore</code>, blocked in Release CD archives, and excluded from GitHub Pages.
+              </li>
             </ul>
           </div>
         </div>
@@ -1680,7 +1690,8 @@ docker compose run --rm dev</code></pre>
                 <td>— (<code>mpc</code> integration)</td>
                 <td><code>src/lib.rs</code> (<code>mpc_library_inclusion</code>, <strong>1</strong>)</td>
                 <td><span class="status-pill status-done">Passing</span> Debug &amp; Release (<code>0.00s</code>, Run
-                  <code>#44987613774</code> &amp; Docker)</td>
+                  <code>#44987613774</code> &amp; Docker)
+                </td>
               </tr>
               <tr>
                 <td><code>src/main.rs</code></td>
@@ -1688,7 +1699,8 @@ docker compose run --rm dev</code></pre>
                 <td>All runtime subsystems</td>
                 <td><code>src/main.rs</code> (<strong>4</strong> unit tests)</td>
                 <td><span class="status-pill status-done">Passing</span> Debug &amp; Release (<code>4/4</code>, Run
-                  <code>#44987613774</code> &amp; Docker)</td>
+                  <code>#44987613774</code> &amp; Docker)
+                </td>
               </tr>
               <tr>
                 <td><code>src/parser.rs</code> (bench)</td>
@@ -1704,7 +1716,8 @@ docker compose run --rm dev</code></pre>
                 <td>Sec. 1-1, 2-1, 3-1..3-2, 4-2, 4-4, 5-1..5-5, 9-11, 11-2</td>
                 <td><code>tests/phase_1_core_types.rs</code> (<strong>11</strong>)</td>
                 <td><span class="status-pill status-done">Passing</span> Debug &amp; Release (<code>11/11</code>, Run
-                  <code>#44987613774</code> &amp; Docker)</td>
+                  <code>#44987613774</code> &amp; Docker)
+                </td>
               </tr>
               <tr>
                 <td><code>src/parser.rs</code></td>
@@ -1712,7 +1725,8 @@ docker compose run --rm dev</code></pre>
                 <td>Sec. 5, 7-1..7-4, 7-10..7-17, 9-5..9-6, 10-2</td>
                 <td><code>tests/phase_2_parser.rs</code> (<strong>10</strong>)</td>
                 <td><span class="status-pill status-done">Passing</span> Debug &amp; Release (<code>10/10</code>, Run
-                  <code>#44987613774</code> &amp; Docker)</td>
+                  <code>#44987613774</code> &amp; Docker)
+                </td>
               </tr>
               <tr>
                 <td><code>src/arithmetic.rs</code></td>
@@ -1720,15 +1734,18 @@ docker compose run --rm dev</code></pre>
                 <td>Sec. 3-3..3-4, 6, Appendix 1–2</td>
                 <td><code>tests/phase_3_arithmetic_math.rs</code> (<strong>10</strong>)</td>
                 <td><span class="status-pill status-done">Passing</span> Debug &amp; Release (<code>10/10</code>, Run
-                  <code>#44987613774</code> &amp; Docker)</td>
+                  <code>#44987613774</code> &amp; Docker)
+                </td>
               </tr>
               <tr>
                 <td><code>src/control.rs</code></td>
-                <td>Phases 4–6: Transfers, <code>R</code>-quantities, AC, <code>load_deck</code>, checking &amp; listing</td>
+                <td>Phases 4–6: Transfers, <code>R</code>-quantities, AC, <code>load_deck</code>, checking &amp; listing
+                </td>
                 <td>Sec. 4-1..4-3, 5-5, 7-6..7-19, 8-1..8-3, 9-1..9-12, 10–11</td>
                 <td><code>tests/phase_4_control_addressing.rs</code> (<strong>12</strong>)</td>
                 <td><span class="status-pill status-done">Passing</span> Debug &amp; Release (<code>12/12</code>, Run
-                  <code>#44987613774</code> &amp; Docker)</td>
+                  <code>#44987613774</code> &amp; Docker)
+                </td>
               </tr>
               <tr>
                 <td><code>src/io.rs</code></td>
@@ -1736,7 +1753,8 @@ docker compose run --rm dev</code></pre>
                 <td>Sec. 7-4..7-19</td>
                 <td><code>tests/phase_5_io_storage.rs</code> (<strong>11</strong>)</td>
                 <td><span class="status-pill status-done">Passing</span> Debug &amp; Release (<code>11/11</code>, Run
-                  <code>#44987613774</code> &amp; Docker)</td>
+                  <code>#44987613774</code> &amp; Docker)
+                </td>
               </tr>
               <tr>
                 <td><code>src/diagnostics.rs</code></td>
@@ -1744,7 +1762,8 @@ docker compose run --rm dev</code></pre>
                 <td>Sec. 10-1..10-4, 11-1..11-2, 12-1..12-5, Appendix 1–2</td>
                 <td><code>tests/phase_6_checking_listing_timing.rs</code> (<strong>11</strong>)</td>
                 <td><span class="status-pill status-done">Passing</span> Debug &amp; Release (<code>11/11</code>, Run
-                  <code>#44987613774</code> &amp; Docker)</td>
+                  <code>#44987613774</code> &amp; Docker)
+                </td>
               </tr>
               <tr>
                 <td><code>tests/e2e_speedcoding.rs</code></td>
@@ -1752,7 +1771,8 @@ docker compose run --rm dev</code></pre>
                 <td>Sec. 7, 9-6, 10–12</td>
                 <td><code>tests/e2e_speedcoding.rs</code> (<strong>4</strong>)</td>
                 <td><span class="status-pill status-done">Passing</span> Debug &amp; Release (<code>4/4</code>, Run
-                  <code>#44987613774</code> &amp; Docker)</td>
+                  <code>#44987613774</code> &amp; Docker)
+                </td>
               </tr>
             </tbody>
           </table>
@@ -1772,26 +1792,34 @@ docker compose run --rm dev</code></pre>
             <tbody>
               <tr>
                 <td><code>speedcoding-verify:0.1.0</code> / <code>speedcoding:0.1.0</code></td>
-                <td>Docker (<code>linux/amd64</code>, <code>rust:1-bookworm</code> &amp; <code>debian:bookworm-slim</code> 75.6 MB)</td>
+                <td>Docker (<code>linux/amd64</code>, <code>rust:1-bookworm</code> &amp;
+                  <code>debian:bookworm-slim</code> 75.6 MB)
+                </td>
                 <td>Clippy + <strong>79/79</strong> Debug/Release tests + CLI smoke + doc + PDF exclusion</td>
                 <td><span class="status-pill status-done">Verified Locally &amp; CI</span></td>
               </tr>
               <tr>
                 <td><code>speedcoding-v0.1.0-x86_64-unknown-linux-gnu.tar.gz</code></td>
                 <td>Linux x86_64 (Release CD)</td>
-                <td>Binary + licenses + <code>README.md</code> + <code>compliance-report.md</code> + <code>SHA256SUMS.txt</code></td>
+                <td>Binary + licenses + <code>README.md</code> + <code>compliance-report.md</code> +
+                  <code>SHA256SUMS.txt</code>
+                </td>
                 <td><span class="status-pill status-done">Automated via <code>release.yml</code></span></td>
               </tr>
               <tr>
                 <td><code>speedcoding-v0.1.0-x86_64-pc-windows-msvc.zip</code></td>
                 <td>Windows x86_64 (Release CD)</td>
-                <td>Binary + licenses + <code>README.md</code> + <code>compliance-report.md</code> + <code>SHA256SUMS.txt</code></td>
+                <td>Binary + licenses + <code>README.md</code> + <code>compliance-report.md</code> +
+                  <code>SHA256SUMS.txt</code>
+                </td>
                 <td><span class="status-pill status-done">Automated via <code>release.yml</code></span></td>
               </tr>
               <tr>
                 <td><code>speedcoding-v0.1.0-aarch64-apple-darwin.tar.gz</code></td>
                 <td>macOS Apple Silicon (Release CD)</td>
-                <td>Binary + licenses + <code>README.md</code> + <code>compliance-report.md</code> + <code>SHA256SUMS.txt</code></td>
+                <td>Binary + licenses + <code>README.md</code> + <code>compliance-report.md</code> +
+                  <code>SHA256SUMS.txt</code>
+                </td>
                 <td><span class="status-pill status-done">Automated via <code>release.yml</code></span></td>
               </tr>
             </tbody>
@@ -1821,14 +1849,16 @@ docker compose run --rm dev</code></pre>
                 <td class="num">2</td>
                 <td><code>mpc</code> pinned via Git URL (<code>mpc-rs.git#011d12ec</code>)</td>
                 <td><span class="status-pill status-skip">Low–Medium (crates.io only)</span></td>
-                <td>Publish/pin crates.io release of <code>mpc</code> in <code>Cargo.toml</code> (non-blocking for GitHub <code>v0.1.0</code> release)</td>
+                <td>Publish/pin crates.io release of <code>mpc</code> in <code>Cargo.toml</code> (non-blocking for
+                  GitHub <code>v0.1.0</code> release)</td>
                 <td>Post-<code>v0.1.0</code> (<code>v0.2.0</code>)</td>
               </tr>
               <tr>
                 <td class="num">3</td>
                 <td>Local Windows <code>.exe</code> / Clippy block (<code>os error 4551</code>)</td>
                 <td><span class="status-pill status-done">Resolved (Sprint 7)</span></td>
-                <td>Multi-stage Docker containers (<code>verify</code>/<code>dev</code>/<code>runtime</code>) + multi-OS CI/CD</td>
+                <td>Multi-stage Docker containers (<code>verify</code>/<code>dev</code>/<code>runtime</code>) + multi-OS
+                  CI/CD</td>
                 <td>Closed (Sprint 7 / <code>v0.1.0</code>)</td>
               </tr>
             </tbody>
